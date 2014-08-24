@@ -1,14 +1,15 @@
-language: node_js
-node_js:
-  - "0.10"
-env:
+--- 
+env: 
   - NODE_ENV=travis
-services:
+language: node_js
+node_js: 
+  - "0.10"
+notifications: 
+  email: 
+    recipients: 
+      - joebm08@gmail.com
+      - treyqg15@gmail.com
+  on_failure: always
+  on_success: always
+services: 
   - mongodb
-notifications:
-  email:
-  	recipients:
-	    - joebm08@gmail.com
-	    - treyqg15@gmail.com
-	on_success: always
-	on_failure: always
