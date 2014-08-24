@@ -7,5 +7,8 @@ services:
   - mongodb
 notifications:
   email:
-    - joebm08@gmail.com
-    - treyqg15@gmail.com
+  	recipients:
+	    - joebm08@gmail.com
+	    - treyqg15@gmail.com
+	on_success: always
+	on_failure: always
