@@ -1,0 +1,21 @@
+<section id="userform" data-ng-controller="UserformController" >
+    <form name="Form" class="form-horizontal" role="form" novalidate="">
+        <div class="form-group">
+            <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-5">
+                <input type="email" class="form-control" ng-model="form.email" id="inputEmail" placeholder="Email" validator="required, email" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPhone" class="col-sm-2 control-label">Phone</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" ng-model="form.phone" id="inputPhone" placeholder="Phone number" validator="required, phone" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" validation-submit="Form" ng-click="form.submit()" class="btn btn-default">Sign in</button>
+            </div>
+        </div>
+    </form>
+</section>
