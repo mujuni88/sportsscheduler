@@ -1,4 +1,4 @@
-<section id="userform" data-ng-controller="UserformController" >
+<section id="userform" data-ng-controller="UserformController" class="row">
     <form name="Form" class="form-horizontal" role="form" novalidate="">
         <div class="form-group">
             <label for="inputEmail" class="col-sm-2 control-label">Email</label>
@@ -18,4 +18,24 @@
             </div>
         </div>
     </form>
+    <br/>
+    <div class="col-sm-8" ng-show="message">
+        <h3>Returned Output</h3>
+
+        <div class="alert alert-success">
+            {{message | json}}
+        </div>
+    </div>
+    <div class="col-sm-8" ng-show="entries">
+        <h3>All Entries</h3>
+
+        <div class="alert alert-success">
+            <ul class="list-unstyled">
+                <li ng-repeat="entry in entries">
+                    <p>{{entry | json}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </section>

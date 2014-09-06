@@ -1,22 +1,32 @@
 'use strict';
 
-angular.module('userform').controller('UserformController', ['$scope', '$injector', 'Userform',
-    function ($scope, $injector, Userform) {
-        // injector
-        var $validationProvider = $injector.get('$validation');
+angular.module('userform').controller('UserformController', ['$scope', 'Userform',
+    function ($scope, Userform) {
+
+        retrieveEntries();
 
         $scope.form = {
-            submit: submit
+            submit: function(){
+                saveEntry();
+            }
         };
 
-        // post user data
-        function submit() {
+        function saveEntry() {
             Userform.save($scope.form)
-                .$promise.then(function () {
-                    alert("success");
-                }, function () {
-                    alert("error");
+                .$promise.then(function (data) {
+                    $scope.message = data;
+
+                    retrieveEntries();
+                }, function (data) {
+                    $scope.message = data;
                 });
+        }
+
+        // retrieve all data in db
+        function retrieveEntries() {
+            var entries = Userform.query(function () {
+                $scope.entries = entries;
+            });
         }
 
     }

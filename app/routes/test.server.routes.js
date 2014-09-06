@@ -26,8 +26,7 @@ app.route('/test')
         for(var i in req.body)
             arr[i] = req.body[i];
         
-        var mirror = new Mirror();
-        mirror.json = arr;
+        var mirror = new Mirror(arr);
 
         mirror.save(function(err) {
             if (err)
