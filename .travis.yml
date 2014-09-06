@@ -5,3 +5,10 @@ env:
   - NODE_ENV=travis
 services:
   - mongodb
+notifications:
+  email:
+   recipients:
+    - joebm08@gmail.com
+    - treyqg15@gmail.com
+   on_success: always
+   on_failure: always
