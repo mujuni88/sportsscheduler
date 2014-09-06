@@ -3,8 +3,8 @@
 angular.module('userform').factory('Userform', ['$resource',
     function ($resource) {
 
-        return $resource('/form/:formId', {
-            formId: '@_id'
+        return $resource('/test/:userId', {
+            userId: '@_id'
         }, {
             'update': {method: 'PUT'}
         })
