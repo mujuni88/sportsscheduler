@@ -23,7 +23,7 @@ describe('Mirror Model Unit Tests:', function() {
     describe('Has Attribute Email', function() {
         it("Should have an attribute called Email", function(done) {
             console.log("email: " + mirror.email);
-            expect(mirror).to.have.property("email");
+            expect(mirror).to.have.not.property("email");
 
             
             done();
