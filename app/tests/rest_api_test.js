@@ -1,7 +1,7 @@
 'use strict';
 
 var superagent = require('superagent');
-var expect = require("chai").expect;
+var chaiExpect = require('chai').expect;
 
 var Mirror = require('../models/Mirror');
 
@@ -21,9 +21,9 @@ describe('Mirror Model Unit Tests:', function() {
 	});
     
     describe('Has Attribute Email', function() {
-        it("Should have an attribute called Email", function(done) {
-            console.log("email: " + mirror.email);
-            expect(mirror).to.have.property("email");
+        it('Should have an attribute called Email', function(done) {
+            console.log('email: ' + mirror.email);
+            chaiExpect(mirror).to.have.property('email');
 
             
             done();
@@ -31,9 +31,9 @@ describe('Mirror Model Unit Tests:', function() {
     });
     
     describe('Email Attribute Not Empty', function() {
-        it("Email Attribute should contain a value", function(done) {
-            console.log("email: " + mirror.email);
-            expect(mirror).to.have.property("email").that.has.length.above(0);
+        it('Email Attribute should contain a value', function(done) {
+            console.log('email: ' + mirror.email);
+            chaiExpect(mirror).to.have.property('email').that.has.length.above(0);
 
             
             done();
@@ -41,9 +41,9 @@ describe('Mirror Model Unit Tests:', function() {
     });
 
     describe('Email Attribute Is String', function() {
-        it("Email Attribute should be a String", function(done) {
-            console.log("email: " + mirror.email);
-            expect(mirror).to.have.property("email").that.is.a("string");
+        it('Email Attribute should be a String', function(done) {
+            console.log('email: ' + mirror.email);
+            chaiExpect(mirror).to.have.property('email').that.is.a('string');
 
             
             done();
@@ -67,7 +67,7 @@ describe('AJAX Requests', function() {
             })
             .end(function(e,res){
                 console.log(res.body);
-                expect(e).to.eql(null);
+                chaiExpect(e).to.eql(null);
                 
                 done();
             });
@@ -81,8 +81,8 @@ describe('AJAX Requests', function() {
             superagent.get('http://localhost:3000/test/')
               .end(function(e, res){
                 console.log(res.body);
-                expect(e).to.eql(null);
-                expect(typeof res.body).to.eql('object');
+                chaiExpect(e).to.eql(null);
+                chaiExpect(typeof res.body).to.eql('object');
                 id = res.body[0]._id;
 
                 done();
@@ -94,8 +94,8 @@ describe('AJAX Requests', function() {
            .end(function(e, res){
                
                console.log(res.body);
-               expect(e).to.eql(null);
-               expect(typeof res.body).to.eql('object');
+               chaiExpect(e).to.eql(null);
+               chaiExpect(typeof res.body).to.eql('object');
                
                done();
            });

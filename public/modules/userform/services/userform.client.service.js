@@ -7,6 +7,6 @@ angular.module('userform').factory('Userform', ['$resource',
             userId: '@_id'
         }, {
             'update': {method: 'PUT'}
-        })
+        });
     }
 ]);

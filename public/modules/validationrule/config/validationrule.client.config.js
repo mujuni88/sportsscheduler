@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 angular.module('validationrule', ['validation'])
     .config(['$validationProvider', function ($validationProvider) {
@@ -28,7 +28,7 @@ angular.module('validationrule', ['validation'])
         };
 
         $validationProvider.setErrorHTML(function (msg) {
-            return  "<div class=\"has-error\">" + msg + "</div>";
+            return  '<div class=\'has-error\'>' + msg + '</div>';
         });
         $validationProvider.setExpression(expression).setDefaultMsg(defaultMsg);
         $validationProvider.showSuccessMessage = false;

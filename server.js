@@ -4,7 +4,8 @@
  */
 var init = require('./config/init')(),
 	config = require('./config/config'),
-	mongoose = require('mongoose');
+	mongoose = require('mongoose'),
+	appJSON = require('./app/custom_objects/AppJSON');
 
 /**
  * Main application entry file.
@@ -25,8 +26,17 @@ var app = require('./config/express')(db);
 // Bootstrap passport config
 require('./config/passport')();
 
+/*************  Init appJSON ***************/
+appJSON.init();
+
+/*********************************************/
+
+
 // Start the app by listening on <port>
 app.listen(config.port);
+
+
+
 
 // Expose app
 exports = module.exports = app;

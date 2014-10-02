@@ -3,7 +3,6 @@
 angular.module('userform').controller('UserformController', ['$scope', 'Userform',
     function ($scope, Userform) {
 
-        retrieveEntries();
 
         $scope.form = {
             submit: function(){
@@ -28,6 +27,8 @@ angular.module('userform').controller('UserformController', ['$scope', 'Userform
                 $scope.entries = entries;
             });
         }
+
+        retrieveEntries();
 
     }
 ]);
