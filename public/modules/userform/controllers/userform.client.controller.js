@@ -4,14 +4,14 @@ angular.module('userform').controller('UserformController', ['$scope', 'Userform
     function ($scope, Userform) {
 
 
-        $scope.form = {
+        $scope.userform = {
             submit: function(){
                 saveEntry();
             }
         };
 
         function saveEntry() {
-            Userform.save($scope.form)
+            Userform.save($scope.userform)
                 .$promise.then(function (data) {
                     $scope.message = data;
 

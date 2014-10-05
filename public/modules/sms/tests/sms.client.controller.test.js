@@ -1,10 +1,10 @@
 'use strict';
 
 (function() {
-	// Userform Controller Spec
-	describe('Userform Controller Tests', function() {
+	// Sms Controller Spec
+	describe('Sms Controller Tests', function() {
 		// Initialize global variables
-		var UserformController,
+		var SmsController,
 			scope,
 			$httpBackend,
 			$stateParams,
@@ -44,19 +44,15 @@
 			$httpBackend = _$httpBackend_;
 			$location = _$location_;
 
-			// Initialize the Userform controller.
-			UserformController = $controller('UserformController', {
+			// Initialize the Sms controller.
+			SmsController = $controller('SmsController', {
 				$scope: scope
 			});
 		}));
 
-        // navigate to user form
-
-        // initially the form is invalid
-		it('It should be pristine and invalid', inject(function() {
-			// get form and check whether invalid
-            expect($scope.Form.$pristine).toBe(true);
-            expect($scope.Form.$invalid)
+		it('Should do some controller test', inject(function() {
+			// The test logic
+			// ...
 		}));
 	});
 }());

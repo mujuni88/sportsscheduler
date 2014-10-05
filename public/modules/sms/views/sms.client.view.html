@@ -1,0 +1,56 @@
+<section data-ng-controller="SmsController" class="section">
+    <h2>SMS TESTER</h2>
+    <br/>
+    <form name="SmsForm" class="form-horizontal" role="form" novalidate="">
+        <div class="form-group">
+            <label for="inputPhone" class="col-sm-2 control-label">Phone</label>
+
+            <div class="col-sm-5">
+                <input type="text" class="form-control" ng-model="smsform.phone" id="inputPhone" placeholder="Phone number"
+                       validator="required, phone" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="smsCarriers" class="col-sm-2 control-label">Carrier</label>
+            <div class="col-sm-5">
+                <select id="smsCarriers" ng-model="smsform.carrier" ng-options="carrier.name for carrier in carriers" validator="required" required="required">
+                    <option value="">-- choose carrier --</option>
+                </select></div>
+        </div>
+        <div class="form-group">
+            <label for="inputMsg" class="col-sm-2 control-label">Message</label>
+
+            <div class="col-sm-5">
+                <input type="text" class="form-control" ng-model="smsform.msg" id="inputMsg" placeholder="Message.."
+                       validator="required" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" validation-submit="SmsForm" ng-click="smsform.submit()" class="btn btn-default">Send
+                    Message
+                </button>
+            </div>
+        </div>
+    </form>
+    <br/>
+
+    <div class="col-sm-8" ng-show="smsform">
+        <h3>Input to API</h3>
+
+        <div class="alert alert-success">
+            {{smsform | json}}
+        </div>
+    </div>
+    <div class="col-sm-8" ng-show="entries">
+        <h3>Returned Output</h3>
+
+        <div class="alert alert-success">
+            <ul class="list-unstyled">
+                <li ng-repeat="entry in entries">
+                    <p>{{entry | json}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
