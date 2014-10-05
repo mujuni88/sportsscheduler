@@ -1,18 +1,41 @@
 'use strict';
 
-angular.module('sms').controller('SmsController', ['$scope',
-    function ($scope) {
+angular.module('sms').controller('SmsController', ['$scope','$http',
+    function ($scope, $http) {
         $scope.carriers = [
-            {name: "AT&T Wireless", value: "at_and_t"},
-            {name: "C Spire", value: "cellularsouth"}
+            {name: "AT&T Wireless", value:"@txt.att.net"},
+            {name: "C Spire", value:"@csouth1.com"}
         ];
 
         $scope.smsform = {
             submit:sendText
         }
 
+
+        function getToAddr(){
+            return $scope.smsform.phone+$scope.smsform.carrier.value;
+        }
+
+        function getText(){
+            return $scope.smsform.msg;
+        }
+
         function sendText(){
-//            alert($scope.smsform);
+            var to = getToAddr();
+            var text = getText();
+            var subject = "Test subject";
+
+            $scope.apiData = {to:to, text:text, subject:subject};
+            $scope.sentData = $scope.apiData;
+
+            var promise = $http.post('/api/sms',$scope.apiData)
+            promise.success(function(response){
+                $scope.response = response;
+            })
+            promise.error(function(response){
+                alert("error "+response);
+            });
+
         }
     }
 ]);

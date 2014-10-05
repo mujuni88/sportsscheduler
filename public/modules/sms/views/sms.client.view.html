@@ -35,22 +35,18 @@
     </form>
     <br/>
 
-    <div class="col-sm-8" ng-show="smsform">
-        <h3>Input to API</h3>
+    <div class="col-sm-8" ng-show="sentData">
+        <h3>Data Sent</h3>
 
         <div class="alert alert-success">
-            {{smsform | json}}
+        {{sentData | json}}
         </div>
     </div>
-    <div class="col-sm-8" ng-show="entries">
-        <h3>Returned Output</h3>
+    <div class="col-sm-8" ng-show="response">
+        <h3>Data Received</h3>
 
         <div class="alert alert-success">
-            <ul class="list-unstyled">
-                <li ng-repeat="entry in entries">
-                    <p>{{entry | json}}</p>
-                </li>
-            </ul>
+        {{response | json}}
         </div>
     </div>
 </section>
