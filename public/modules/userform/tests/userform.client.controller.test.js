@@ -55,8 +55,8 @@
         // initially the form is invalid
 		it('It should be pristine and invalid', inject(function() {
 			// get form and check whether invalid
-            expect($scope.Form.$pristine).toBe(true);
-            expect($scope.Form.$invalid)
+            expect(scope.Form.$pristine).toBe(true);
+            expect(scope.Form.$invalid);
 		}));
 	});
 }());
