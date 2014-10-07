@@ -21,7 +21,7 @@ describe('GET Requests', function() {
 
 describe('POST Requests', function() {
 	it('POST: check if sms is sent when req has the required parameters', function(done) {
-        superagent.post('http://localhost:3000/api/sms')
+        superagent.post('http://127.0.0.1:3000/api/sms')
             .send({ 
                 to: '6018801788@cspire1.com',
                 subject: 'SMS Test',
@@ -38,7 +38,7 @@ describe('POST Requests', function() {
         });
 
     it('POST: check if sending an sms fails when req is missing required parameters ("to" in this case)', function(done) {
-        superagent.post('http://localhost:3000/api/sms')
+        superagent.post('http://127.0.0.1:3000/api/sms')
             .send({ 
                 //from: 'treyqg15@gmail.com',
                 //to: '6018801788@cspire1.com',
