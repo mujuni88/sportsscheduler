@@ -3,8 +3,8 @@
 var superagent = require('superagent');
 var chaiExpect = require('chai').expect;
 
-var MyResponse = require('../custom_objects/MyResponse');
-var MyError = require('../custom_objects/MyError');
+var MyResponse = require('../../custom_objects/MyResponse');
+var MyError = require('../../custom_objects/MyError');
 
 describe('MyResponse Custom Object Unit Tests:', function() {
     
