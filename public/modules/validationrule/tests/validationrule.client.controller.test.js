@@ -121,7 +121,7 @@
                 '123',
                 '1223-1',
                 '12345-124',
-                'abc',
+                'abc'
             ];
             it('should validate zips correctly', inject(function() {
                 var zipRegex = $validationProvider.getExpression('zip');
