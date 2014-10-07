@@ -8,7 +8,8 @@
 			scope,
 			$httpBackend,
 			$stateParams,
-			$location;
+			$location,
+            UserFormService;
 
 		// The $resource service augments the response object with methods for updating and deleting the resource.
 		// If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -35,7 +36,7 @@
 		// The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
 		// This allows us to inject a service but then attach it to a variable
 		// with the same name as the service.
-		beforeEach(inject(function($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_) {
+		beforeEach(inject(function($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_,_Userform_) {
 			// Set a new global scope
 			scope = $rootScope.$new();
 
@@ -43,6 +44,7 @@
 			$stateParams = _$stateParams_;
 			$httpBackend = _$httpBackend_;
 			$location = _$location_;
+            UserFormService = _Userform_;
 
 			// Initialize the Userform controller.
 			UserformController = $controller('UserformController', {
@@ -50,13 +52,27 @@
 			});
 		}));
 
-        // navigate to user form
+        // testing service whether it's saving
+        describe('UserFormService tests', function(){
+            var user = {
+                phone:'1234567890',
+                email:'jbuza@cspire.com'
+            }, id = null;
 
-        // initially the form is invalid
-		it('It should be pristine and invalid', inject(function() {
-			// get form and check whether invalid
-            expect(scope.Form.$pristine).toBe(true);
-            expect(scope.Form.$invalid);
-		}));
+            it('should add user', function(){
+                UserFormService.save(user)
+                    .$promise.then(function (data) {
+                        console.log('data: '+data);
+                    }, function (data) {
+                        console.log('error: '+data);
+                    });
+            });
+            it('should update user info', function(){
+            });
+            it('should retrieve all users in the db', function(){});
+            it('should delete added user', function(){});
+
+        });
+
 	});
 }());
