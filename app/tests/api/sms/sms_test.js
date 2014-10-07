@@ -28,8 +28,9 @@ describe('POST Requests', function() {
                 text: 'This is a message from sms_test.js for unit testing. Checking if sms is sent when req has the required parameters'
             })
             .end(function(e,res){
-                console.log(res.body);
+                console.log(e);
                 chaiExpect(e).to.eql(null);
+                console.log(res.body);
                 chaiExpect(res.body.clientMessage).to.not.eql('SMS Sent Successfully');
                 chaiExpect(res.body.error.clientMessage).to.eql('');
                 done();
@@ -45,8 +46,9 @@ describe('POST Requests', function() {
                 text: 'This is a message from sms_test.js for unit testing. check if sending an sms fails when req is missing required parameters ("to" in this case)'
             })
             .end(function(e,res){
-                console.log(res.body);
+                console.log(e);
                 chaiExpect(e).to.eql(null);
+                console.log(res.body);
                 chaiExpect(res.body.error.clientMessage).to.eql('Missing "to" parameter in request');
                 done();
             });

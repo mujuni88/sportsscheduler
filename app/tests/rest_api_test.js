@@ -66,8 +66,10 @@ describe('AJAX Requests', function() {
                 email: 'john@rpjs.co'
             })
             .end(function(e,res){
-                console.log(res.body);
+                console.log(e);
                 chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                
                 
                 done();
             });
@@ -80,8 +82,9 @@ describe('AJAX Requests', function() {
         it('GET: retrieves all test objects', function(done){
             superagent.get('http://localhost:3000/test/')
               .end(function(e, res){
-                console.log(res.body);
+                console.log(e);
                 chaiExpect(e).to.eql(null);
+                console.log(res.body);
                 chaiExpect(typeof res.body).to.eql('object');
                 id = res.body[0]._id;
 
@@ -93,8 +96,9 @@ describe('AJAX Requests', function() {
            superagent.get('http://localhost:3000/test/'+id)
            .end(function(e, res){
                
-               console.log(res.body);
+               console.log(e);
                chaiExpect(e).to.eql(null);
+               console.log(res.body);
                chaiExpect(typeof res.body).to.eql('object');
                
                done();
