@@ -110,7 +110,7 @@
 
             var validZips = [
                 '12345',
-                '12345-1234-'
+                '12345-1234'
             ];
 
             var invalidZips = [
