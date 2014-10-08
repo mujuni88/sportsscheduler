@@ -6,7 +6,7 @@ install:
 before_script:
   - "npm install -g grunt-cli"
 script:
-  - "grunt nodemon && grunt test"
+  - "grunt test"
 env:
   - NODE_ENV=travis
 services:
