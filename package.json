@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "grunt",
-    "test": "nodemon && grunt test",
+    "test": "grunt nodemon && grunt test",
     "postinstall": "bower install --config.interactive=false"
   },
   "dependencies": {
