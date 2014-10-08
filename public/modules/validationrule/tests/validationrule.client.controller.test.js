@@ -69,7 +69,6 @@
                 var emailRegex = $validationProvider.getExpression('email');
                 expect(emailRegex).not.toBe(null);
 
-                // you can loop through arrays of test cases like this
                 for (var i in validEmails) {
                     isValid = emailRegex.test(validEmails[i]);
                     expect(isValid).toBeTruthy();
@@ -98,7 +97,6 @@
                 var phoneRegex = $validationProvider.getExpression('phone');
                 expect(phoneRegex).not.toBe(null);
 
-                // you can loop through arrays of test cases like this
                 for (var i in validPhones) {
                     isValid = phoneRegex.test(validPhones[i]);
                     expect(isValid).toBeTruthy();
@@ -127,7 +125,6 @@
                 var zipRegex = $validationProvider.getExpression('zip');
                 expect(zipRegex).not.toBe(null);
 
-                // you can loop through arrays of test cases like this
                 for (var i in validZips) {
                     isValid = zipRegex.test(validZips[i]);
                     expect(isValid).toBeTruthy();
