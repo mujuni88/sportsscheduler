@@ -17,7 +17,20 @@ module.exports = function(config) {
 		// Test results reporter to use
 		// Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
 		//reporters: ['progress'],
-		reporters: ['progress'],
+		reporters: ['progress','coverage'],
+
+       preprocessors: {
+           // source files, that you wanna generate coverage for
+           // do not include tests or libraries
+           // (these files will be instrumented by Istanbul)
+           'public/modules/**/*.js': ['coverage']
+       },
+
+       // optionally, configure the reporter
+       coverageReporter: {
+           type : 'html',
+           dir : 'coverage/'
+       },
 
 		// Web server port
 		port: 9876,
@@ -47,6 +60,18 @@ module.exports = function(config) {
 
 		// Continuous Integration mode
 		// If true, it capture browsers, run tests and exit
-		singleRun: true
+		singleRun: true,
+
+        // report which specs are slower than 500ms
+        // CLI --report-slower-than 500
+        reportSlowerThan: 500,
+
+        plugins: [
+            'karma-coverage',
+            'karma-jasmine',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-phantomjs-launcher'
+        ]
 	});
 };

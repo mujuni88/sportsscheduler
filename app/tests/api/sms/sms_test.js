@@ -31,7 +31,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.not.eql('SMS Sent Successfully');
+                chaiExpect(res.body.clientMessage).to.eql('SMS Sent Successfully');
                 chaiExpect(res.body.error.clientMessage).to.eql('');
                 done();
             });

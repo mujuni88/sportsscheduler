@@ -47,7 +47,11 @@ module.exports = function(grunt) {
 				options: {
 					livereload: true
 				}
-			}
+			},
+			karma: {
+                files: ['src/**/*.js', 'test/unit/**/*.js'],
+                tasks: ['karma:unit:run']
+            }
 		},
 		jshint: {
 			all: {
@@ -128,13 +132,19 @@ module.exports = function(grunt) {
 			src: watchFiles.mochaTests,
 			options: {
 				reporter: 'spec',
-				require: 'server.js'
+				require: 'server.js',
+				coverage: true
 			}
 		},
 		karma: {
 			unit: {
-				configFile: 'karma.conf.js'
-			}
+				configFile: './karma.conf.js'
+			},
+			travis: {
+                configFile: './karma.conf.js',
+                singleRun: true,
+                browsers: ['PhantomJS']
+            }
 		}
 	});
 
@@ -142,7 +152,7 @@ module.exports = function(grunt) {
 	require('load-grunt-tasks')(grunt);
 
 	// Making grunt default to force in order not to break the project.
-	grunt.option('force', true);
+	grunt.option('force', false);
 
 	// A Task for loading the configuration object
 	grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function() {
@@ -166,6 +176,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
 	// Test task.
-	//grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
-	grunt.registerTask('test', ['env:test', 'mochaTest']);
+	//grunt.registerTask('test', ['env:test', 'karma:unit']);
+	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:travis']);
+	grunt.registerTask('devmode', ['karma:unit', 'watch']);
 };

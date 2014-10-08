@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('userform').factory('Userform', ['$resource',
+angular.module('userform')
+    .factory('Userform', ['$resource',
     function ($resource) {
 
         return $resource('/test/:userId', {
