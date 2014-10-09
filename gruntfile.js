@@ -152,10 +152,10 @@ module.exports = function (grunt) {
             }
 		},
         protractor: {
-            all: {   // Grunt requires at least one target to run so you can simply put 'all: {}' here too.
+            all: {   
                 options: {
-                    configFile: 'e2e.conf.js', // Target-specific config file
-                    args: {}, // Target-specific arguments,
+                    configFile: 'e2e.conf.js', 
+                    args: {}, 
                     noColor: false,
                     keepAlive: true
                 }
@@ -200,7 +200,5 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
 	// Test task.
-//	grunt.registerTask('test', ['env:test', 'mochaTest']);
-	grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
 };
