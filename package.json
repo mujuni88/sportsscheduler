@@ -13,9 +13,8 @@
     "npm": "1.4.x"
   },
   "scripts": {
-    "test":"grunt nodemon",
     "start": "grunt",
-//    "test": "grunt test",
+    "test": "grunt test",
     "install": "node node_modules/protractor/bin/webdriver-manager update",
     "postinstall": "bower install --config.interactive=false"
   },
