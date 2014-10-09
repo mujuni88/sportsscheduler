@@ -11,8 +11,6 @@ env:
   - NODE_ENV=travis
 services:
   - mongodb
-env:
-   - NODE_ENV=travis
 notifications:
   email:
    recipients:

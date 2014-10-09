@@ -1,15 +1,16 @@
 'use strict';
 
-module.exports = function(grunt) {
-	// Unified Watch Object
-	var watchFiles = {
-		serverViews: ['app/views/**/*.*'], 
-		serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
-		clientViews: ['public/modules/**/views/**/*.html'],
-		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
-		clientCSS: ['public/modules/**/*.css'],
-		mochaTests: ['app/tests/**/*.js']
-	};
+module.exports = function (grunt) {
+    // Unified Watch Object
+    var watchFiles = {
+        serverViews: ['app/views/**/*.*'],
+        serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
+        clientViews: ['public/modules/**/views/**/*.html'],
+        clientJS: ['public/js/*.js', 'public/modules/**/*![e2e]*.js'],
+        clientCSS: ['public/modules/**/*.css'],
+        mochaTests: ['app/tests/**/*.js'],
+        e2eTests: ['public/modules/*/tests/e2e/*.js']
+    };
 
 	// Project Configuration
 	grunt.initConfig({
@@ -148,35 +149,36 @@ module.exports = function(grunt) {
 		}
 	});
 
-	// Load NPM tasks 
-	require('load-grunt-tasks')(grunt);
 
-	// Making grunt default to force in order not to break the project.
-	grunt.option('force', false);
+    // Load NPM tasks
+    require('load-grunt-tasks')(grunt);
 
-	// A Task for loading the configuration object
-	grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function() {
-		var init = require('./config/init')();
-		var config = require('./config/config');
+    // Making grunt default to force in order not to break the project.
+    grunt.option('force', true);
 
-		grunt.config.set('applicationJavaScriptFiles', config.assets.js);
-		grunt.config.set('applicationCSSFiles', config.assets.css);
-	});
+    // A Task for loading the configuration object
+    grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function () {
+        var init = require('./config/init')();
+        var config = require('./config/config');
 
-	// Default task(s).
-	grunt.registerTask('default', ['lint', 'concurrent:default']);
+        grunt.config.set('applicationJavaScriptFiles', config.assets.js);
+        grunt.config.set('applicationCSSFiles', config.assets.css);
+    });
 
-	// Debug task.
-	grunt.registerTask('debug', ['lint', 'concurrent:debug']);
+    // Default task(s).
+    grunt.registerTask('default', ['lint', 'concurrent:default']);
 
-	// Lint task(s).
-	grunt.registerTask('lint', ['jshint', 'csslint']);
+    // Debug task.
+    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
 
-	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
+    // Lint task(s).
+    grunt.registerTask('lint', ['jshint', 'csslint']);
+
+    // Build task(s).
+    grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
 	// Test task.
-	//grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:travis']);
 	grunt.registerTask('test', ['env:test', 'mochaTest']);
 	grunt.registerTask('devmode', ['karma:unit', 'watch']);
+//    grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
 };
