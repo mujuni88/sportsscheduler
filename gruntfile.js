@@ -52,6 +52,10 @@ module.exports = function (grunt) {
 			karma: {
                 files: ['src/**/*.js', 'test/unit/**/*.js'],
                 tasks: ['karma:unit:run']
+            },
+            e2eJS: {
+                files: watchFiles.e2eTests,
+                tasks: ['protractor_webdriver','protractor']
             }
 		},
 		jshint: {
@@ -146,7 +150,25 @@ module.exports = function (grunt) {
                 singleRun: true,
                 browsers: ['PhantomJS']
             }
-		}
+		},
+        protractor: {
+            all: {   // Grunt requires at least one target to run so you can simply put 'all: {}' here too.
+                options: {
+                    configFile: 'e2e.conf.js', // Target-specific config file
+                    args: {}, // Target-specific arguments,
+                    noColor: false,
+                    keepAlive: true
+                }
+            }
+        },
+        protractor_webdriver: {
+            start: {
+                options: {
+                    path: 'node_modules/protractor/bin/',
+                    command: 'webdriver-manager start'
+                }
+            }
+        }
 	});
 
 
