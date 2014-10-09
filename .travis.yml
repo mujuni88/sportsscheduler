@@ -6,6 +6,7 @@ env:
 install:
   - sudo apt-get update
   - sudo apt-get install chromium-browser
+  - npm install
 services:
   - mongodb
 notifications:
