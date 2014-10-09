@@ -6,9 +6,10 @@ module.exports = function (grunt) {
         serverViews: ['app/views/**/*.*'],
         serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
         clientViews: ['public/modules/**/views/**/*.html'],
-        clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
+        clientJS: ['public/js/*.js', 'public/modules/**/*![e2e]*.js'],
         clientCSS: ['public/modules/**/*.css'],
-        mochaTests: ['app/tests/**/*.js']
+        mochaTests: ['app/tests/**/*.js'],
+        e2eTests: ['public/modules/*/tests/e2e/*.js']
     };
 
     // Project Configuration
@@ -47,6 +48,10 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
+            },
+            e2eJS: {
+                files: watchFiles.e2eTests,
+                tasks: ['protractor_webdriver','protractor']
             }
         },
         jshint: {
@@ -59,7 +64,7 @@ module.exports = function (grunt) {
         },
         csslint: {
             options: {
-                csslintrc: '.csslintrc',
+                csslintrc: '.csslintrc'
             },
             all: {
                 src: watchFiles.clientCSS
@@ -141,8 +146,16 @@ module.exports = function (grunt) {
                 options: {
                     configFile: 'e2e.conf.js', // Target-specific config file
                     args: {}, // Target-specific arguments,
-                    noColor:false,
-                    keepAlive:true
+                    noColor: false,
+                    keepAlive: true
+                }
+            }
+        },
+        protractor_webdriver: {
+            start: {
+                options: {
+                    path: 'node_modules/protractor/bin/',
+                    command: 'webdriver-manager start'
                 }
             }
         }
@@ -176,6 +189,6 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
     // Test task.
-    grunt.registerTask('test', ['env:test', 'karma:unit','protractor']);
+    grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor']);
 //	grunt.registerTask('test', ['env:test', 'mochaTest']);
 };

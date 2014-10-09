@@ -1,51 +1,57 @@
 describe('Userform intergration/e2e test', function(){
-    var firstNumber = element(by.model('first'));
-    var secondNumber = element(by.model('second'));
-    var goButton = element(by.id('gobutton'));
-    var latestResult = element(by.binding('latest'));
-    var history = element.all(by.repeater('result in memory'));
+    var email = element(by.model('userform.email'));
+    var phone = element(by.model('userform.phone'));
+    var submitBtn = element.all(by.css('.btn'));
+    var hasErrors = element.all(by.css('.has-error'));
+    var entries = element.all(by.repeater('entry in entries'));
+    var count;
 
-    function add(a, b){
-        firstNumber.sendKeys(a);
-        secondNumber.sendKeys(b);
-        goButton.click();
-    }
+    var user = {
+        email:'jbuza@cspire.com',
+        phone:'6626174248'
+    };
 
     beforeEach(function(){
-        browser.get('http://juliemr.github.io/protractor-demo/');
+        browser.get('/#!/form');
+
+        entries.count().then(function(c){
+            count = c;
+        });
     });
 
-    xit('should have a title', function() {
-
-        expect(browser.getTitle()).toEqual('Super Calculator');
+    it('should have a title', function() {
+        expect(browser.getTitle()).toContain('MEAN.JS');
     });
 
-    xit('should add one and two', function() {
-        firstNumber.sendKeys(1);
-        secondNumber.sendKeys(2);
-        goButton.click();
-        expect(latestResult.getText()).toEqual('3');
+    it('should be in pristine state', function(){
+        expect(email.getAttribute('class')).toContain('ng-pristine');
+        expect(phone.getAttribute('class')).toContain('ng-pristine');
     });
 
-    xit('should add 4 and 6',function(){
-        firstNumber.sendKeys('4');
-        secondNumber.sendKeys('6');
-        goButton.click();
-        expect(latestResult.getText()).toEqual('10');
+    it('should sign in the users', function(){
+        email.sendKeys(user.email);
+        phone.sendKeys(user.phone);
+        submitBtn.first().click();
+
+        // check whether the entry list has increased
+        expect(entries.count()).toEqual(count + 1);
+
+        // check whether the correct information is on the list
+        expect(entries.last().getText()).toContain(user.email);
     });
+    it('should provide errors when using invalid credentials', function(){
+        email.sendKeys('1111111111111@1');
+        phone.sendKeys('66174248');
 
-    it('should have a history', function(){
-        add(1,2);
-        add(3,4);
+        expect(phone.getAttribute('class')).toContain('ng-invalid');
+        expect(email.getAttribute('class')).toContain('ng-invalid');
+        expect(hasErrors.first().getText()).toContain('valid email');
+        expect(hasErrors.last().getText()).toContain('valid phone');
 
-        expect(history.count()).toEqual(2);
-
-        add(5,6);
-
-        expect(history.count()).toEqual(3);
-        expect(history.first().getText()).toContain('5 + 6');
-        expect(history.last().getText()).toContain('1 + 2');
+        email.clear();
+        phone.clear();
+        expect(hasErrors.first().getText()).toContain('Required');
+        expect(hasErrors.last().getText()).toContain('Required');
     });
-
 
 });

@@ -71,7 +71,7 @@
 
             it('should add user', function () {
 
-                $httpBackend.expectPOST('/test').respond(resp);
+                $httpBackend.expectPOST('/test/').respond(resp);
 
                     UserFormService.save(info)
                     .$promise.then(function (data) {
