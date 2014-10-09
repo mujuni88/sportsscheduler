@@ -123,7 +123,7 @@ module.exports = function (grunt) {
         },
 		concurrent: {
 			default: ['nodemon', 'watch'],
-			travis: ['env:test','mochaTest'],
+			travis: ['env:test','mochaTest','protractor_webdriver', 'protractor'],
 			debug: ['nodemon', 'watch', 'node-inspector'],
 			options: {
 				logConcurrentOutput: true
