@@ -178,7 +178,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
 	// Test task.
-	grunt.registerTask('test', ['env:test', 'mochaTest']);
+//	grunt.registerTask('test', ['env:test', 'mochaTest']);
 	grunt.registerTask('devmode', ['karma:unit', 'watch']);
-//    grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
+    grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
 };
