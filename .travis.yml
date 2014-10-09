@@ -3,6 +3,8 @@ node_js:
   - "0.10"
 env:
   - NODE_ENV=travis
+install:
+  - sudo apt-get install google-chrome-stable
 services:
   - mongodb
 notifications:
