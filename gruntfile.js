@@ -123,6 +123,7 @@ module.exports = function (grunt) {
         },
 		concurrent: {
 			default: ['nodemon', 'watch'],
+			travis: ['env:test','mochaTest'],
 			debug: ['nodemon', 'watch', 'node-inspector'],
 			options: {
 				logConcurrentOutput: true
@@ -176,7 +177,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     // Making grunt default to force in order not to break the project.
-    grunt.option('force', true);
+    grunt.option('force', false);
 
     // A Task for loading the configuration object
     grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function () {
@@ -201,6 +202,6 @@ module.exports = function (grunt) {
 
 	// Test task.
 //	grunt.registerTask('test', ['env:test', 'mochaTest']);
-	grunt.registerTask('devmode', ['karma:unit', 'watch']);
+	grunt.registerTask('travis', ['concurrent:travis']);
     grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
 };
