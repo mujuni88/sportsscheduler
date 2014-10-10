@@ -3,13 +3,10 @@ node_js:
   - "0.10"
 env:
   - NODE_ENV=travis
-install:
-  - sudo apt-get update
-  - sudo apt-get install libxss1 libappindicator1 libindicator7
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
-  - npm install
-  - bower install --config.interactive=false
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 #give xvfb some time to start
 services:
   - mongodb
 notifications:
