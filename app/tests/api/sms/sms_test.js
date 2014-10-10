@@ -53,6 +53,74 @@ describe('POST Requests', function() {
                 done();
             });
         });
+
+    it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788@cspire1.com', function(done) {
+        superagent.post('http://localhost:3000/api/sms')
+            .send({ 
+                //from: 'treyqg15@gmail.com',
+                to: '6018a801788@cspire1.com',
+                subject: 'SMS Test',
+                text: 'This is a message from sms_test.js for unit testing. check if "to" parameter is in the correct format'
+            })
+            .end(function(e,res){
+                console.log(e);
+                chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                chaiExpect(res.body.error.clientMessage).to.eql('Recipient does not match the correct format');
+                done();
+            });
+        });
+
+    it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788_cspire1.com', function(done) {
+        superagent.post('http://localhost:3000/api/sms')
+            .send({ 
+                //from: 'treyqg15@gmail.com',
+                to: 'test case: 6018a801788_cspire1.com',
+                subject: 'SMS Test',
+                text: 'This is a message from sms_test.js for unit testing. check if "to" parameter is in the correct format'
+            })
+            .end(function(e,res){
+                console.log(e);
+                chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                chaiExpect(res.body.error.clientMessage).to.eql('Recipient does not match the correct format');
+                done();
+            }); 
+        });
+
+    it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788 cspire1.com', function(done) {
+        superagent.post('http://localhost:3000/api/sms')
+            .send({ 
+                //from: 'treyqg15@gmail.com',
+                to: '6018a801788 cspire1.com',
+                subject: 'SMS Test',
+                text: 'This is a message from sms_test.js for unit testing. check if "to" parameter is in the correct format'
+            })
+            .end(function(e,res){
+                console.log(e);
+                chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                chaiExpect(res.body.error.clientMessage).to.eql('Recipient does not match the correct format');
+                done();
+            });
+        });
+
+    it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788@cspire 1 . com', function(done) {
+        superagent.post('http://localhost:3000/api/sms')
+            .send({ 
+                //from: 'treyqg15@gmail.com',
+                to: '6018a801788@cspire 1 . com',
+                subject: 'SMS Test',
+                text: 'This is a message from sms_test.js for unit testing. check if "to" parameter is in the correct format'
+            })
+            .end(function(e,res){
+                console.log(e);
+                chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                chaiExpect(res.body.error.clientMessage).to.eql('Recipient does not match the correct format');
+                done();
+            });
+        });
     
     /*
     it('POST: check if sending an sms succeeds when sending to multiple people', function(done) {

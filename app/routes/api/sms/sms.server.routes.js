@@ -14,10 +14,12 @@ app.route('/api/sms')
     		res.json(myResponse);
 
     	};
-    	
+
     	console.log(req.body);
     	var to,subject,text = null;
     	var myResponse = new MyResponse();
+        
+        var regEx = new RegExp(/[\d]{10,}@[a-z]*[\d]*\.[a-z]{1,4}/);
 
     	if(typeof req.body.to === 'undefined')
     	{
@@ -25,8 +27,15 @@ app.route('/api/sms')
     		res.json(myResponse);
     		return;
     	}
+        else if(!regEx.test(req.body.to))
+        {
+            myResponse.error.clientMessage = 'Recipient does not match the correct format';
+            res.json(myResponse);
+            return;
+        }
     	else
     		to = req.body.to;
+
 
     	if(typeof req.body.subject === 'undefined')
     	{

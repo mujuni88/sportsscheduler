@@ -139,7 +139,8 @@ module.exports = function (grunt) {
 			options: {
 				reporter: 'spec',
 				require: 'server.js',
-				coverage: true
+				coverage: true,
+				timeout: 20000
 			}
 		},
 		karma: {
@@ -204,4 +205,5 @@ module.exports = function (grunt) {
 	grunt.registerTask('travis', ['protractor_webdriver','concurrent:travis','protractor']);
 
     grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
+    grunt.registerTask('treyTest', ['env:test', 'mochaTest']);
 };
