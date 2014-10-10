@@ -14,9 +14,10 @@
   },
   "scripts": {
     "start": "grunt",
-    "test": "grunt travis",
+    "pretest":"grunt nodemon",
+    "test": "grunt jbtest",
     "install": "node node_modules/protractor/bin/webdriver-manager update",
-    "postinstall": "bower install --config.interactive=false && grunt nodeman"
+    "postinstall": "bower install --config.interactive=false"
   },
   "dependencies": {
     "express": "~4.7.2",
