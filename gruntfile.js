@@ -204,4 +204,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('travis', ['protractor_webdriver','concurrent:travis','protractor']);
 
     grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
+    grunt.registerTask('jbtest', ['env:test', 'protractor_webdriver', 'protractor']);
+
+
 };

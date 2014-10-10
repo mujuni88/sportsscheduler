@@ -8,5 +8,8 @@ exports.config = {
         showColors: true,
         includeStackTrace: true,
         defaultTimeoutInterval: 60000
+    },
+    capabilities:{
+        browserName:'firefox'
     }
 }
