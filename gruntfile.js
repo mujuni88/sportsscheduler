@@ -203,7 +203,6 @@ module.exports = function (grunt) {
     // Build task(s).
     grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
-//	grunt.registerTask('test', ['env:test', 'mochaTest']);
 	grunt.registerTask('travis', ['protractor_webdriver','concurrent:travis','protractor']);
 
     grunt.registerTask('test', ['env:dev', 'mochaTest', 'protractor_webdriver', 'protractor']);
