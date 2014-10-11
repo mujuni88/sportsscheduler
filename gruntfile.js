@@ -123,7 +123,7 @@ module.exports = function (grunt) {
         },
 		concurrent: {
 			default: ['nodemon', 'watch'],
-			travis: ['env:test','mochaTest'],
+			travis: ['mochaTest','karma:unit'],
 			debug: ['nodemon', 'watch', 'node-inspector'],
 			options: {
 				logConcurrentOutput: true
@@ -203,7 +203,5 @@ module.exports = function (grunt) {
     // Build task(s).
     grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
-	grunt.registerTask('travis', ['protractor_webdriver','concurrent:travis','protractor']);
-
-    grunt.registerTask('test', ['env:dev', 'mochaTest', 'protractor_webdriver', 'protractor']);
+    grunt.registerTask('test', ['env:dev', 'mochaTest', 'protractor_webdriver', 'protractor','karma:unit']);
 };
