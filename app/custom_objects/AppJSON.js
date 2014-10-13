@@ -5,17 +5,18 @@ var fs = require('fs');
 //singleton closure
 module.exports = (function() {
 
-	var json = null;
+	var originalData = null;
+	var parsedJSON = null;
 
 	function setJSON(data)
 	{
-		json = JSON.parse(data);
+		parsedJSON = JSON.parse(data);
+		originalData = data;
 	}
 
 	return {
 
 		init: function() {
-
 			var file = __dirname + '/../local_files/app.json';
 
 			fs.readFile(file, 'utf8', function (err, data) {
@@ -23,13 +24,16 @@ module.exports = (function() {
 			  		console.log('Error: ' + err);
 			    	return;
 			  	}
-
+			  	//console.log('data: ' + data);
 			  	setJSON(data);
 			});
 		},
 
-		getJSON: function() {
-			return json;
+		getParsedJSON: function() {
+			return parsedJSON;
+		},
+		getOriginalData: function() {
+			return originalData;
 		}
 	};
 

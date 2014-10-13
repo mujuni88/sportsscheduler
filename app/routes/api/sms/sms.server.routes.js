@@ -16,6 +16,7 @@ app.route('/api/sms')
     	};
 
     	console.log(req.body);
+        var smsJSON = appJSON.getParsedJSON().server.api.sms;
     	var to,subject,text = null;
     	var myResponse = new MyResponse();
         
@@ -23,13 +24,13 @@ app.route('/api/sms')
 
     	if(typeof req.body.to === 'undefined')
     	{
-    		myResponse.error.clientMessage = 'Missing "to" parameter in request';
+    		myResponse.error.clientMessage = smsJSON.errors._1;
     		res.json(myResponse);
     		return;
     	}
         else if(!regEx.test(req.body.to))
         {
-            myResponse.error.clientMessage = 'Recipient does not match the correct format';
+            myResponse.error.clientMessage = smsJSON.errors._2;
             res.json(myResponse);
             return;
         }
@@ -39,7 +40,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.subject === 'undefined')
     	{
-    		myResponse.error.clientMessage = 'Missing "subject" parameter in request';
+    		myResponse.error.clientMessage = smsJSON.errors._3;
     		res.json(myResponse);
     		return;
     	}
@@ -48,7 +49,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.text === 'undefined')
     	{
-    		myResponse.error.clientMessage = 'Missing "text" parameter in request';
+    		myResponse.error.clientMessage = smsJSON.errors._4;
     		res.json(myResponse);
     		return;
     	}
@@ -58,6 +59,5 @@ app.route('/api/sms')
         console.log('sending sms');
         //console.log(appJSON.getJSON());
         Sender.sendSMS(to,subject,text,outputCallback);
-        //Sender.sendSMS('Trey Gaines <treyqg15@gmail.com>','6018801788@cspire1.com','Hello','Hello world',outputCallback);
     });
 };
