@@ -4,9 +4,7 @@
  */
 var init = require('./config/init')(),
 	config = require('./config/config'),
-	mongoose = require('mongoose'),
-	appJSON = require('./app/custom_objects/AppJSON');
-
+	mongoose = require('mongoose');
 /**
  * Main application entry file.
  * Please note that the order of loading is important.
@@ -25,12 +23,6 @@ var app = require('./config/express')(db);
 
 // Bootstrap passport config
 require('./config/passport')();
-
-/*************  Init appJSON ***************/
-appJSON.init();
-
-/*********************************************/
-
 
 // Start the app by listening on <port>
 app.listen(config.port);

@@ -2,7 +2,7 @@
 
 var superagent = require('superagent');
 var chaiExpect = require('chai').expect;
-var appJSON = require('../../../custom_objects/AppJSON');
+var serverJSON = require('../../../local_files/ui/server.ui.json');
 
 /*
 describe('GET Requests', function() {
@@ -22,16 +22,6 @@ describe('GET Requests', function() {
 
 describe('POST Requests', function() {
 
-    var smsJSON = null;
-
-    beforeEach(function(done) {
-        
-        appJSON.init();
-        smsJSON = appJSON.getParsedJSON().server.api.sms;
-
-        done();
-    });
-
 	it('POST: check if sms is sent when req has the required parameters', function(done) {
         superagent.post('http://localhost:3000/api/sms')
             .send({ 
@@ -43,7 +33,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(smsJSON.successes._1);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.successes._1);
                 chaiExpect(res.body.error.clientMessage).to.eql('');
                 done();
             });
@@ -61,7 +51,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(smsJSON.errors._1);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._1);
                 done();
             });
         });
@@ -78,7 +68,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(smsJSON.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
                 done();
             });
         });
@@ -95,7 +85,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(smsJSON.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
                 done();
             }); 
         });
@@ -112,7 +102,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(smsJSON.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
                 done();
             });
         });
@@ -129,7 +119,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(smsJSON.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
                 done();
             });
         });
