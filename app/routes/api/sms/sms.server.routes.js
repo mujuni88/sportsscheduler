@@ -2,7 +2,7 @@
 
 var MyResponse = require('../../../custom_objects/MyResponse');
 var Sender = require('../../../custom_objects/Sender');
-var appJSON = require('../../../custom_objects/AppJSON');
+var serverJSON = require('../../../local_files/ui/server.ui.json');
 
 module.exports = function(app) {
 
@@ -16,7 +16,6 @@ app.route('/api/sms')
     	};
 
     	console.log(req.body);
-        var smsJSON = appJSON.getParsedJSON().server.api.sms;
     	var to,subject,text = null;
     	var myResponse = new MyResponse();
         
@@ -24,13 +23,13 @@ app.route('/api/sms')
 
     	if(typeof req.body.to === 'undefined')
     	{
-    		myResponse.error.clientMessage = smsJSON.errors._1;
+    		myResponse.error.clientMessage = serverJSON.api.sms.errors._1;
     		res.json(myResponse);
     		return;
     	}
         else if(!regEx.test(req.body.to))
         {
-            myResponse.error.clientMessage = smsJSON.errors._2;
+            myResponse.error.clientMessage = serverJSON.api.sms.errors._2;
             res.json(myResponse);
             return;
         }
@@ -40,7 +39,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.subject === 'undefined')
     	{
-    		myResponse.error.clientMessage = smsJSON.errors._3;
+    		myResponse.error.clientMessage = serverJSON.api.sms.errors._3;
     		res.json(myResponse);
     		return;
     	}
@@ -49,7 +48,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.text === 'undefined')
     	{
-    		myResponse.error.clientMessage = smsJSON.errors._4;
+    		myResponse.error.clientMessage = serverJSON.api.sms.errors._4;
     		res.json(myResponse);
     		return;
     	}

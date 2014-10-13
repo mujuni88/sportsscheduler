@@ -1,0 +1,26 @@
+{
+	"api":
+	{
+		"sms":
+		{
+			"successes":
+			{
+				"_1":"SMS Sent Successfully"
+			},
+			"errors":
+			{
+				"_1":"Missing \"to\" parameter in request",
+				"_2":"Recipient does not match the correct format",
+				"_3":"Missing \"subject\" parameter in request",
+				"_4":"Missing \"text\" parameter in request"
+			}
+		},
+		"file":
+		{
+			"errors":
+			{
+				"_1":"File Does not Exist"
+			}
+		}
+	}
+}
