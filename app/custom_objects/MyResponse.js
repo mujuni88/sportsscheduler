@@ -6,7 +6,7 @@ var MyResponse = function() {
     
     this.data = {};
     this.clientMessage = '';
-    this.error = new MyError();
+    this.error = null;
 };
 
 module.exports = MyResponse;

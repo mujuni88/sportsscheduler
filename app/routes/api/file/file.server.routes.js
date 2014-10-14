@@ -11,12 +11,12 @@ app.route('/api/file/sms')
 	.get(function(req, res) {
     	
         var myResponse = new MyResponse();
-        var carriers = [];
+        var carriersArr = [];
         console.log('serverJSON: ' + smsJSON.sms);
         
-        for(var country in smsJSON.sms.sms_carriers)
+        for(var carriers in smsJSON.sms.sms_carriers)
         {
-            var country = smsJSON.sms.sms_carriers[country];
+            var country = smsJSON.sms.sms_carriers[carriers];
 
             for(var carrier in country)
             {
@@ -24,10 +24,10 @@ app.route('/api/file/sms')
                 var name = carrierInfo[0];
                 var address = carrierInfo[1];
 
-                if(typeof address != 'undefined')
+                if(typeof address !== 'undefined')
                 {
                     address = address.replace('{number}','');
-                    carriers.push({
+                    carriersArr.push({
                         'carrier': name,
                         'addr': address
                     });
@@ -35,7 +35,7 @@ app.route('/api/file/sms')
             }
         }
 
-        myResponse.data = carriers;
+        myResponse.data = carriersArr;
         
         res.json(myResponse);
     });
