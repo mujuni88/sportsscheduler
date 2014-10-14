@@ -1,4 +1,4 @@
-<section data-ng-controller="SmsController" class="section">
+<section class="section">
     <h2>SMS TESTER</h2>
     <br/>
     <form name="SmsForm" class="form-horizontal" role="form" novalidate="">
@@ -13,7 +13,7 @@
         <div class="form-group">
             <label for="smsCarriers" class="col-sm-2 control-label">Carrier</label>
             <div class="col-sm-5">
-                <select id="smsCarriers" ng-model="smsform.carrier" ng-options="carrier.name for carrier in carriers" validator="required" required="required">
+                <select id="smsCarriers" ng-model="smsform.carrier" ng-options="carrier.carrier for carrier in carriers" validator="required" required="required">
                     <option value="">-- choose carrier --</option>
                 </select></div>
         </div>

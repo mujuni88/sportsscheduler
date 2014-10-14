@@ -3,7 +3,6 @@
 angular.module('userform').controller('UserformController', ['$scope', 'Userform',
     function ($scope, Userform) {
 
-
         $scope.userform = {
             submit: function(){
                 saveEntry();
