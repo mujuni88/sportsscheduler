@@ -18,19 +18,21 @@ app.route('/api/sms')
     	console.log(req.body);
     	var to,subject,text = null;
     	var myResponse = new MyResponse();
-        
+
         var regEx = new RegExp(/[\d]{10,}@[a-z]*[\d]*\.[a-z]{1,4}/);
 
     	if(typeof req.body.to === 'undefined')
     	{
-    		myResponse.error.clientMessage = serverJSON.api.sms.errors._1;
+            myResponse.setError(serverJSON.api.sms.errors._1,null);
     		res.json(myResponse);
-    		return;
+    		
+            return;
     	}
         else if(!regEx.test(req.body.to))
         {
-            myResponse.error.clientMessage = serverJSON.api.sms.errors._2;
+            myResponse.setError(serverJSON.api.sms.errors._2,null);
             res.json(myResponse);
+            
             return;
         }
     	else
@@ -39,24 +41,26 @@ app.route('/api/sms')
 
     	if(typeof req.body.subject === 'undefined')
     	{
-    		myResponse.error.clientMessage = serverJSON.api.sms.errors._3;
+            myResponse.setError(serverJSON.api.sms.errors._3,null);
     		res.json(myResponse);
-    		return;
+    		
+            return;
     	}
     	else
     		subject = req.body.subject;
 
     	if(typeof req.body.text === 'undefined')
     	{
-    		myResponse.error.clientMessage = serverJSON.api.sms.errors._4;
+            myResponse.setError(serverJSON.api.sms.errors._1,null);
     		res.json(myResponse);
-    		return;
+    		
+            return;
     	}
     	else
     		text = req.body.text;
 
         console.log('sending sms');
-        //console.log(appJSON.getJSON());
+        
         Sender.sendSMS(to,subject,text,outputCallback);
     });
 };

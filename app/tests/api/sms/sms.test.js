@@ -34,7 +34,7 @@ describe('POST Requests', function() {
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
                 chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.successes._1);
-                chaiExpect(res.body.error.clientMessage).to.eql('');
+                chaiExpect(res.body.error).to.be.a('null');
                 done();
             });
         });
@@ -51,7 +51,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._1);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._1.clientMessage);
                 done();
             });
         });
@@ -68,7 +68,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 done();
             });
         });
@@ -85,7 +85,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 done();
             }); 
         });
@@ -102,7 +102,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 done();
             });
         });
@@ -119,7 +119,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2);
+                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 done();
             });
         });

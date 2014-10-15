@@ -5,14 +5,40 @@
 		{
 			"successes":
 			{
-				"_1":"SMS Sent Successfully"
+				"_1":
+				{
+					"clientMessage": "SMS Sent Successfully",
+					"status": 200
+				}
 			},
 			"errors":
 			{
-				"_1":"Missing \"to\" parameter in request",
-				"_2":"Recipient does not match the correct format",
-				"_3":"Missing \"subject\" parameter in request",
-				"_4":"Missing \"text\" parameter in request"
+				"_1": 
+				{
+					"clientMessage": "Missing \"to\" parameter in request",
+					"status": 400
+				},
+				"_2":
+				{
+					"clientMessage": "Recipient does not match the correct format",
+					"status": 400
+				},
+				"_3":
+				{
+					"clientMessage": "Missing \"subject\" parameter in request",
+					"status": 400
+				},
+				"_4":
+				{
+					"clientMessage": "Missing \"text\" parameter in request",
+					"status": 400
+				},
+				"_5":
+				{
+					"clientMessage": "Server failed to send text",
+					"status": 500
+				}
+
 			}
 		},
 		"file":

@@ -2,7 +2,7 @@
 
 var nodemailer = require('nodemailer');
 var MyResponse = require('./MyResponse');
-var MyError = require('./MyError');
+var serverJSON = require('../local_files/ui/server.ui.json');
 
 //Should be used in the same manner as a singleton
 function Sender() {
@@ -40,13 +40,10 @@ Sender.prototype.sendSMS = function(to,subject,text,callback) {
 	this.transporter.sendMail(mailOptions, function(err, info){
 
 	    if(err){
-	    	var error = new MyError();
-	    	error.clientMessage = 'Server Error';
-	    	error.data = err;
-	    	response.error = error;
+	    	response.setError(serverJSON.api.sms.errors._5,err);
 	        console.log(err);
 	    }else{
-	    	response.clientMessage = 'SMS Sent Successfully';
+	    	response.clientMessage = serverJSON.api.sms.successes._1;
 	        console.log('Message sent: ' + info.response);
 	    }
 

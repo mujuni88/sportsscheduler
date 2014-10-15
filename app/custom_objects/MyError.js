@@ -7,6 +7,8 @@ var MyError = function() {
 
     //MUST BE OBJECT
     this.data = {};
+
+    this.status = null;
 };
 
 module.exports = MyError;

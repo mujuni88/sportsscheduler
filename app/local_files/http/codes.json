@@ -1,0 +1,20 @@
+{
+	"codes": 
+	{
+		"200": 
+		{
+			"name": 200,
+			"desc": "Request executed successfully"
+		},
+		"400": 
+		{
+			"name": 400,
+			"desc": "Client sent a bad request"
+		},
+		"500":
+		{
+			"name": 500,
+			"desc": "Internal server error"
+		}
+	}
+}
