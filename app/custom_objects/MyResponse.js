@@ -6,7 +6,9 @@ var httpCodesJSON = require('../local_files/http/codes.json');
 function MyResponse() {
     
     this.data = {};
-    this.status = null;
+
+    //default to successful http code
+    this.status = 200; 
     this.clientMessage = '';
     this.error = null;
 }

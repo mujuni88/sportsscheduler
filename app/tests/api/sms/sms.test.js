@@ -35,6 +35,8 @@ describe('POST Requests', function() {
                 console.log(res.body);
                 chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.successes._1);
                 chaiExpect(res.body.error).to.be.a('null');
+                chaiExpect(res.body.status).to.eql(200);
+
                 done();
             });
         });
@@ -52,6 +54,8 @@ describe('POST Requests', function() {
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
                 chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._1.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._1.status);
+
                 done();
             });
         });
@@ -69,6 +73,8 @@ describe('POST Requests', function() {
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
                 chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+
                 done();
             });
         });
@@ -86,6 +92,8 @@ describe('POST Requests', function() {
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
                 chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+
                 done();
             }); 
         });
@@ -103,6 +111,7 @@ describe('POST Requests', function() {
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
                 chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
                 done();
             });
         });
@@ -120,6 +129,8 @@ describe('POST Requests', function() {
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
                 chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+                
                 done();
             });
         });
