@@ -55,15 +55,15 @@ app.route('/api/carriers/countries/:countryName')
         console.log('smsJSON: ' + smsJSON.sms);
        
         var country = smsJSON.sms.sms_carriers[req.params.countryName];
-        var formattedData = {};
+        var carrierArr = [];
         
 
         for(var carrier in country)
         {
-        	formattedData[carrier] = formatCarrierInfo(country[carrier]);
+        	carrierArr.push(formatCarrierInfo(country[carrier]));
         }
 
-        myResponse.data = formattedData;
+        myResponse.data = carrierArr;
 
         res.json(myResponse);
 
