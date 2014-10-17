@@ -51,7 +51,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.text === 'undefined')
     	{
-            myResponse.setError(serverJSON.api.sms.errors._1,null);
+            myResponse.setError(serverJSON.api.sms.errors._4,null);
     		res.json(myResponse);
     		
             return;

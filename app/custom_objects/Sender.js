@@ -43,7 +43,6 @@ Sender.prototype.sendSMS = function(to,subject,text,callback) {
 	    	response.setError(serverJSON.api.sms.errors._5,err);
 	        console.log(err);
 	    }else{
-	    	response.clientMessage = serverJSON.api.sms.successes._1;
 	        console.log('Message sent: ' + info.response);
 	    }
 

@@ -15,30 +15,57 @@
 			{
 				"_1": 
 				{
+					"devMessage": "Add \"to\" parameter in request",
 					"clientMessage": "Missing \"to\" parameter in request",
 					"status": 400
 				},
 				"_2":
 				{
+					"devMessage": "The value in the \"to\" parameter should match this RegEx: /[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}/",
 					"clientMessage": "Recipient does not match the correct format",
 					"status": 400
 				},
 				"_3":
 				{
+					"devMessage": "Add \"subject\" paramater to the request",
 					"clientMessage": "Missing \"subject\" parameter in request",
 					"status": 400
 				},
 				"_4":
 				{
+					"devMessage": "Add \"text\" parameter in request",
 					"clientMessage": "Missing \"text\" parameter in request",
 					"status": 400
 				},
 				"_5":
 				{
+					"devMessage": "There was a logical error with the API. Contact the developers with the request used to generate this error",
 					"clientMessage": "Server failed to send text",
 					"status": 500
 				}
 
+			}
+		},
+		"carriers":
+		{
+			"successes":
+			{
+
+			},
+			"errors":
+			{
+				"_1":
+				{
+					"devMessage": "This country name doesn't exist in our data",
+					"clientMessage": "Invalid Country Name",
+					"status": 400
+				},
+				"_2":
+				{
+					"devMessage": "This carrier name doesn't exist for this country in our data",
+					"clientMessage": "Invalid Carrier Name for the specified country",
+					"status": 400
+				}
 			}
 		},
 		"file":

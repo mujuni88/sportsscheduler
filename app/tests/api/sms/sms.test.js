@@ -33,9 +33,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.successes._1);
-                chaiExpect(res.body.error).to.be.a('null');
-                chaiExpect(res.body.status).to.eql(200);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.successes._1.status);
 
                 done();
             });
@@ -53,7 +51,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._1.clientMessage);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._1.clientMessage);
                 chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._1.status);
 
                 done();
@@ -72,7 +70,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
 
                 done();
@@ -91,7 +89,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
 
                 done();
@@ -110,7 +108,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
                 done();
             });
@@ -128,8 +126,46 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.error.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
                 chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+                
+                done();
+            });
+        });
+
+    it('POST: check if "subject" parameter exists', function(done) {
+        superagent.post('http://localhost:3000/api/sms')
+            .send({ 
+                //from: 'treyqg15@gmail.com',
+                to: '6018801788@cspire1.com',
+                //subject: 'SMS Test',
+                text: 'This is a message from sms_test.js for unit testing. check if "subject" parameter exists'
+            })
+            .end(function(e,res){
+                console.log(e);
+                chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._3.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._3.status);
+                
+                done();
+            });
+        });
+
+    it('POST: check if "text" parameter exists', function(done) {
+        superagent.post('http://localhost:3000/api/sms')
+            .send({ 
+                //from: 'treyqg15@gmail.com',
+                to: '6018801788@cspire1.com',
+                subject: 'SMS Test',
+                //text: 'This is a message from sms_test.js for unit testing. check if "text" parameter exists'
+            })
+            .end(function(e,res){
+                console.log(e);
+                chaiExpect(e).to.eql(null);
+                console.log(res.body);
+                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._4.clientMessage);
+                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._4.status);
                 
                 done();
             });

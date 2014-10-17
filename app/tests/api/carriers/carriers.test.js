@@ -24,7 +24,6 @@ describe('GET Requests', function() {
           .end(function(e, res){
             console.log(e);
             chaiExpect(e).to.eql(null);
-            console.log(res);
             chaiExpect(typeof res.body.data).to.eql('object');
             chaiExpect(res.body.status).to.eql(200);
 
@@ -43,5 +42,44 @@ describe('GET Requests', function() {
 
             done();
   	    });
+    });
+
+    it('GET: check if requesting for an invalid country fails properly', function(done) {
+        superagent.get('http://localhost:3000/api/carriers/countries/usa')
+          .end(function(e, res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+
+            chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.carriers.errors._1.clientMessage);
+            chaiExpect(res.body.status).to.eql(400);
+
+            done();
+        });
+    });
+
+    it('GET: check if requesting for an invalid carrier in a country fails properly', function(done) {
+        superagent.get('http://localhost:3000/api/carriers/countries/us/carrier/at_and_')
+          .end(function(e, res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+
+            chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.carriers.errors._2.clientMessage);
+            chaiExpect(res.body.status).to.eql(400);
+
+            done();
+        });
+    });
+
+    it('GET: check if requesting for an valid carrier in an invalid country fails properly', function(done) {
+        superagent.get('http://localhost:3000/api/carriers/countries/usa/carrier/at_and_t')
+          .end(function(e, res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+
+            chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.carriers.errors._1.clientMessage);
+            chaiExpect(res.body.status).to.eql(400);
+
+            done();
+        });
     });
 });
