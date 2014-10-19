@@ -5,6 +5,7 @@ angular.module('userform').controller('UserformController', ['$scope', 'Userform
 
         $scope.userform = {
             submit: function(){
+                alert("hello world");
                 saveEntry();
             }
         };
