@@ -4,6 +4,8 @@ var MyResponse = require('../../../custom_objects/MyResponse');
 var serverJSON = require('../../../local_files/ui/server.ui.json');
 var smsJSON = require('../../../local_files/ui/sms.ui.json');
 
+var myResponse = new MyResponse();
+
 function formatCarrierInfo(carrierInfo) 
 {
 	var name = carrierInfo[0];
@@ -19,20 +21,18 @@ function formatCarrierInfo(carrierInfo)
 module.exports = function(app) {
 
 app.route('/api/carriers')
-
+    
 	.get(function(req, res) {
     	
-        var myResponse = new MyResponse();
         var carriersArr = [];
-        console.log('smsJSON: ' + smsJSON.sms);
         
-        for(var carriers in smsJSON.sms.sms_carriers)
+        for(var country in smsJSON.sms.sms_carriers)
         {
-            var country = smsJSON.sms.sms_carriers[carriers];
+            var carriers = smsJSON.sms.sms_carriers[country];
 
-            for(var carrier in country)
+            for(var carrier in carriers)
             {
-                var carrierInfo = country[carrier];
+                var carrierInfo = carriers[carrier];
                 var address = carrierInfo[1];
 
                 if(typeof address !== 'undefined')
@@ -47,15 +47,46 @@ app.route('/api/carriers')
         res.json(myResponse);
     });
 
+app.route('/api/carriers/countries')
+
+    .get(function(req, res) {
+
+        var countries = {};
+
+        for(var country in smsJSON.sms.sms_carriers)
+        {
+            var carriersArr =  [];
+            countries[country] = {};
+            var carriers = smsJSON.sms.sms_carriers[country];
+            
+            for(var carrier in carriers)
+            {
+                var carrierInfo = carriers[carrier];
+                var address = carrierInfo[1];
+
+                if(typeof address !== 'undefined')
+                {
+                    carriersArr.push(formatCarrierInfo(carrierInfo));
+                }
+            }
+
+            countries[country].carriers = carriersArr;
+
+        }
+
+        myResponse.data = countries;
+
+        res.json(myResponse);
+    });
+
 app.route('/api/carriers/countries/:countryName')
 
 	.get(function(req, res) {
 
-		var myResponse = new MyResponse();
        
         var country = smsJSON.sms.sms_carriers[req.params.countryName];
         var carrierArr = [];
-        console.log('country: ' + country);
+
         if(typeof country === 'undefined')
         {
             myResponse.setError(serverJSON.api.carriers.errors._1);
@@ -79,7 +110,6 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
 
 	.get(function(req, res) {
 
-		var myResponse = new MyResponse();
         var countryCarriers = smsJSON.sms.sms_carriers[req.params.countryName];
 
         if(typeof countryCarriers === 'undefined')

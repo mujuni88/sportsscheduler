@@ -19,6 +19,19 @@ describe('GET Requests', function() {
         });
     });
 
+    it('GET: check if requesting for all carriers in all countries returns successful', function(done) {
+        superagent.get('http://localhost:3000/api/carriers/countries')
+          .end(function(e, res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+
+            chaiExpect(typeof res.body.data).to.eql('object');
+            chaiExpect(res.body.status).to.eql(200);
+
+            done();
+        });
+    });
+
 	it('GET: check if requesting for all carriers in a country returns successful', function(done) {
 		superagent.get('http://localhost:3000/api/carriers/countries/us/')
           .end(function(e, res){
