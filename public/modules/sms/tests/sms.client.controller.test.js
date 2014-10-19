@@ -45,9 +45,9 @@
 			$location = _$location_;
 
 			// Initialize the Sms controller.
-			SmsController = $controller('SmsController', {
-				$scope: scope
-			});
+			// SmsController = $controller('SmsController', {
+			// 	$scope: scope
+			// });
 		}));
 
 		it('Should do some controller test', inject(function() {
