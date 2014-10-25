@@ -11,6 +11,7 @@
 		"angular-bootstrap": "~0.11.0",
 		"angular-ui-utils": "~0.1.1",
 		"angular-ui-router": "~0.2.10",
-		"angular-validation":"https://github.com/huei90/angular-validation.git" 
+		"angular-validation":"https://github.com/huei90/angular-validation.git",
+        "angular-ui-form-validation":"~1.2"
 	}
 }

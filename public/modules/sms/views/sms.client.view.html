@@ -6,14 +6,13 @@
             <label for="inputPhone" class="col-sm-2 control-label">Phone</label>
 
             <div class="col-sm-5">
-                <input type="text" name="inputPhone" class="form-control" ng-model="smsform.phone" id="inputPhone" placeholder="Phone number"
-                       validator="required, phone" phone-error-message="Please enter a valid phone number" required-error-message="Required" required>
+                <input type="text" name="inputPhone" class="form-control" ng-model="smsform.phone" id="inputPhone" placeholder="Phone number" validator="required, phone" required>
             </div>
         </div>
         <div class="form-group">
             <label for="smsCarriers" class="col-sm-2 control-label">Carrier</label>
             <div class="col-sm-5">
-                <select id="smsCarriers" name="smsCarriers" ng-model="smsform.carrier" ng-options="carrier.carrier for carrier in carriers" validator="required" required-error-message="Required" required="required">
+                <select id="smsCarriers" name="smsCarriers" ng-model="smsform.carrier" ng-options="carrier.carrier for carrier in carriers" validator="required" required="required">
                     <option value="">-- choose carrier --</option>
                 </select></div>
         </div>
@@ -22,7 +21,7 @@
 
             <div class="col-sm-5">
                 <input type="text" name="inputMsg" class="form-control" ng-model="smsform.msg" id="inputMsg" placeholder="Message.."
-                       validator="required" required-error-message="Required" required>
+                       validator="required" required>
             </div>
         </div>
         <div class="form-group">

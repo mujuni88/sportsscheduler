@@ -23,7 +23,8 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/angular-validation/dist/angular-validation.min.js'
+				'public/lib/angular-validation/dist/angular-validation.min.js',
+				'public/lib/angular-ui-form-validation/dist/angular-ui-form-validation.js'
 			]
 		},
 		css: [

@@ -6,7 +6,6 @@ var app = angular.module('sms').factory('CarrierFactory', ['$http', '$q', 'Carri
         var deferred = $q.defer();
 
         function success(data, status, headers, config) {
-            console.log(data);
             // if success, cache it
             if (data.status === 200) {
                 cs.setCarriers(data.data);
@@ -18,7 +17,6 @@ var app = angular.module('sms').factory('CarrierFactory', ['$http', '$q', 'Carri
         }
 
         function error(data, status, headers, config) {
-            console.log(data);
             if (!cs.getCarriers()) {
                 // if no cache, return set local copy
                 cs.setCarriers(localCarriers);
