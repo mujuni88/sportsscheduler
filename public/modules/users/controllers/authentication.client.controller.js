@@ -36,7 +36,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 			});
 		};
 
-        $scope.isPasswordError = true;
         $scope.confirmPassword = function(){
             var password = $scope.credentials.password || '';
             $scope.isPasswordError =  (password.trimRight() === $scope.credentials.confirmPassword.trimRight());

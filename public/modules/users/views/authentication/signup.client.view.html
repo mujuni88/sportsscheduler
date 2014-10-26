@@ -55,7 +55,7 @@
 
                     <div class="col-sm-7">
                         <input type="text" id="username" name="username" class="form-control"
-                               ng-model="credentials.username" placeholder="Username" ng-minlength="5" validator="required, nospecialchars, minlength">
+                               ng-model="credentials.username" placeholder="Username" validator="required, nospecialchars" minlength-error-message="Minimum 5 characters" >
 
                     </div>
                 </div>
@@ -64,7 +64,7 @@
 
                     <div class="col-sm-7">
                         <input type="password" id="password" name="password" class="form-control"
-                               ng-model="credentials.password" placeholder="Password" ng-minlength="5" validator="required, minlength">
+                               ng-model="credentials.password" placeholder="Password" validator="required, oneUpperCaseLetter, oneUpperCaseLetter, oneNumber, oneAlphabet" minlength-error-message="Minimum 5 characters">
 
                     </div>
                 </div>
@@ -73,8 +73,8 @@
 
                     <div class="col-sm-7">
                         <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-                               ng-model="credentials.confirmPassword" placeholder="Confirm Password" validator="required" valid-callback="confirmPassword()">
-                        <span><div class="has-error" ng-hide="isPasswordError">Passwords do not match.</div></span>
+                               ng-model="credentials.confirmPassword" placeholder="Confirm Password" data-match="credentials.password">
+                        <span><div class="has-error" ng-show="userForm.confirmPassword.$error.match">Passwords do not match.</div></span>
                     </div>
                 </div>
                 <div class="form-group">

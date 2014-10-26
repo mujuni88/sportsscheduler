@@ -26,10 +26,13 @@ angular.module('validationrule', ['validation'])
                 return (/^(?=.*[a-z]).+$/i).test(value);
             },
             minlength:function(value, scope, element, attrs){
-                return value.length >= parseInt(attrs.ngMinlength, 10);
+                var val = value || '';
+                return val.length >= parseInt(attrs.ngMinlength, 10);
             },
             maxlength:function(value, scope, element, attrs){
-                if (value.length <= parseInt(attrs.ngMaxlength, 10)) {
+                var val = value || '';
+
+                if (val.length <= parseInt(attrs.ngMaxlength, 10)) {
                     return true;
                 } else {
                     return false;
@@ -70,12 +73,6 @@ angular.module('validationrule', ['validation'])
             },
             oneAlphabet:{
                 error:'Must contain at least one alphabet'
-            },
-            minlength:{
-                error:'Minimum of ' + '5' + ' characters'
-            },
-            maxlength:{
-                error:'Maximum of ' + '7' + ' characters'
             }
         };
 
