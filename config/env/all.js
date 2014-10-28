@@ -14,7 +14,7 @@ module.exports = {
 		lib: {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/bootstrap/dist/css/bootstrap-theme.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -24,7 +24,7 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/angular-validation/dist/angular-validation.min.js'
-			]
+            ]
 		},
 		css: [
 			'public/modules/**/css/*.css'

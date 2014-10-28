@@ -1,7 +1,12 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication','CarrierFactory',
+	function($scope, $http, $location, Authentication, CarrierFactory) {
+
+        CarrierFactory.getCarriers().then(function(data){
+            $scope.carriers = data;
+        });
+
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
@@ -30,5 +35,10 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$scope.error = response.message;
 			});
 		};
+
+        $scope.confirmPassword = function(){
+            var password = $scope.credentials.password || '';
+            $scope.isPasswordError =  (password.trimRight() === $scope.credentials.confirmPassword.trimRight());
+        };
 	}
 ]);
