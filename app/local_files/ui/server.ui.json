@@ -74,6 +74,76 @@
 			{
 				"_1":"File Does not Exist"
 			}
+		},
+		"users":
+		{
+			"successes":
+			{
+				"_1":
+				{
+					"clientMessage": "User Saved Successfully",
+					"status": 200
+				}
+			},
+			"errors":
+			{
+				"_1":
+				{
+					"devMessage": "A user already exists with these credentials in the Database",
+					"clientMessage": "User has already been created",
+					"status": 400
+				},
+				"_2":
+				{	"devMessage": "No value has been entered for the 'firstName' parameter",
+					"clientMessage": "Please fill in your first name",
+					"status": 400
+				},
+				"_3":
+				{
+					"devMessage": "No value has been entered for the 'lastName' parameter",
+					"clientMessage": "Please fill in your last name",
+					"status": 400
+				},
+				"_4":
+				{	"devMessage": "No value has been entered for the 'email' parameter",
+					"clientMessage": "Please fill in your email",
+					"status": 400
+				},
+				"_5":
+				{
+					"devMessage": "Email does not pass the proper validation",
+					"clientMessage": "Please fill a valid email address",
+					"status": 400
+				},
+				"_6":
+				{
+					"devMessage": "No value has been entered for the 'carrier' parameter",
+					"clientMessage": "Please fill in your carrier",
+					"status": 400
+				},
+				"_7":
+				{	"devMessage": "No value has been entered for the 'phoneNumber' parameter",
+					"clientMessage": "Please fill in your phone number",
+					"status": 400
+				},
+				"_8":
+				{	"devMessage": "No value has been entered for the 'username' parameter",
+					"clientMessage": "Please fill in your username",
+					"status": 400
+				},
+				"_9":
+				{
+					"devMessage": "No value has been entered for the 'password' parameter",
+					"clientMessage":"Please fill in your password",
+					"status": 400
+				},
+				"_10":
+				{
+					"devMessage": "Password does not pass the proper validation",
+					"clientMessage":"Password should be longer",
+					"status": 400
+				}
+			}
 		}
 	}
 }

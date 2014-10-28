@@ -5,13 +5,18 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	serverJSON = require('../local_files/ui/server.ui.json');
 
 /**
  * A Validation function for local strategy properties
  */
 var validateLocalStrategyProperty = function(property) {
 	return ((this.provider !== 'local' && !this.updated) || property.length);
+};
+
+var validateLocalStrategyPhoneNumber = function(number) {
+	return (this.provider !== 'local' || number.toString().length >= 10);
 };
 
 /**
@@ -29,13 +34,13 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._2.clientMessage]
 	},
 	lastName: {
 		type: String,
 		trim: true,
 		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._3.clientMessage]
 	},
 	displayName: {
 		type: String,
@@ -45,19 +50,31 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your email'],
-		match: [/.+\@.+\..+/, 'Please fill a valid email address']
+		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._4.clientMessage],
+		match: [/.+\@.+\..+/, serverJSON.api.users.errors._5.clientMessage]
+	},
+	carrier: {
+		type: String,
+		trim: true,
+		default: '',
+		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._6.clientMessage]
+	},
+	phoneNumber: {
+		type: Number,
+		default: -1,
+		validate: [validateLocalStrategyPhoneNumber, serverJSON.api.users.errors._7.clientMessage]
 	},
 	username: {
 		type: String,
 		unique: 'testing error message',
-		required: 'Please fill in a username',
+		required: serverJSON.api.users.errors._8.clientMessage,
 		trim: true
 	},
 	password: {
 		type: String,
 		default: '',
-		validate: [validateLocalStrategyPassword, 'Password should be longer']
+		required: serverJSON.api.users.errors._9.clientMessage,
+		match: [/[\d\w]{6,}/, serverJSON.api.users.errors._10.clientMessage]
 	},
 	salt: {
 		type: String
@@ -76,7 +93,8 @@ var UserSchema = new Schema({
 		default: ['user']
 	},
 	updated: {
-		type: Date
+		type: Date,
+		default: Date.now
 	},
 	created: {
 		type: Date,

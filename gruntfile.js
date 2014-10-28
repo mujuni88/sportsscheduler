@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     var watchFiles = {
         serverViews: ['app/views/**/*.*'],
         serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
+        localFiles: ['app/local_files/**/*'],
         clientViews: ['public/modules/**/views/**/*.html'],
         clientJS: ['public/js/*.js', 'public/modules/**/*![e2e]*.js'],
         clientCSS: ['public/modules/**/*.css'],
@@ -25,6 +26,12 @@ module.exports = function (grunt) {
 			serverJS: {
 				files: watchFiles.serverJS,
 				tasks: ['jshint'],
+				options: {
+					livereload: true
+				}
+			},
+			localFiles: {
+				files: watchFiles.localFiles,
 				options: {
 					livereload: true
 				}

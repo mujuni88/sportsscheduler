@@ -7,13 +7,16 @@ var _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	MyResponse = require('../../custom_objects/MyResponse'),
+	serverJSON = require('../../local_files/ui/server.ui.json');
 
 /**
  * Signup
  */
 exports.signup = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
+	console.log(req.body);
 	delete req.body.roles;
 
 	// Init Variables
@@ -26,20 +29,37 @@ exports.signup = function(req, res) {
 
 	// Then save the user 
 	user.save(function(err) {
+		var myResponse = new MyResponse();
+
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
+			console.log('error: ' + err);
+			if(err.errors)
+			{
+				for(var property in err.errors)
+				{
+					console.log(err.errors[property]);
+					console.log('prop: ' + property);
+					var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
+					myResponse.setError(errorObj);
+					res.json(myResponse);
+					return;
+				}
+			}
+			else
+			{
+				res.json(errorHandler.getErrorMessage(err));
+			}
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
-
+			console.log('saved');
 			req.login(user, function(err) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
-					res.jsonp(user);
+					myResponse.data = user;
+					res.jsonp(myResponse);
 				}
 			});
 		}

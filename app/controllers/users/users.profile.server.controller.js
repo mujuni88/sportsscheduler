@@ -1,5 +1,9 @@
 'use strict';
 
+var MyResponse = require('../../custom_objects/MyResponse');
+var Sender = require('../../custom_objects/Sender');
+var serverJSON = require('../../local_files/ui/server.ui.json');
+
 /**
  * Module dependencies.
  */
@@ -46,6 +50,28 @@ exports.update = function(req, res) {
 			message: 'User is not signed in'
 		});
 	}
+};
+
+exports.delete = function(req, res) {
+
+	var myResponse = new MyResponse();
+	var username = req.params.username;
+
+	User.findOne({username: username}, function(err,user) {
+
+		if(user)
+		{
+			user.remove();
+			req.user = null;
+			//res.send(username + ' has been deleted');
+			myResponse.data = user;
+			res.json(myResponse);
+		}
+		else
+		{
+			res.send(username + ' does not exist in the DB');
+		}
+	});
 };
 
 /**
