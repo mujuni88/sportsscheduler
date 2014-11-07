@@ -10,9 +10,8 @@ exports.config = {
         defaultTimeoutInterval: 60000
     },
     capabilities: {
-        'browserName': 'chrome',
-    }
-    ,
+        'browserName': 'chrome'
+    },
     multiCapabilities: [{
         'browserName': 'phantomjs',
         /* 

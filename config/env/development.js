@@ -3,21 +3,21 @@
 module.exports = {
 	db: 'mongodb://localhost/mean-dev',
 	app: {
-		title: 'MEAN.JS - Development Environment'
+		title: 'SportsScheduler'
 	},
 	facebook: {
-		clientID: process.env.FACEBOOK_ID || 'APP_ID',
-		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
+		clientID: process.env.FACEBOOK_ID || '1707771316114841',
+		clientSecret: process.env.FACEBOOK_SECRET || 'f89244c2b34aa0d893bb10409b0a9ab3',
 		callbackURL: 'http://localhost:3000/auth/facebook/callback'
 	},
 	twitter: {
-		clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-		clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
+		clientID: process.env.TWITTER_KEY || 'OyoK7wIfekH1UKeFJyw0p8Q68',
+		clientSecret: process.env.TWITTER_SECRET || '41P67E7ckuyvPVSHhgkKRJBm2Q8BIJTSeGeKCWJuSFHbwafXH4',
 		callbackURL: 'http://localhost:3000/auth/twitter/callback'
 	},
 	google: {
-		clientID: process.env.GOOGLE_ID || 'APP_ID',
-		clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
+		clientID: process.env.GOOGLE_ID || '63767316383-j3essslh76rsr167l9ek181pfp321pdo.apps.googleusercontent.com',
+		clientSecret: process.env.GOOGLE_SECRET || 'ohUIThCioXqfnoUyldSs3cak',
 		callbackURL: 'http://localhost:3000/auth/google/callback'
 	},
 	linkedin: {
@@ -31,12 +31,12 @@ module.exports = {
 		callbackURL: 'http://localhost:3000/auth/github/callback'
 	},
 	mailer: {
-		from: process.env.MAILER_FROM || 'MAILER_FROM',
+		from: process.env.MAILER_FROM || 'SportsScheduler',
 		options: {
-			service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+			service: process.env.MAILER_SERVICE_PROVIDER || 'gmail',
 			auth: {
-				user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
-				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+				user: process.env.MAILER_EMAIL_ID || 'sportschedulertest@gmail.com',
+				pass: process.env.MAILER_PASSWORD || '}_sB*p4:Y]A4ESr'
 			}
 		}
 	}
