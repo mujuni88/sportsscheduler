@@ -8,9 +8,7 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		// Create new Event
 		$scope.create = function() {
 			// Create new Event object
-			var event = new Events ({
-				name: this.name
-			});
+			var event = new Events ($scope.event);
 
 			// Redirect after save
 			event.$save(function(response) {
@@ -52,7 +50,9 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 
 		// Find a list of Events
 		$scope.find = function() {
-			$scope.events = Events.query();
+			var events = Events.query(function(){
+				$scope.events = events;
+			});
 		};
 
 		// Find existing Event
