@@ -3,16 +3,16 @@
         <h1>New Group</h1>
     </div>
     <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="create()" novalidate>
+        <form name="groupsForm" class="form-horizontal" novalidate>
             <fieldset>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="name">Name</label>
                     <div class="col-sm-7 ">
-                        <input type="text" data-ng-model="name" id="name" class="form-control" placeholder="Name" required>
+                        <input type="text" name="name" data-ng-model="group.name" id="name" class="form-control" placeholder="Name" validator="required" valid-method="blur" required>
                     </div>
                 </div>
                 <div class="text-center form-group">
-                    <button type="submit" validation-submit="eventsForm" ng-click="update()" class="btn btn-large btn-primary">Create Event</button>
+                    <button type="submit" validation-submit="groupsForm" ng-click="create()" class="btn btn-large btn-primary">Create Group</button>
                 </div>
 				<div data-ng-show="error" class="text-danger">
 					<strong data-ng-bind="error"></strong>

@@ -8,9 +8,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 		// Create new Group
 		$scope.create = function() {
 			// Create new Group object
-			var group = new Groups ({
-				name: this.name
-			});
+			var group = new Groups ($scope.group);
 
 			// Redirect after save
 			group.$save(function(response) {
