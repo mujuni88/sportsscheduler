@@ -4,6 +4,49 @@
 angular.module('events').controller('EventsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Events',
 	function($scope, $stateParams, $location, Authentication, Events ) {
 		$scope.authentication = Authentication;
+		$scope.event = $scope.event || {};
+
+		// Datepicker
+		$scope.today = function() {
+			$scope.event.date = new Date();
+		};
+		$scope.today();
+
+		$scope.clear = function () {
+			$scope.event.date = null;
+		};
+
+		// Disable weekend selection
+		$scope.disabled = function(date, mode) {
+			return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+		};
+
+		$scope.toggleMin = function() {
+			$scope.minDate = $scope.minDate ? null : new Date();
+		};
+		$scope.toggleMin();
+
+		$scope.open = function($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened = true;
+		};
+
+		$scope.dateOptions = {
+			formatYear: 'yy',
+			startingDay: 1
+		};
+
+		$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+		$scope.format = $scope.formats[0];
+
+
+		// Timepicker
+		$scope.timeChange = function(){
+			$scope.event.time += 30;
+			console.log($scope.event.time);
+		};
 
 		// Create new Event
 		$scope.create = function() {
