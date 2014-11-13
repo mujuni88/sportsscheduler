@@ -21,7 +21,7 @@
     <h3 class="col-md-12 text-center">Or with your email</h3>
 
     <div class="col-sm-6 col-sm-offset-3">
-        <form name="userForm" ng-submit="signup()" class="signin form-horizontal" novalidate autocomplete="off">
+        <form name="userForm" class="form-horizontal" novalidate autocomplete="off">
             <fieldset>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="firstName">First Name</label>
@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div class="text-center form-group">
-                    <button type="submit" validation-submit="userForm" class="btn btn-large btn-primary">Sign up</button>
+                    <button type="submit" validation-submit="userForm" ng-click="signup()" class="btn btn-large btn-primary">Sign up</button>
                     &nbsp; or&nbsp;
                     <a href="/#!/signin" class="show-signup">Sign in</a>
                 </div>
