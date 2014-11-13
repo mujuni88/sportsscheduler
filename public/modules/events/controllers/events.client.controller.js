@@ -5,6 +5,11 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 	function($scope, $stateParams, $location, Authentication, Events ) {
 		$scope.authentication = Authentication;
 		$scope.event = $scope.event || {};
+		$scope.event = {
+			voteEnabled:true,
+			minVotes:0
+		};
+
 
 		// Datepicker
 		$scope.today = function() {
@@ -41,15 +46,32 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
 		$scope.format = $scope.formats[0];
 
+		$scope.dateChange = function(){
+			$scope.dateError = (!$scope.event.date) ? true : false;
+		};
+
 
 		// Timepicker
+		var date = new Date();
+		var plusTwoHrs = (date.getHours() + 2);
+		date.setHours(plusTwoHrs);
+
+		$scope.event.time = date;
+
+		var now,hrsDiff, time, HRS = 2,HRS_MS = HRS * 60*60*1000;
 		$scope.timeChange = function(){
-			$scope.event.time += 30;
-			console.log($scope.event.time);
+			now = new Date();
+			time = now.getTime();
+			hrsDiff = $scope.event.time.getTime() - time;
+
+			$scope.timeError = (hrsDiff < HRS_MS)? true: false;
 		};
+
 
 		// Create new Event
 		$scope.create = function() {
+			if($scope.timeError || $scope.dateError) return;
+
 			// Create new Event object
 			var event = new Events ($scope.event);
 
@@ -82,6 +104,8 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 
 		// Update existing Event
 		$scope.update = function() {
+			if($scope.timeError || $scope.dateError) return;
+
 			var event = $scope.event ;
 
 			event.$update(function() {
@@ -100,7 +124,7 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 
 		// Find existing Event
 		$scope.findOne = function() {
-			$scope.event = Events.get({ 
+			$scope.event = Events.get({
 				eventId: $stateParams.eventId
 			});
 		};

@@ -7,6 +7,7 @@ angular.module('validationrule', ['validation'])
             required: function (value) {
                 return !!value;
             },
+            positiveIntegers:/^\d+$/,
             email: /^.*@.*\..*[a-z]$/i,
             phone:/(\W|^)[(]{0,1}\d{3}[)]{0,1}[\s-]{0,1}\d{3}[\s-]{0,1}\d{4}(\W|$)/,
             zip:/^\d{5}(-\d{4})?$/,
@@ -43,6 +44,9 @@ angular.module('validationrule', ['validation'])
         var defaultMsg = {
             required: {
                 error: 'Required!!'
+            },
+            positiveIntegers:{
+                error:'Please enter only positive numbers with no decimals'
             },
             email: {
                 error: 'Please enter a valid email'

@@ -1,12 +1,16 @@
 <section data-ng-controller="EventsController">
     <div class="page-header">
         <h1 class="text-left">New Event</h1>
+
+        <p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> An event can only be created if the
+            start time is 2 hours or more ahead of the creation time.</p>
     </div>
     <div class="col-md-12">
         <form name="eventsForm" class="form-horizontal" novalidate>
             <fieldset>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="name">Name</label>
+
                     <div class="col-sm-7">
                         <input type="text"
                                name="name"
@@ -23,30 +27,57 @@
 
                     <div class="col-sm-7">
                         <input type="text" id="location" name="location" class="form-control"
-                               data-ng-model="event.location" placeholder="Location" validator="required, alpha" valid-method="blur">
+                               data-ng-model="event.location" placeholder="Location" validator="required, alpha"
+                               valid-method="blur">
 
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="day">Day</label>
+                    <label class="col-sm-3 control-label" for="day">Date</label>
 
                     <div class="col-sm-7">
                         <p class="input-group">
-                            <input id="day" name="day" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="event.date" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                            <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day" type="text"
+                                   class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
+                                   is-open="opened" min-date="minDate" max-date="'2015-06-22'"
+                                   datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                                   ng-required="true" close-text="Close"/>
                           <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
                           </span>
                         </p>
-
+                        <div class="has-error" ng-show="dateError">Required!!</div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Time</label>
 
                     <div class="col-sm-7">
-                        <p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> Has to be at least 30 mins in the future</p>
-                        <timepicker ng-model="event.time" ng-change="timeChange" hour-step="" minute-step="" show-meridian=""></timepicker>
-                        <div class="has-error">Only future time allowed</div>
+                        <timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""
+                                    show-meridian=""></timepicker>
+                        <div class="has-error" ng-show="timeError">Time has to be 2 hours ahead</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Votes</label>
+
+                    <div class="checkbox col-sm-7">
+                        <label><input type="checkbox" name="vote" ng-model="event.voteEnabled" value="true" checked>
+                            Enabled</label>
+                    </div>
+                </div>
+
+
+                <div class="form-group" ng-show="event.voteEnabled">
+                    <label class="col-sm-3 control-label" for="minVotes">Minimum Votes</label>
+
+                    <div class="col-sm-7">
+                        <input id="minVotes" name="minVotes" ng-model="event.minVotes" class="form-control"
+                               type="number" min="0" tooltip-placement="top" validator="positiveIntegers"
+                               valid-method="blur" tooltip="Minimum number of votes before the event is cancelled."
+                               required/>
                     </div>
                 </div>
 
@@ -55,18 +86,21 @@
 
                     <div class="col-sm-7">
                         <textarea class="form-control" rows="3" id="message" name="message" class="form-control"
-                                  data-ng-model="event.message" placeholder="Message" validator="" valid-method="blur"></textarea>
+                                  data-ng-model="event.message" placeholder="Message" validator="required"
+                                  valid-method="blur"></textarea>
                     </div>
                 </div>
                 <div class="text-center form-group">
-                    <button type="submit" validation-submit="eventsForm" ng-click="create()" class="btn btn-large btn-primary">Create Event</button>
+                    <button type="submit" validation-submit="eventsForm" ng-click="create()"
+                            class="btn btn-large btn-primary">Create Event
+                    </button>
                 </div>
                 <!--<div class="form-group">-->
-                    <!--<input type="submit" class="btn btn-default">-->
+                <!--<input type="submit" class="btn btn-default">-->
                 <!--</div>-->
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
             </fieldset>
         </form>
     </div>
