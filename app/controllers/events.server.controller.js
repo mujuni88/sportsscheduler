@@ -5,14 +5,14 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
-	Event = mongoose.model('Event'),
+	EventModel = mongoose.model('Event'),
 	_ = require('lodash');
 
 /**
  * Create a Event
  */
 exports.create = function(req, res) {
-	var event = new Event(req.body);
+	var event = new EventModel(req.body);
 	event.user = req.user;
 
 	event.save(function(err) {
