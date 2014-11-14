@@ -13,7 +13,7 @@
                                data-ng-model="event.name"
                                id="name"
                                class="form-control"
-                               validator="required, alpha"
+                               validator="required"
                                placeholder="Name"
                                valid-method="blur" required>
                     </div>
@@ -23,7 +23,7 @@
 
                     <div class="col-sm-7">
                         <input type="text" id="location" name="location" class="form-control"
-                               data-ng-model="event.location" placeholder="Location" validator="required, alpha" valid-method="blur">
+                               data-ng-model="event.location" placeholder="Location" validator="required" valid-method="blur">
 
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                     <label class="col-sm-3 control-label" for="minVotes">Minimum Votes</label>
 
                     <div class="col-sm-7">
-                        <input id="minVotes" name="minVotes" ng-model="event.minVotes" class="form-control" type="number" min="0" tooltip-placement="top" validator="positiveIntegers" valid-method="blur" tooltip="Minimum number of votes before the event is cancelled." required/>
+                        <input id="minVotes" name="minVotes" ng-model="event.minimumVotes" class="form-control" type="number" min="0" tooltip-placement="top" validator="positiveIntegers" valid-method="blur" tooltip="Minimum number of votes before the event is cancelled." required/>
                     </div>
                 </div>
 

@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
  * Create a Event
  */
 exports.create = function(req, res) {
+	console.log(req.body);
 	var event = new Event(req.body);
 	event.user = req.user;
 
@@ -30,6 +31,7 @@ exports.create = function(req, res) {
  * Show the current Event
  */
 exports.read = function(req, res) {
+	console.log(req.event);
 	res.jsonp(req.event);
 };
 
