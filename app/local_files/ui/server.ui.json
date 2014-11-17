@@ -77,6 +77,32 @@
 		},
 		"users":
 		{
+			"groups":
+			{
+				"successes":
+				{
+					"_1":
+					{
+						"clientMessage": "Group Saved Successfully",
+						"status": 200
+					}
+				},
+				"errors":
+				{
+					"_1":
+					{
+						"devMessage": "No value has been entered for the 'name' parameter",
+						"clientMessage": "Please fill in your Group Name",
+						"status": 400
+					},
+					"_2":
+					{
+						"devMessage": "Name does not pass the proper validation of '^[\\d\\w\\-@]{5,30}$'",
+						"clientMessage": "Please fill in a valid Group Name",
+						"status": 400
+					}
+				}
+			},
 			"successes":
 			{
 				"_1":
@@ -94,7 +120,8 @@
 					"status": 400
 				},
 				"_2":
-				{	"devMessage": "No value has been entered for the 'firstName' parameter",
+				{	
+					"devMessage": "No value has been entered for the 'firstName' parameter",
 					"clientMessage": "Please fill in your first name",
 					"status": 400
 				},

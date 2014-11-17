@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Group = mongoose.model('Group'),
+	MyResponse = require('../custom_objects/MyResponse'),
 	_ = require('lodash');
 
 /**
@@ -15,13 +16,30 @@ exports.create = function(req, res) {
 	var group = new Group(req.body);
 	group.user = req.user;
 
-	group.save(function(err) {
+	group.save(function(err) { 
+		console.log('in save');
+		var myResponse = new MyResponse();
+
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(group);
+			console.log('error: ' + err);
+			res.json(errorHandler.getErrorMessage(err));
+			// if(err.errors)
+			// {
+			// 	for(var property in err.errors)
+			// 	{
+			// 		console.log(err.errors[property]);
+			// 		console.log('prop: ' + property);
+			// 		var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
+			// 		myResponse.setError(errorObj);
+			// 		res.json(myResponse);
+			// 		return;
+			// 	}
+			// }
+		}
+		else {
+			console.log('saved successfully');
+			myResponse.data = group;
+			res.jsonp(myResponse);
 		}
 	});
 };
@@ -37,17 +55,30 @@ exports.read = function(req, res) {
  * Update a Group
  */
 exports.update = function(req, res) {
-	var group = req.group ;
+	
+	var myResponse = new MyResponse();
+	var id = req.body.id;
 
-	group = _.extend(group , req.body);
+	Group.findOne({_id: id}, function(err,group) {
 
-	group.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
+		if(err)
+		{
+			console.log(err);
+			res.json(errorHandler.getErrorMessage(err));
+		}
+		else
+		{
+			group = _.extend(group , req.body);
+			group.updated = Date.now();
+
+			group.save(function(err) {
+				if (err) {
+					res.json(errorHandler.getErrorMessage(err));
+				} else {
+					myResponse.data = group;
+					res.jsonp(myResponse);
+				}
 			});
-		} else {
-			res.jsonp(group);
 		}
 	});
 };
@@ -56,16 +87,22 @@ exports.update = function(req, res) {
  * Delete an Group
  */
 exports.delete = function(req, res) {
-	var group = req.group ;
+	//var group = req.group ;
+	console.log(req.params);
+	var id = req.params.groupId;
+	console.log('group id: ' + id);
+	var myResponse = new MyResponse();
 
-	group.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(group);
-		}
+	Group.findOne({_id: id}, function(err,group) {
+		group.remove(function(err) {
+			if (err) {
+				res.status(400);
+				res.json(errorHandler.getErrorMessage(err));
+			} else {
+				res.jsonp(group);
+			}
+		});
+
 	});
 };
 

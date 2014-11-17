@@ -33,22 +33,19 @@ exports.signup = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			if(err.errors)
-			{
-				for(var property in err.errors)
-				{
-					console.log(err.errors[property]);
-					console.log('prop: ' + property);
-					var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
-					myResponse.setError(errorObj);
-					res.json(myResponse);
-					return;
-				}
-			}
-			else
-			{
-				res.json(errorHandler.getErrorMessage(err));
-			}
+			res.json(errorHandler.getErrorMessage(err));
+			// if(err.errors)
+			// {
+			// 	for(var property in err.errors)
+			// 	{
+			// 		console.log(err.errors[property]);
+			// 		console.log('prop: ' + property);
+			// 		var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
+			// 		myResponse.setError(errorObj);
+			// 		res.json(myResponse);
+			// 		return;
+			// 	}
+			// }
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;

@@ -5,14 +5,17 @@ module.exports = function(app) {
 	var groups = require('../../app/controllers/groups');
 
 	// Groups Routes
-	app.route('/groups')
+	app.route('/api/users/groups')
 		.get(groups.list)
-		.post(users.requiresLogin, groups.create);
+		.post(groups.create)
+		.put(groups.update);
+		//.post(users.requiresLogin, groups.create);
 
-	app.route('/groups/:groupId')
+	app.route('/api/users/groups/:groupId')
 		.get(groups.read)
-		.put(users.requiresLogin, groups.hasAuthorization, groups.update)
-		.delete(users.requiresLogin, groups.hasAuthorization, groups.delete);
+		//.put(users.requiresLogin, groups.hasAuthorization, groups.update)
+		//.delete(users.requiresLogin, groups.hasAuthorization, groups.delete);
+		.delete(groups.delete);
 
 	// Finish by binding the Group middleware
 	app.param('groupId', groups.groupByID);
