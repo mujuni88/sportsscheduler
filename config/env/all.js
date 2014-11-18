@@ -23,7 +23,9 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/angular-validation/dist/angular-validation.min.js'
+				'public/lib/angular-validation/dist/angular-validation.min.js',
+				'http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false',
+				'public/lib/ng-google-places-autocomplete/src/ngAutocomplete.js'
             ]
 		},
 		css: [

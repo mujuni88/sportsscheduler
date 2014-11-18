@@ -29,7 +29,7 @@ var EventSchema = new Schema({
 		ref:'Group'
 	},
 	location:{
-		type:String,
+		type:Object,
 		required:'Please fill location name',
 		trim:true
 	},

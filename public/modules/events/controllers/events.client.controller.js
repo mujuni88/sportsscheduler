@@ -7,8 +7,14 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.event = $scope.event || {};
 		$scope.event = {
 			voteEnabled:true,
-			minVotes:0
+			minimumVotes:0
 		};
+
+		// Google places
+		$scope.options = {
+			country: 'us'
+		};
+		$scope.details="";
 
 
 		// Datepicker
@@ -71,6 +77,9 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		// Create new Event
 		$scope.create = function() {
 			if($scope.timeError || $scope.dateError) return;
+
+			$scope.event.location.lat = $scope.details.geometry.location.lat();
+			$scope.event.location.lng = $scope.details.geometry.location.lng();
 
 			// Create new Event object
 			var event = new Events ($scope.event);

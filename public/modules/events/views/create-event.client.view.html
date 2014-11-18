@@ -9,7 +9,7 @@
         <form name="eventsForm" class="form-horizontal" novalidate>
             <fieldset>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="name">Name</label>
+                    <label class="col-sm-3 control-label" for="name">Name <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
                         <input type="text"
@@ -23,17 +23,31 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="location">Location</label>
-
+                    <label class="col-sm-3 control-label" for="locationName">Location Name <span class="has-error">*</span></label>
                     <div class="col-sm-7">
-                        <input type="text" id="location" name="location" class="form-control"
-                               data-ng-model="event.location" placeholder="Location" validator="required"
-                               valid-method="blur">
-
+                        <input type="text"
+                               name="locationName"
+                               data-ng-model="event.location.name"
+                               id="locationName"
+                               class="form-control"
+                               validator="required"
+                               placeholder="Name"
+                               valid-method="blur" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="day">Date</label>
+                    <label class="col-sm-3 control-label" for="locationAddress">Location Address <span class="has-error">*</span></label>
+
+                    <div class="col-sm-7">
+                        <input type="text" id="locationAddress" name="locationAddress" class="form-control"
+                               data-ng-model="event.location.address" placeholder="Enter a location" ng-autocomplete options="options" details="details" required>
+
+                    <div class="has-error" ng-show="eventsForm.locationAddress.$dirty && eventsForm.locationAddress.$error.required">Required!!</div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="day">Date <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
                         <p class="input-group">
@@ -51,7 +65,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Time</label>
+                    <label class="col-sm-3 control-label">Time <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
                         <timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""
@@ -71,18 +85,18 @@
 
 
                 <div class="form-group" ng-show="event.voteEnabled">
-                    <label class="col-sm-3 control-label" for="minVotes">Minimum Votes</label>
+                    <label class="col-sm-3 control-label" for="minimumVotes">Minimum Votes <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
-                        <input id="minVotes" name="minVotes" ng-model="event.minimumVotes" class="form-control"
-                               type="number" min="0" tooltip-placement="top" validator="positiveIntegers"
+                        <input id="minimumVotes" name="minimumVotes" ng-model="event.minimumVotes" class="form-control"
+                               type="number" min="0" tooltip-placement="top" validator="required, positiveIntegers"
                                valid-method="blur" tooltip="Minimum number of votes before the event is cancelled."
                                required/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="message">Message</label>
+                    <label class="col-sm-3 control-label" for="message">Message <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
                         <textarea class="form-control" rows="3" id="message" name="message" class="form-control"
