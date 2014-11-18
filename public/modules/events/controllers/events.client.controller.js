@@ -126,6 +126,8 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.findOne = function() {
 			$scope.event = Events.get({
 				eventId: $stateParams.eventId
+			}, function(){
+				console.log($scope.event);
 			});
 		};
 	}
