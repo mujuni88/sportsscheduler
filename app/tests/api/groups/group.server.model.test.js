@@ -101,7 +101,7 @@ describe('Group Model Unit Tests:', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body._id).to.not.eql(null);
+                chaiExpect(res.body._id).to.not.be.null;
                 console.log('deleted ID: ' + id);
                 done();
             });
