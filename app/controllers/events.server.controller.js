@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	EventModel = mongoose.model('Event'),
+	MyResponse = require('../custom_objects/MyResponse'),
 	_ = require('lodash');
 
 /**
@@ -16,12 +17,29 @@ exports.create = function(req, res) {
 	event.user = req.user;
 
 	event.save(function(err) {
+		console.log('in create event save');
+		var myResponse = new MyResponse();
+
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(event);
+			console.log('error: ' + err);
+			res.json(errorHandler.getErrorMessage(err));
+			// if(err.errors)
+			// {
+			// 	for(var property in err.errors)
+			// 	{
+			// 		console.log(err.errors[property]);
+			// 		console.log('prop: ' + property);
+			// 		var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
+			// 		myResponse.setError(errorObj);
+			// 		res.json(myResponse);
+			// 		return;
+			// 	}
+			// }
+		}
+		else {
+			console.log('saved successfully');
+			myResponse.data = event;
+			res.jsonp(myResponse);
 		}
 	});
 };
@@ -38,17 +56,33 @@ exports.read = function(req, res) {
  * Update a Event
  */
 exports.update = function(req, res) {
-	var event = req.event ;
+	
+	console.log(req.params);
+	var id = req.params.eventId;
+	console.log('event id: ' + id);
+	var myResponse = new MyResponse();
 
-	event = _.extend(event , req.body);
+	EventModel.findOne({_id: id}, function(err,event) {
+		if(err)
+		{
+			res.status(400);
+			res.json(errorHandler.getErrorMessage(err));
+		}
+		else
+		{
+			console.log(req.body);
+			event = _.extend(event , req.body);
 
-	event.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
+			event.save(function(err) {
+				var myResponse = new MyResponse();
+				if (err) {
+					//res.status(400);
+					res.json(errorHandler.getErrorMessage(err));
+				} else {
+					myResponse.data = event;
+					res.jsonp(myResponse);
+				}
 			});
-		} else {
-			res.jsonp(event);
 		}
 	});
 };
@@ -57,23 +91,38 @@ exports.update = function(req, res) {
  * Delete an Event
  */
 exports.delete = function(req, res) {
-	var event = req.event ;
+	
+	console.log(req.params);
+	var id = req.params.eventId;
+	console.log('event id: ' + id);
+	var myResponse = new MyResponse();
 
-	event.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(event);
+	EventModel.findOne({_id: id}, function(err,event) {
+		if(err)
+		{
+			res.status(400);
+			res.json(errorHandler.getErrorMessage(err));
 		}
+		else
+		{
+			event.remove(function(err) {
+				if (err) {
+					res.status(400);
+					res.json(errorHandler.getErrorMessage(err));
+				} else {
+					myResponse.data = event;
+					res.jsonp(myResponse);
+				}
+			});
+		}
+
 	});
 };
 
 /**
  * List of Events
  */
-exports.list = function(req, res) { Event.find().sort('-created').populate('user', 'displayName').exec(function(err, events) {
+exports.list = function(req, res) { EventModel.find().sort('-created').populate('user', 'displayName').exec(function(err, events) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -87,10 +136,14 @@ exports.list = function(req, res) { Event.find().sort('-created').populate('user
 /**
  * Event middleware
  */
-exports.eventByID = function(req, res, next, id) { Event.findById(id).populate('user', 'displayName').exec(function(err, event) {
-		if (err) return next(err);
-		if (! event) return next(new Error('Failed to load Event ' + id));
-		req.event = event ;
+exports.eventByID = function(req, res, next, id) { EventModel.findById(id).populate('user', 'displayName').exec(function(err, event) {
+		// if (err) return next(err);
+		// if (! event) return next(new Error('Failed to load Event ' + id));
+		// req.event = event ;
+		// next();
+		if(err)
+			res.json(errorHandler.getErrorMessage(err));
+		
 		next();
 	});
 };

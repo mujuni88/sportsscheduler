@@ -79,6 +79,68 @@
 		{
 			"groups":
 			{
+				"events":
+				{
+					"successes":
+					{
+						"_1":
+						{
+							"clientMessage": "Event Saved Successfully",
+							"status": 200
+						}
+					},
+					"errors":
+					{
+						"_1":
+						{
+							"devMessage": "No value has been entered for the 'name' parameter",
+							"clientMessage": "Please fill in your Event Name",
+							"status": 400
+						},
+						"_2":
+						{
+							"devMessage": "Name does not pass the proper validation of '^[\\d\\w\\-@]{5,30}$'",
+							"clientMessage": "Please fill in a valid Event Name",
+							"status": 400
+						},
+						"_3":
+						{
+							"devMessage": "No value has been found for the 'lat' attribute",
+							"clientMessage": "Could not find location for this address",
+							"status": 400
+						},
+						"_4":
+						{
+							"devMessage": "No value has been found for the 'lng' attribute",
+							"clientMessage": "Could not find location for this address",
+							"status": 400
+						},
+						"_5":
+						{
+							"devMessage": "No value has been entered for the 'date' parameter",
+							"clientMessage": "Please fill in your Event Date",
+							"status": 400
+						},
+						"_6":
+						{
+							"devMessage": "No value has been entered for the 'time' parameter",
+							"clientMessage": "Please fill in your Event Time",
+							"status": 400
+						},
+						"_7":
+						{
+							"devMessage": "No value has been entered for the 'message' parameter",
+							"clientMessage": "Please fill in your Event Message",
+							"status": 400
+						},
+						"_8":
+						{
+							"devMessage": "No value has been entered for the 'address' parameter",
+							"clientMessage": "Please fill in the Address where the Event will be taking place",
+							"status": 400
+						}
+					}
+				},
 				"successes":
 				{
 					"_1":

@@ -5,14 +5,17 @@ module.exports = function(app) {
 	var events = require('../../app/controllers/events');
 
 	// Events Routes
-	app.route('/events')
+	app.route('/api/users/groups/events')
 		.get(events.list)
-		.post(users.requiresLogin, events.create);
+		//.post(users.requiresLogin, events.create);
+		.post(events.create);
 
-	app.route('/events/:eventId')
+	app.route('/api/users/groups/events/:eventId')
 		.get(events.read)
-		.put(users.requiresLogin, events.hasAuthorization, events.update)
-		.delete(users.requiresLogin, events.hasAuthorization, events.delete);
+		//.put(users.requiresLogin, events.hasAuthorization, events.update)
+		.put(events.update)
+		//.delete(users.requiresLogin, events.hasAuthorization, events.delete);
+		.delete(events.delete);
 
 	// Finish by binding the Event middleware
 	app.param('eventId', events.eventByID);
