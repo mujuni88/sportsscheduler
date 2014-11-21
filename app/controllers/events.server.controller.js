@@ -73,6 +73,7 @@ exports.update = function(req, res) {
 			console.log(req.body);
 			event = _.extend(event , req.body);
 
+
 			event.save(function(err) {
 				var myResponse = new MyResponse();
 				if (err) {
@@ -143,7 +144,8 @@ exports.eventByID = function(req, res, next, id) { EventModel.findById(id).popul
 		// next();
 		if(err)
 			res.json(errorHandler.getErrorMessage(err));
-		
+
+		req.event = event ;
 		next();
 	});
 };

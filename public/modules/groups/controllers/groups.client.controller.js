@@ -12,9 +12,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
 			// Redirect after save
 			group.$save(function(response) {
-				$location.path('groups/' + response._id);
+				if(response.status === 200 && response.data){
+					$location.path('groups/' + response.data._id);
+				} else if(response.error){
+					$scope.error = response.error.clientMessage;
+				} else{
+					console.log("Unknown error, Status: "+response.status);
+					$scope.error = "Unknown error";
+				}
 
-				// Clear form fields
 				$scope.name = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
