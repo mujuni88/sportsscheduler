@@ -73,13 +73,17 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 			$scope.timeError = (hrsDiff < HRS_MS)? true: false;
 		};
 
+		// watch if places api changes
+		$scope.$watch("details.geometry.location", function(newVal, oldVal){
+			if(!newVal){return;}
+
+			$scope.event.location.lat = newVal.lat();
+			$scope.event.location.lng = newVal.lng();
+		});
 
 		// Create new Event
 		$scope.create = function() {
 			if($scope.timeError || $scope.dateError) return;
-
-			$scope.event.location.lat = $scope.details.geometry.location.lat();
-			$scope.event.location.lng = $scope.details.geometry.location.lng();
 
 			// Create new Event object
 			var event = new Events ($scope.event);
@@ -135,8 +139,6 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.findOne = function() {
 			$scope.event = Events.get({
 				eventId: $stateParams.eventId
-			}, function(){
-				console.log($scope.event);
 			});
 		};
 	}
