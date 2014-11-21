@@ -7,8 +7,14 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.event = $scope.event || {};
 		$scope.event = {
 			voteEnabled:true,
-			minVotes:0
+			minimumVotes:0
 		};
+
+		// Google places
+		$scope.options = {
+			country: 'us'
+		};
+		$scope.details="";
 
 
 		// Datepicker
@@ -67,6 +73,13 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 			$scope.timeError = (hrsDiff < HRS_MS)? true: false;
 		};
 
+		// watch if places api changes
+		$scope.$watch("details.geometry.location", function(newVal, oldVal){
+			if(!newVal){return;}
+
+			$scope.event.location.lat = newVal.lat();
+			$scope.event.location.lng = newVal.lng();
+		});
 
 		// Create new Event
 		$scope.create = function() {
@@ -126,8 +139,6 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.findOne = function() {
 			$scope.event = Events.get({
 				eventId: $stateParams.eventId
-			}, function(){
-				console.log($scope.event);
 			});
 		};
 	}
