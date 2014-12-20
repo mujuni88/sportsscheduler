@@ -71,6 +71,12 @@ var UserSchema = new Schema({
 		required: serverJSON.api.users.password.empty.clientMessage,
 		match: [new RegExp(serverJSON.api.users.password.invalid.regex), serverJSON.api.users.password.invalid.clientMessage]
 	},
+	groups: [
+		{
+			type: Schema.ObjectId,
+			ref: 'Group'
+		}
+	],
 	salt: {
 		type: String
 	},

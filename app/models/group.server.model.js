@@ -43,7 +43,14 @@ var GroupSchema = new Schema({
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
-	}
+	},
+	events: 
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'Event'
+		}
+	]
 });
 
 mongoose.model('Group', GroupSchema);

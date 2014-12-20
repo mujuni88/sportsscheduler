@@ -93,6 +93,10 @@ var EventSchema = new Schema({
 	message:{
 		type: String,
 		required: serverJSON.api.users.groups.events.message.empty.clientMessage
+	},
+	group: {
+		type: Schema.ObjectId,
+		ref: 'Group'
 	}
 
 });
