@@ -27,8 +27,9 @@ var GroupSchema = new Schema({
 	name: {
 		type: String,
 		default: '',
-		required: serverJSON.api.users.groups.errors._1.clientMessage,
-		validate: [validateNameProperty, serverJSON.api.users.groups.errors._2.clientMessage],
+		required: serverJSON.api.users.groups.name.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.groups.name.invalid.regex), serverJSON.api.users.groups.name.invalid.clientMessage],
+		//validate: [validateNameProperty, serverJSON.api.users.groups.errors._2.clientMessage],
 		trim: true
 	},
 	created: {

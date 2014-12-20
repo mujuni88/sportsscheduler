@@ -12,7 +12,7 @@ describe('POST Requests', function() {
 	it('POST: check if creation of user works when sent the required parameters', function(done) {
         superagent.post('http://localhost:3000/api/users')
             .send({
-			  "password":"from_postman",
+			  "password":"Password123",
 			  "email":"postman@postman.com",
 			  "lastName":"man",
 			  "firstName":"post",
@@ -24,7 +24,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.users.successes._1.status);
+                chaiExpect(typeof res.body.data).to.eql('object');
 
                 done();
             });
@@ -33,7 +33,7 @@ describe('POST Requests', function() {
     it('POST: check if creation of user fails if user is added twice', function(done) {
         superagent.post('http://localhost:3000/api/users')
             .send({
-              "password":"from_postman",
+              "password":"Password1",
               "email":"postman@postman.com",
               "lastName":"man",
               "firstName":"post",
@@ -45,7 +45,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body).to.eql('Username already exist');
+                chaiExpect(typeof res.body.error).to.eql('object');
 
                 done();
             });
@@ -58,7 +58,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.users.successes._1.status);
+                chaiExpect(typeof res.body.data).to.eql('object');
 
                 done();
             });

@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	EventModel = mongoose.model('Event'),
 	MyResponse = require('../custom_objects/MyResponse'),
+	serverJSON = require('../local_files/ui/server.ui.json'),
 	_ = require('lodash');
 
 /**
@@ -22,7 +23,8 @@ exports.create = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			res.json(errorHandler.getErrorMessage(err));
+			myResponse.transformMongooseError('api.users.groups.events',String(err));
+			res.json(myResponse);
 			// if(err.errors)
 			// {
 			// 	for(var property in err.errors)
@@ -48,8 +50,8 @@ exports.create = function(req, res) {
  * Show the current Event
  */
 exports.read = function(req, res) {
-	console.log(req.event);
-	res.jsonp(req.event);
+	//console.log(req.event);
+	//res.jsonp(req.event);
 };
 
 /**
@@ -136,7 +138,18 @@ exports.list = function(req, res) { EventModel.find().sort('-created').populate(
 /**
  * Event middleware
  */
-exports.eventByID = function(req, res, next, id) { EventModel.findById(id).populate('user', 'displayName').exec(function(err, event) {
+exports.eventByID = function(req, res, next, id) { 
+
+	var myResponse = new MyResponse();
+	
+	if(!mongoose.Types.ObjectId.isValid(id))
+	{
+		myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+		res.json(myResponse);
+		return;
+	}
+
+	EventModel.findById(id).populate('user', 'displayName').exec(function(err, event) {
 		// if (err) return next(err);
 		// if (! event) return next(new Error('Failed to load Event ' + id));
 		// req.event = event ;

@@ -15,16 +15,6 @@ function Sender() {
 	        pass: '}_sB*p4:Y]A4ESr'
 	    }
 	});
-
- 	/*
- 	this.mailOptions = {
-	    from: 'Trey Gaines <treyqg15@gmail.com>', // sender address
-	    to: '6018801788@cspire1.com', // list of receivers
-	    subject: 'Hello', // Subject line
-	    text: 'Hello world', // plaintext body
-	    html: '<b>Hello world1</b>' // html body
-	};
-	*/
 }
 
 Sender.prototype.sendSMS = function(to,subject,text,callback) {

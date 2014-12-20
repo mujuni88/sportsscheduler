@@ -1,69 +1,99 @@
 {
+	"mongo":
+	{
+		"11000":
+		{
+			"devMessage": "Duplicate entry in DB",
+			"clientMessage": "There already exist",
+			"status": 500
+		}
+	},
 	"api":
 	{
 		"sms":
 		{
-			"successes":
+			"to":
 			{
-				"_1":
+				"empty":
 				{
-					"clientMessage": "SMS Sent Successfully",
-					"status": 200
+					"devMessage": "No value has been entered for the 'to' parameter",
+					"clientMessage": "Please fill in the recipient",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}$",
+					"devMessage": "To does not pass the proper validation regex of '^[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}$'",
+					"clientMessage": "Please fill in a valid Recipient",
+					"status": 400
 				}
 			},
-			"errors":
+			"from":
 			{
-				"_1": 
+				"empty":
 				{
-					"devMessage": "Add \"to\" parameter in request",
-					"clientMessage": "Missing \"to\" parameter in request",
+					"devMessage": "No value has been entered for the 'from' parameter",
+					"clientMessage": "Please fill in the sender",
 					"status": 400
 				},
-				"_2":
+				"invalid":
 				{
-					"devMessage": "The value in the \"to\" parameter should match this RegEx: /[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}/",
-					"clientMessage": "Recipient does not match the correct format",
+					"regex": "^[\\d\\w\\-@]{5,30}$",
+					"devMessage": "from does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+					"clientMessage": "Please fill in a valid Sender",
 					"status": 400
-				},
-				"_3":
-				{
-					"devMessage": "Add \"subject\" paramater to the request",
-					"clientMessage": "Missing \"subject\" parameter in request",
-					"status": 400
-				},
-				"_4":
-				{
-					"devMessage": "Add \"text\" parameter in request",
-					"clientMessage": "Missing \"text\" parameter in request",
-					"status": 400
-				},
-				"_5":
-				{
-					"devMessage": "There was a logical error with the API. Contact the developers with the request used to generate this error",
-					"clientMessage": "Server failed to send text",
-					"status": 500
 				}
-
+			},
+			"subject":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'subject' parameter",
+					"clientMessage": "Please fill in the subject",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d\\w\\-@]{5,30}$",
+					"devMessage": "Subject does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+					"clientMessage": "Please fill in a valid Subject",
+					"status": 400
+				}
+			},
+			"text":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'text' parameter",
+					"clientMessage": "Please fill in the message",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d\\w\\-@]{5,30}$",
+					"devMessage": "Text does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+					"clientMessage": "Please fill in a valid message",
+					"status": 400
+				}
 			}
 		},
 		"carriers":
 		{
-			"successes":
+			"countries":
 			{
-
-			},
-			"errors":
-			{
-				"_1":
+				"carriers":
 				{
-					"devMessage": "This country name doesn't exist in our data",
-					"clientMessage": "Invalid Country Name",
-					"status": 400
+					"invalid":
+					{
+						"devMessage": "Carrier does not exist",
+						"clientMessage": "Carrier does not exist",
+						"status": 400
+					}
 				},
-				"_2":
+				"invalid":
 				{
-					"devMessage": "This carrier name doesn't exist for this country in our data",
-					"clientMessage": "Invalid Carrier Name for the specified country",
+					"devMessage": "Country Name does not exist",
+					"clientMessage": "Country Name does not exist",
 					"status": 400
 				}
 			}
@@ -81,6 +111,125 @@
 			{
 				"events":
 				{
+					"_id":
+					{
+						"invalid":
+						{
+							"devMessage": "Invalid ObjectID for event",
+							"clientMessage": "This Event does not exist",
+							"status": 400
+						}
+					},
+					"name":
+					{
+						"empty":
+						{
+							"devMessage": "No value has been entered for the 'name' parameter",
+							"clientMessage": "Please fill in your Event Name",
+							"status": 400
+						},
+						"invalid":
+						{
+							"regex": "^[\\d\\w\\-@\\s]{5,30}$",
+							"devMessage": "Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
+							"clientMessage": "Please fill in a valid Event Name",
+							"status": 400
+						}
+					},
+					"location":
+					{
+						"name":
+						{
+							"empty":
+							{
+								"devMessage": "No value has been entered for the 'name' parameter of the location attribute",
+								"clientMessage": "Please fill in your Location Name",
+								"status": 400
+							},
+							"invalid":
+							{
+								"regex": "^[\\d\\w\\-@]{5,30}$",
+								"devMessage": "location 'name' does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+								"clientMessage": "Please fill in a valid Location Name",
+								"status": 400
+							}
+						},
+						"address":
+						{
+							"empty":
+							{
+								"devMessage": "No value has been entered for the 'address' parameter of the location attribute",
+								"clientMessage": "Please fill in your Location Address",
+								"status": 400
+							},
+							"invalid":
+							{
+								"regex": "^[\\d\\w\\-\\s]{5,30}$",
+								"devMessage": "location 'address' does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+								"clientMessage": "Please fill in a valid Location Address",
+								"status": 400
+							}
+						},
+						"lat":
+						{
+							"empty":
+							{
+								"devMessage": "No value has been found for the 'lat' attribute",
+								"clientMessage": "Could not find location for this address",
+								"status": 400
+							}
+						},
+						"lng":
+						{
+							"empty":
+							{
+								"devMessage": "No value has been found for the 'lng' attribute",
+								"clientMessage": "Could not find location for this address",
+								"status": 400
+							}
+						}
+					},
+					"date":
+					{
+						"empty":
+						{
+							"devMessage": "No value has been entered for the 'date' parameter",
+							"clientMessage": "Please fill in your Event Date",
+							"status": 400
+						},
+						"invalid":
+						{
+							"regex": "^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$",
+							"devMessage": "location 'date' does not pass the proper validation regex of '^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$'",
+							"clientMessage": "Please fill in a valid Location Date",
+							"status": 400
+						}
+					},
+					"time":
+					{
+						"empty":
+						{
+							"devMessage": "No value has been entered for the 'time' parameter",
+							"clientMessage": "Please fill in your Event Time",
+							"status": 400
+						},
+						"invalid":
+						{
+							"regex": "^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$",
+							"devMessage": "location 'time' does not pass the proper validation regex of '^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$'",
+							"clientMessage": "Please fill in a valid Location Time",
+							"status": 400
+						}
+					},
+					"message":
+					{
+						"empty":
+						{
+							"devMessage": "No value has been entered for the 'message' parameter",
+							"clientMessage": "Please fill in your Event Message",
+							"status": 400
+						}
+					},
 					"successes":
 					{
 						"_1":
@@ -88,148 +237,164 @@
 							"clientMessage": "Event Saved Successfully",
 							"status": 200
 						}
-					},
-					"errors":
-					{
-						"_1":
-						{
-							"devMessage": "No value has been entered for the 'name' parameter",
-							"clientMessage": "Please fill in your Event Name",
-							"status": 400
-						},
-						"_2":
-						{
-							"devMessage": "Name does not pass the proper validation of '^[\\d\\w\\-@]{5,30}$'",
-							"clientMessage": "Please fill in a valid Event Name",
-							"status": 400
-						},
-						"_3":
-						{
-							"devMessage": "No value has been found for the 'lat' attribute",
-							"clientMessage": "Could not find location for this address",
-							"status": 400
-						},
-						"_4":
-						{
-							"devMessage": "No value has been found for the 'lng' attribute",
-							"clientMessage": "Could not find location for this address",
-							"status": 400
-						},
-						"_5":
-						{
-							"devMessage": "No value has been entered for the 'date' parameter",
-							"clientMessage": "Please fill in your Event Date",
-							"status": 400
-						},
-						"_6":
-						{
-							"devMessage": "No value has been entered for the 'time' parameter",
-							"clientMessage": "Please fill in your Event Time",
-							"status": 400
-						},
-						"_7":
-						{
-							"devMessage": "No value has been entered for the 'message' parameter",
-							"clientMessage": "Please fill in your Event Message",
-							"status": 400
-						},
-						"_8":
-						{
-							"devMessage": "No value has been entered for the 'address' parameter",
-							"clientMessage": "Please fill in the Address where the Event will be taking place",
-							"status": 400
-						}
 					}
 				},
-				"successes":
+				"_id":
 				{
-					"_1":
+					"invalid":
 					{
-						"clientMessage": "Group Saved Successfully",
-						"status": 200
+						"devMessage": "Invalid ObjectID for group",
+						"clientMessage": "This group does not exist",
+						"status": 400
 					}
 				},
-				"errors":
+				"name":
 				{
-					"_1":
+					"empty":
 					{
 						"devMessage": "No value has been entered for the 'name' parameter",
 						"clientMessage": "Please fill in your Group Name",
 						"status": 400
 					},
-					"_2":
+					"invalid":
 					{
-						"devMessage": "Name does not pass the proper validation of '^[\\d\\w\\-@]{5,30}$'",
+						"regex": "^[\\d\\w\\-@\\s]{5,30}$",
+						"devMessage": "Group Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
 						"clientMessage": "Please fill in a valid Group Name",
 						"status": 400
 					}
 				}
 			},
-			"successes":
+			"firstName":
 			{
-				"_1":
+				"empty":
 				{
-					"clientMessage": "User Saved Successfully",
-					"status": 200
+					"devMessage": "No value has been entered for the 'name' parameter",
+					"clientMessage": "Please fill in your First Name",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\w]{2,50}$",
+					"devMessage": "firstName does not pass the proper validation regex of '^[\\w]{2,50}$'",
+					"clientMessage": "Please fill in a valid First Name",
+					"status": 400
 				}
 			},
-			"errors":
+			"lastName":
 			{
-				"_1":
+				"empty":
 				{
-					"devMessage": "A user already exists with these credentials in the Database",
-					"clientMessage": "User has already been created",
+					"devMessage": "No value has been entered for the 'name' parameter",
+					"clientMessage": "Please fill in your Last Name",
 					"status": 400
 				},
-				"_2":
-				{	
-					"devMessage": "No value has been entered for the 'firstName' parameter",
-					"clientMessage": "Please fill in your first name",
-					"status": 400
-				},
-				"_3":
+				"invalid":
 				{
-					"devMessage": "No value has been entered for the 'lastName' parameter",
-					"clientMessage": "Please fill in your last name",
+					"regex": "^[\\w]{2,50}$",
+					"devMessage": "lastName does not pass the proper validation regex of '^[\\w]{2,50}$'",
+					"clientMessage": "Please fill in a valid Last Name",
 					"status": 400
-				},
-				"_4":
-				{	"devMessage": "No value has been entered for the 'email' parameter",
-					"clientMessage": "Please fill in your email",
-					"status": 400
-				},
-				"_5":
+				}
+			},
+			"displayName":
+			{
+				"empty":
 				{
-					"devMessage": "Email does not pass the proper validation",
-					"clientMessage": "Please fill a valid email address",
+					"devMessage": "No value has been entered for the 'displayName' parameter",
+					"clientMessage": "Please fill in your Display Name",
 					"status": 400
 				},
-				"_6":
+				"invalid":
+				{
+					"regex": "^[\\w]{2,50}$",
+					"devMessage": "displayName does not pass the proper validation regex of '^[\\w]{2,50}$'",
+					"clientMessage": "Please fill in a valid Display Name",
+					"status": 400
+				}
+			},
+			"email":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'email' parameter",
+					"clientMessage": "Please fill in your Email",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\\b$",
+					"devMessage": "email does not pass the proper validation regex",
+					"clientMessage": "Please fill in a valid Email",
+					"status": 400
+				}
+			},
+			"carrier":
+			{
+				"empty":
 				{
 					"devMessage": "No value has been entered for the 'carrier' parameter",
-					"clientMessage": "Please fill in your carrier",
+					"clientMessage": "Please fill in your Carrier",
 					"status": 400
 				},
-				"_7":
-				{	"devMessage": "No value has been entered for the 'phoneNumber' parameter",
-					"clientMessage": "Please fill in your phone number",
+				"invalid":
+				{
+					"devMessage": "carrier does not pass the proper validation regex of '^[\\w]{2,50}$'",
+					"clientMessage": "Please fill in a valid Carrier",
+					"status": 400
+				}
+			},
+			"phoneNumber":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'phoneNumber' parameter",
+					"clientMessage": "Please fill in your Phone Number",
 					"status": 400
 				},
-				"_8":
-				{	"devMessage": "No value has been entered for the 'username' parameter",
-					"clientMessage": "Please fill in your username",
+				"invalid":
+				{
+					"regex": "^[\\d]{10,}$",
+					"devMessage": "phoneNumber does not pass the proper validation regex of '^[\\w]{2,50}$'",
+					"clientMessage": "Please fill in a valid Phone Number",
+					"status": 400
+				}
+			},
+			"username":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'username' parameter",
+					"clientMessage": "Please fill in your Username",
 					"status": 400
 				},
-				"_9":
+				"invalid":
+				{
+					"regex": "^[\\w]{2,50}$",
+					"devMessage": "username does not pass the proper validation regex of '^[\\w]{2,50}$'",
+					"clientMessage": "Please fill in a valid Username",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "username already exists in DB",
+					"clientMessage": "This username is already taken",
+					"status": 500
+				}
+			},
+			"password":
+			{
+				"empty":
 				{
 					"devMessage": "No value has been entered for the 'password' parameter",
-					"clientMessage":"Please fill in your password",
+					"clientMessage": "Please fill in your Password",
 					"status": 400
 				},
-				"_10":
+				"invalid":
 				{
-					"devMessage": "Password does not pass the proper validation",
-					"clientMessage":"Password should be longer",
+					"regex": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$",
+					"devMessage": "password does not pass the proper validation regex of '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$'",
+					"clientMessage": "Please fill in a valid Password",
 					"status": 400
 				}
 			}

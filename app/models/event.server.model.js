@@ -20,8 +20,9 @@ var validateNameProperty = function(property)
 var EventSchema = new Schema({
 	name: {
 		type: String,
-		required: serverJSON.api.users.groups.events.errors._1.clientMessage,
-		validate: [validateNameProperty, serverJSON.api.users.groups.events.errors._2.clientMessage],
+		required: serverJSON.api.users.groups.events.name.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.groups.events.name.invalid.regex), serverJSON.api.users.groups.events.name.invalid.clientMessage],
+		//validate: [validateNameProperty, serverJSON.api.users.groups.events.errors._2.clientMessage],
 		default: '',
 		trim: true
 	},
@@ -51,7 +52,8 @@ var EventSchema = new Schema({
 		},
 		address: {
 			type: String,
-			required: serverJSON.api.users.groups.events.errors._8.clientMessage,
+			required: serverJSON.api.users.groups.events.location.address.empty.clientMessage,
+			match: [new RegExp(serverJSON.api.users.groups.events.location.address.invalid.regex), serverJSON.api.users.groups.events.location.address.invalid.clientMessage],
 			trim: true
 		},
 		lat: {
@@ -67,11 +69,13 @@ var EventSchema = new Schema({
 	},
 	date:{
 		type: Date,
-		required: serverJSON.api.users.groups.events.errors._5.clientMessage
+		required: serverJSON.api.users.groups.events.date.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.groups.events.date.invalid.regex), serverJSON.api.users.groups.events.date.invalid.clientMessage],
 	},
 	time:{
 		type: Date,
-		required: serverJSON.api.users.groups.events.errors._6.clientMessage
+		required: serverJSON.api.users.groups.events.time.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.groups.events.time.invalid.regex), serverJSON.api.users.groups.events.time.invalid.clientMessage],
 	},
 	voteEnabled:{
 		type: Boolean,
@@ -88,7 +92,7 @@ var EventSchema = new Schema({
 	//voters:[ {type:Schema.ObjectId, ref:'User'} ],
 	message:{
 		type: String,
-		required: serverJSON.api.users.groups.events.errors._7.clientMessage
+		required: serverJSON.api.users.groups.events.message.empty.clientMessage
 	}
 
 });

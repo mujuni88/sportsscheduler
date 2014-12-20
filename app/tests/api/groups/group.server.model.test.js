@@ -50,8 +50,8 @@ describe('Group Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body.status).to.eql(serverJSON.api.users.groups.successes._1.status);
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.data).to.eql('object');
 	            id = res.body.data._id;
 	            console.log('created ID: ' + id);
 	            done();
@@ -60,17 +60,12 @@ describe('Group Model Unit Tests:', function() {
 
 	it('PUT: check if updating a group works when req has the required parameters', function(done) {
 		var name = 'UpdatedPostGroup';
-    	superagent.put('http://localhost:3000/api/users/groups')
-	        .send({
-	        	id: id,
-			  	name: name
-			})
+    	superagent.put('http://localhost:3000/api/users/groups/'+id)
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body.status).to.eql(serverJSON.api.users.groups.successes._1.status);
-	            chaiExpect(res.body.data.name).to.eql(name);
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.data).to.eql('object');
 	            console.log('updated ID: ' + id);
 	            done();
 	        });
@@ -79,18 +74,13 @@ describe('Group Model Unit Tests:', function() {
 	it('PUT: updating a group should fail when id does not exist in DB', function(done) {
 		var name = 'UpdatedPostGroup';
 
-    	superagent.put('http://localhost:3000/api/users/groups')
-	        .send({
-	        	id: -108309842,
-			  	name: name
-			})
+    	superagent.put('http://localhost:3000/api/users/groups/-1')
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body).to.be.empty;
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.error).to.eql('object');
 
-	            console.log('updated ID: ' + id);
 	            done();
 	        });
 	    });
@@ -100,8 +90,8 @@ describe('Group Model Unit Tests:', function() {
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body);
-                chaiExpect(res.body._id).to.not.be.null;
+                console.log(res.body.data);
+                chaiExpect(res.body.data._id).to.not.be.null;
                 console.log('deleted ID: ' + id);
                 done();
             });
@@ -117,7 +107,7 @@ describe('Group Model Unit Tests:', function() {
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
 	            console.log(res.body);
-	            chaiExpect(res.body).to.eql(serverJSON.api.users.groups.errors._1.clientMessage);
+	            chaiExpect(typeof res.body.error).to.eql('object');
 	            done();
 	        });
 	    });
@@ -125,13 +115,13 @@ describe('Group Model Unit Tests:', function() {
 	it('POST: should be able to show an error when saving with an invalid group name', function(done) { 
 		superagent.post('http://localhost:3000/api/users/groups')
 	        .send({
-			  name: 'sdfss/d;\'"fdf@'
+			  name: 'sdfss/d;"fdf@'
 			})
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
 	            console.log(res.body);
-	            chaiExpect(res.body).to.eql(serverJSON.api.users.groups.errors._2.clientMessage);
+	            chaiExpect(typeof res.body.error).to.eql('object');
 	            done();
 	        });
 	    });

@@ -19,18 +19,18 @@ app.route('/api/sms')
     	var to,subject,text = null;
     	var myResponse = new MyResponse();
 
-        var regEx = new RegExp(/[\d]{10,}@[a-z]*[\d]*\.[a-z]{1,4}/);
+        var regEx = new RegExp(serverJSON.api.sms.to.invalid.regex);
 
     	if(typeof req.body.to === 'undefined')
     	{
-            myResponse.setError(serverJSON.api.sms.errors._1,null);
+            myResponse.setError(serverJSON.api.sms.to.empty);
     		res.json(myResponse);
     		
             return;
     	}
         else if(!regEx.test(req.body.to))
         {
-            myResponse.setError(serverJSON.api.sms.errors._2,null);
+            myResponse.setError(serverJSON.api.sms.to.invalid);
             res.json(myResponse);
             
             return;
@@ -41,7 +41,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.subject === 'undefined')
     	{
-            myResponse.setError(serverJSON.api.sms.errors._3,null);
+            myResponse.setError(serverJSON.api.sms.subject.empty);
     		res.json(myResponse);
     		
             return;
@@ -51,7 +51,7 @@ app.route('/api/sms')
 
     	if(typeof req.body.text === 'undefined')
     	{
-            myResponse.setError(serverJSON.api.sms.errors._4,null);
+            myResponse.setError(serverJSON.api.sms.text.empty);
     		res.json(myResponse);
     		
             return;

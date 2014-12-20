@@ -4,7 +4,7 @@ var MyResponse = require('../../../custom_objects/MyResponse');
 var serverJSON = require('../../../local_files/ui/server.ui.json');
 var smsJSON = require('../../../local_files/ui/sms.ui.json');
 
-var myResponse = new MyResponse();
+
 
 function formatCarrierInfo(carrierInfo) 
 {
@@ -24,6 +24,7 @@ app.route('/api/carriers')
     
 	.get(function(req, res) {
     	
+        var myResponse = new MyResponse();
         var carriersArr = [];
         
         for(var country in smsJSON.sms.sms_carriers)
@@ -51,6 +52,7 @@ app.route('/api/carriers/countries')
 
     .get(function(req, res) {
 
+        var myResponse = new MyResponse();
         var countries = {};
 
         for(var country in smsJSON.sms.sms_carriers)
@@ -83,13 +85,13 @@ app.route('/api/carriers/countries/:countryName')
 
 	.get(function(req, res) {
 
-       
+        var myResponse = new MyResponse();
         var country = smsJSON.sms.sms_carriers[req.params.countryName];
         var carrierArr = [];
 
         if(typeof country === 'undefined')
         {
-            myResponse.setError(serverJSON.api.carriers.errors._1);
+            myResponse.setError(serverJSON.api.carriers.countries.invalid);
             res.json(myResponse);
             return;
         }
@@ -110,11 +112,12 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
 
 	.get(function(req, res) {
 
+        var myResponse = new MyResponse();
         var countryCarriers = smsJSON.sms.sms_carriers[req.params.countryName];
 
         if(typeof countryCarriers === 'undefined')
         {
-            myResponse.setError(serverJSON.api.carriers.errors._1);
+            myResponse.setError(serverJSON.api.carriers.countries.carriers.invalid);
             res.json(myResponse);
             return;
         }
@@ -123,7 +126,7 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
 
         if(typeof carrierInfo === 'undefined')
         {
-            myResponse.setError(serverJSON.api.carriers.errors._2);
+            myResponse.setError(serverJSON.api.carriers.countries.invalid);
             res.json(myResponse);
             return;
         }

@@ -31,10 +31,11 @@ exports.update = function(req, res) {
 		user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function(err) {
+			var myResponse = new MyResponse();
+
 			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
+				myResponse.transformMongooseError('api.users',String(err));
+				res.json(myResponse);
 			} else {
 				req.login(user, function(err) {
 					if (err) {
@@ -59,17 +60,18 @@ exports.delete = function(req, res) {
 
 	User.findOne({username: username}, function(err,user) {
 
-		if(user)
+		if (err) 
+		{
+			myResponse.transformMongooseError('api.users',String(err));
+			res.json(myResponse);
+		} 
+		else
 		{
 			user.remove();
 			req.user = null;
 			//res.send(username + ' has been deleted');
 			myResponse.data = user;
 			res.json(myResponse);
-		}
-		else
-		{
-			res.send(username + ' does not exist in the DB');
 		}
 	});
 };

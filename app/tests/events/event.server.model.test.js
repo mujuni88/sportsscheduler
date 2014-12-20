@@ -27,7 +27,7 @@ describe('Event Model Unit Tests:', function() {
 	        .send({
 			 	name: 'PostMan Event Name',
 			  	location: {
-			    	address: 'add'
+			    	address: 'address'
 			  	},
 			  	date: '2014-11-19T19:33:00.243Z',
 				message: 'w',
@@ -39,8 +39,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body.status).to.eql(serverJSON.api.users.groups.events.successes._1.status);
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.data).to.eql('object');
 	            id = res.body.data._id;
 	            console.log('created ID: ' + id);
 	            done();
@@ -53,7 +53,7 @@ describe('Event Model Unit Tests:', function() {
 	        .send({
 	        	name: name,
 			  	location: {
-			    	address: 'add'
+			    	address: 'address2'
 			  	},
 			  	date: '2014-11-19T19:33:00.243Z',
 				message: 'w',
@@ -65,9 +65,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body.status).to.eql(serverJSON.api.users.groups.events.successes._1.status);
-	            chaiExpect(res.body.data.name).to.eql(name);
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.data).to.eql('object');
 	            console.log('updated ID: ' + id);
 	            done();
 	        });
@@ -90,8 +89,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body).to.be.empty;
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.error).to.eql('object');
 
 	            console.log('updated ID: ' + id);
 	            done();
@@ -103,8 +102,8 @@ describe('Event Model Unit Tests:', function() {
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body);
-                chaiExpect(res.body._id).to.not.be.null;
+                console.log(res.body.data);
+                chaiExpect(typeof res.body.data).to.eql('object');
                 console.log('deleted ID: ' + id);
                 done();
             });
@@ -119,8 +118,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body).to.eql(serverJSON.api.users.groups.events.errors._1.clientMessage);
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.error).to.eql('object');
 	            done();
 	        });
 	    });
@@ -133,8 +132,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(res.body).to.eql(serverJSON.api.users.groups.events.errors._2.clientMessage);
+	            console.log(res.body.data);
+	            chaiExpect(typeof res.body.error).to.eql('object');
 	            done();
 	        });
 	    });
