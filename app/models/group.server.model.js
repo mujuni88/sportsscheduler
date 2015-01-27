@@ -40,7 +40,7 @@ var GroupSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	user: {
+	admins: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
@@ -49,6 +49,13 @@ var GroupSchema = new Schema({
 		{
 			type: Schema.ObjectId,
 			ref: 'Event'
+		}
+	],
+	users:
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'User'
 		}
 	]
 });
