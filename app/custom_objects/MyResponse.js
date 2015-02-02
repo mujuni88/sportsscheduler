@@ -59,13 +59,13 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 {
 	var i = 0;
 	var path = null;
-
+	var copyOfServerJSON = serverJSON;
 	if(err.indexOf('CastError') !== -1)
 	{
 		path = modelPath.split('.');
 
 		for(i = 0; i < path.length; ++i)
-			serverJSON = serverJSON[path[i]];
+			copyOfServerJSON = copyOfServerJSON[path[i]];
 
 		//("[\w]*")
 		var regEx = /path ("[\w]*")/;
@@ -80,13 +80,13 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		{
 			for(i = 0; i < match.length; ++i)
 			{
-				serverJSON = serverJSON[match[i]];
+				copyOfServerJSON = copyOfServerJSON[match[i]];
 			}
 		}
 		else
-			serverJSON = serverJSON[match];
+			copyOfServerJSON = copyOfServerJSON[match];
 
-		this.setError(serverJSON);
+		this.setError(copyOfServerJSON);
 	}
 	else if(err.indexOf('ValidationError') !== -1)
 	{
@@ -103,14 +103,14 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 			{
 				errMessage = messages[i].trim();
 				console.log('errMessage: ' + errMessage);
-				traverse(serverJSON,findErrorObject);
+				traverse(copyOfServerJSON,findErrorObject);
 				this.setError(foundObj);
 				foundObj = null;
 			}
 		}
 		else
 		{
-			traverse(serverJSON,findErrorObject);
+			traverse(copyOfServerJSON,findErrorObject);
 			this.setError(foundObj);
 		}
 	}
@@ -119,12 +119,12 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		path = modelPath.split('.');
 
 		for(i = 0; i < path.length; ++i)
-			serverJSON = serverJSON[path[i]];
+			copyOfServerJSON = copyOfServerJSON[path[i]];
 
 		var prop = err.substring(err.lastIndexOf("$")+1,err.lastIndexOf("_"));
 
 		if(err.indexOf('E11000') !== -1)
-			this.setError(serverJSON[prop].duplicate);
+			this.setError(copyOfServerJSON[prop].duplicate);
 	}
 };
 

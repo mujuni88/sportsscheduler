@@ -1,4 +1,10 @@
 {
+	"constants":
+	{
+		"users":"users",
+		"groups":"groups",
+		"events":"events"
+	},
 	"mongo":
 	{
 		"11000":
@@ -261,6 +267,15 @@
 						"regex": "^[\\d\\w\\-@\\s]{5,30}$",
 						"devMessage": "Group Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
 						"clientMessage": "Please fill in a valid Group Name",
+						"status": 400
+					}
+				},
+				"admins":
+				{
+					"validate":
+					{
+						"devMessage": "The passed in ObjectId does not exist",
+						"clientMessage": "This User does not exist",
 						"status": 400
 					}
 				}
