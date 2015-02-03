@@ -23,7 +23,7 @@ Helper.isValidObjectID = function(id,model,respond) {
         	respond(false);
         } else {
         	console.log('valid');
-        	//respond(true);
+        	respond(true);
         }
     });
 };

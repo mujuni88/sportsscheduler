@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	serverJSON = require('../local_files/ui/server.ui.json');
+	serverJSON = require('../local_files/ui/server.ui.json'),
+	Helper = require('../custom_objects/Helper');
 
 var validateNameProperty = function(property)
 {
@@ -89,6 +90,23 @@ var EventSchema = new Schema({
 		type: Number,
 		default: 0
 	},
+	votes: 
+	{
+		yes: 
+		[
+			{
+				type: Schema.ObjectId,
+				ref: 'User'
+			}
+		],
+		no: 
+		[
+			{
+				type: Schema.ObjectId,
+				ref: 'User'
+			}
+		],
+	},
 	//voters:[ {type:Schema.ObjectId, ref:'User'} ],
 	message:{
 		type: String,
@@ -96,9 +114,19 @@ var EventSchema = new Schema({
 	},
 	group: {
 		type: Schema.ObjectId,
-		ref: 'Group'
+		ref: 'Group',
+		required: serverJSON.api.users.groups.events.group.empty.clientMessage
 	}
 
 });
+
+EventSchema.path('group').validate(function (id,respond) {
+
+	var Group = mongoose.model('Group');
+	console.log('validate groups');
+	
+	Helper.isValidObjectID(id, Group,respond);
+	
+},serverJSON.api.users.groups.events.group.validate.clientMessage);
 
 mongoose.model('Event', EventSchema);

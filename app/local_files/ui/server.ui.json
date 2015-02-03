@@ -236,12 +236,19 @@
 							"status": 400
 						}
 					},
-					"successes":
+					"group":
 					{
-						"_1":
+						"validate":
 						{
-							"clientMessage": "Event Saved Successfully",
-							"status": 200
+							"devMessage": "The passed in ObjectId does not exist",
+							"clientMessage": "This Group does not exist",
+							"status": 400
+						},
+						"empty":
+						{
+							"devMessage": "No group id has been entered for the 'empty' parameter",
+							"clientMessage": "This Event must belong to a group",
+							"status": 400
 						}
 					}
 				},
