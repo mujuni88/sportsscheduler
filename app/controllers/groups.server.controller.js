@@ -67,8 +67,6 @@ exports.update = function(req, res) {
 	Group.findOne({_id: id}, function(err,group) {
 		
 		var myResponse = new MyResponse();
-		var i = 0;
-		var id = null;
 
 		if(err)
 		{
@@ -78,14 +76,6 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			if(req.body.admins)
-			{
-				for(i = 0; i < req.body.admins.length; ++i)
-				{
-					id = req.body.admins[i];
-					console.log('id: ' + id);
-				}
-			}
 			group = _.extend(group , req.body);
 			group.updated = Date.now();
 
