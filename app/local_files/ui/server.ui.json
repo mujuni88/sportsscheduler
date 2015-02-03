@@ -419,6 +419,24 @@
 					"clientMessage": "Please fill in a valid Password",
 					"status": 400
 				}
+			},
+			"createdGroups":
+			{
+				"validate":
+					{
+						"devMessage": "The passed in ObjectId does not exist",
+						"clientMessage": "This Group does not exist",
+						"status": 400
+					}
+			},
+			"joinedGroups":
+			{
+				"validate":
+					{
+						"devMessage": "The passed in ObjectId does not exist",
+						"clientMessage": "This Group does not exist",
+						"status": 400
+					}
 			}
 		}
 	}

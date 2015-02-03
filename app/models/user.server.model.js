@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto'),
-	serverJSON = require('../local_files/ui/server.ui.json');
+	serverJSON = require('../local_files/ui/server.ui.json'),
+	Helper = require('../custom_objects/Helper');
 
 /**
  * A Validation function for local strategy properties
@@ -71,7 +72,15 @@ var UserSchema = new Schema({
 		required: serverJSON.api.users.password.empty.clientMessage,
 		match: [new RegExp(serverJSON.api.users.password.invalid.regex), serverJSON.api.users.password.invalid.clientMessage]
 	},
-	groups: [
+	createdGroups: 
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'Group'
+		}
+	],
+	joinedGroups:
+	[
 		{
 			type: Schema.ObjectId,
 			ref: 'Group'
@@ -161,5 +170,23 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 		}
 	});
 };
+
+UserSchema.path('createdGroups').validate(function (ids,respond) {
+
+	var Group = mongoose.model('Group');
+	console.log('validate created groups');
+	
+	Helper.isValidObjectIDs(ids, Group,respond);
+	
+},serverJSON.api.users.createdGroups.validate.clientMessage);
+
+UserSchema.path('joinedGroups').validate(function (ids,respond) {
+
+	var Group = mongoose.model('Group');
+	console.log('validate joined groups');
+	
+	Helper.isValidObjectIDs(ids, Group,respond);
+	
+},serverJSON.api.users.joinedGroups.validate.clientMessage);
 
 mongoose.model('User', UserSchema);

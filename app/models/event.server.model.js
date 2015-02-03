@@ -107,7 +107,7 @@ var EventSchema = new Schema({
 			}
 		],
 	},
-	//voters:[ {type:Schema.ObjectId, ref:'User'} ],
+
 	message:{
 		type: String,
 		required: serverJSON.api.users.groups.events.message.empty.clientMessage
@@ -123,7 +123,7 @@ var EventSchema = new Schema({
 EventSchema.path('group').validate(function (id,respond) {
 
 	var Group = mongoose.model('Group');
-	console.log('validate groups');
+	console.log('validate group');
 	
 	Helper.isValidObjectID(id, Group,respond);
 	

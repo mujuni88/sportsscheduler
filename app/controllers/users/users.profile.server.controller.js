@@ -17,40 +17,46 @@ var _ = require('lodash'),
  * Update user details
  */
 exports.update = function(req, res) {
+	
 	// Init Variables
-	var user = req.user;
+	var id = req.params.userId;
 	var message = null;
+	var myResponse = new MyResponse();
 
-	// For security measurement we remove the roles from the req.body object
-	delete req.body.roles;
+	User.findOne({_id: id}, function (err, user) {
+		if (user) {
+			
+			// For security measurement we remove the roles from the req.body object
+			delete req.body.roles;
+			
+			// Merge existing user
+			user = _.extend(user, req.body);
+			user.updated = Date.now();
+			user.displayName = user.firstName + ' ' + user.lastName;
 
-	if (user) {
-		// Merge existing user
-		user = _.extend(user, req.body);
-		user.updated = Date.now();
-		user.displayName = user.firstName + ' ' + user.lastName;
+			user.save(function(err) {
+				
 
-		user.save(function(err) {
-			var myResponse = new MyResponse();
-
-			if (err) {
-				myResponse.transformMongooseError('api.users',String(err));
-				res.json(myResponse);
-			} else {
-				req.login(user, function(err) {
-					if (err) {
-						res.status(400).send(err);
-					} else {
-						res.jsonp(user);
-					}
-				});
-			}
-		});
-	} else {
-		res.status(400).send({
-			message: 'User is not signed in'
-		});
-	}
+				if (err) {
+					myResponse.transformMongooseError('api.users',String(err));
+					res.json(myResponse);
+				} else {
+					req.login(user, function(err) {
+						if (err) {
+							myResponse.transformMongooseError('api.users',String(err));
+							res.jsonp(myResponse);
+						} else {
+							myResponse.data = user;
+							res.jsonp(myResponse);
+						}
+					});
+				}
+			});
+		} else {
+			myResponse.transformMongooseError('api.users',String(err));
+			res.jsonp(myResponse);
+		}
+	});
 };
 
 exports.delete = function(req, res) {
