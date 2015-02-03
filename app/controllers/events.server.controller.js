@@ -129,12 +129,15 @@ exports.delete = function(req, res) {
  * List of Events
  */
 exports.list = function(req, res) { EventModel.find().sort('-created').populate('user', 'displayName').exec(function(err, events) {
+		
+		var myResponse = new MyResponse();
+
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
+			myResponse.transformMongooseError('api.users.groups.events',String(err));
+			res.json(myResponse);
 		} else {
-			res.jsonp(events);
+			myResponse.data = events;
+			res.jsonp(myResponse);
 		}
 	});
 };

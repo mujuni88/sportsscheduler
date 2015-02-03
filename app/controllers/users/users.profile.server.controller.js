@@ -76,6 +76,20 @@ exports.delete = function(req, res) {
 	});
 };
 
+exports.list = function(req, res) { User.find().sort('-created').populate('user', 'displayName').exec(function(err, users) {
+		
+		var myResponse = new MyResponse();
+
+		if (err) {
+			myResponse.transformMongooseError('api.users',String(err));
+			res.json(myResponse);
+		} else {
+			myResponse.data = users;
+			res.jsonp(myResponse);
+		}
+	});
+};
+
 /**
  * Send User
  */
