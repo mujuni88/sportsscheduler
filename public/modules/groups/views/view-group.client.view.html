@@ -20,22 +20,38 @@
 
         <br/>
     </div>
-    <div class="row">
-        <div class="col-sm-2">
-            <div class="list-group">
-                <a ui-sref=".members" ui-sref-active="active" class="list-group-item active">Members</a>
-                <a ui-sref=".events" ui-sref-active="active" class="list-group-item">Events</a>
+    <!--<div class="row">-->
+        <!--<div class="col-sm-2">-->
+            <!--<div class="list-group">-->
+                <!--<a ui-sref=".members" ui-sref-active="active" class="list-group-item active">Members</a>-->
+                <!--<a ui-sref=".events" ui-sref-active="active" class="list-group-item">Events</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-sm-10">-->
+            <!--<div ui-view></div>-->
+
+        <!--</div>-->
+    <!--</div>-->
+    <div class="row" role="tabpanel">
+        <div class="col-sm-12">
+
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active" ui-sref-active="active"><a ui-sref=".members">Members</a></li>
+                <li role="presentation" ui-sref-active="active"><a ui-sref=".events">Events</a></li>
+            </ul>
+            <br/>
+
+            <div class="tab-content">
+                <div ui-view></div>
             </div>
         </div>
-        <div class="col-sm-10">
-            <div ui-view></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="fb-comments " data-href="http://developers.facebook.com/docs/plugins/comments/"
+                     data-numposts="5" data-colorscheme="light" data-width="100%"></div>
+            </div>
 
         </div>
-    </div>
-    <div class="row">
-        <div class="fb-comments " data-href="http://developers.facebook.com/docs/plugins/comments/"
-             data-numposts="5" data-colorscheme="light" data-width="100%"></div>
-
     </div>
 
 </section>
