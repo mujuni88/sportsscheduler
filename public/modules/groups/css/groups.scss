@@ -1,3 +1,8 @@
 .row + .row{
   margin-top:20px;
 }
+.group{
+  .form-group{
+	margin-bottom:0;
+  }
+}

@@ -1,50 +1,86 @@
-<section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1 data-ng-bind="group.name"></h1>
-    </div>
+<section data-ng-controller="GroupsController" data-ng-init="findOne()" class="group">
     <div class="row">
-        <div class="col-sm-4">
-            <small>
-                <em class="text-muted">
-                    Posted on
-                    <span data-ng-bind="group.created | date:'mediumDate'"></span>
-                    by
-                    <span data-ng-bind="group.user.displayName"></span>
-                </em>
-            </small>
-        </div>
-        <div class="col-sm-8">
-            <div class="pull-right" data-ng-show="authentication.user._id == group.user._id">
-                <a class="btn btn-primary" href="/#!/groups/{{group._id}}/members/edit">
-                    <i class="glyphicon glyphicon-plus"></i> Add Users
+        <div class="col-sm-3 col-sm-offset-9">
+            <div class="pull-right">
+                <a class="btn btn-primary btn-sm" href="/#!/groups/{{group._id}}/edit">
+                    <i class="glyphicon glyphicon-edit"></i>
                 </a>
-                <a class="btn btn-primary" href="/#!/groups/{{group._id}}/edit">
-                    <i class="glyphicon glyphicon-edit"></i> Edit Group
-                </a>
-                <a class="btn btn-primary" data-ng-click="remove();">
+                <a class="btn btn-danger btn-sm" data-ng-click="remove();">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </div>
         </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-xs-12" data-ng-hide="groups.users">
-            <div class="alert alert-info text-center">No members in this group</div>
+        <div class="jumbotron text-center">
+            <h1 data-ng-bind="group.name"></h1>
+            <ul class="text-center list-unstyled">
+                <li><h3>Admins:</h3></li>
+                <li><h5 class="text-info" data-ng-bind="group.user.displayName"></h5></li>
+            </ul>
         </div>
-        <div class="col-xs-12" data-ng-if="groups.users">
-            <div class="list-groups">
-                <a data-ng-repeat="user in groups.users" data-ng-href="#!/users/{{user._id}}" class="list-group-item">
-                    <h4 class="list-group-item-heading" data-ng-bind="user.displayName"></h4>
-                </a>
-                <div class="pull-right">
-                    <a class="btn btn-primary" data-ng-click="removeUser(user._id);">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </div>
+
+        <br/>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="list-group">
+                <a href="" class="list-group-item active">Members</a>
+                <a href="" class="list-group-item">Events</a>
             </div>
         </div>
-    </div>
+        <div class="col-sm-10">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                           placeholder="Add Members"/>
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </span>
+                                </div>
+                            </div>
 
+                            <div class="col-xs-3" data-ng-show="authentication.user._id == group.user._id">
+                                <a class="btn btn-primary btn-sm pull-right"
+                                   href="/#!/groups/{{group._id}}/members/edit">
+                                    <i class="glyphicon glyphicon-edit"></i> 
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="panel-body">
+                    <div class="text-info text-center" data-ng-hide="groups.users">No members in this group</div>
+
+                    <div class="list-groups" data-ng-if="groups.users">
+                        <a data-ng-repeat="user in groups.users" data-ng-href="#!/users/{{user._id}}"
+                           class="list-group-item">
+                            <h4 class="list-group-item-heading" data-ng-bind="user.displayName"></h4>
+                        </a>
+
+                        <div class="pull-right">
+                            <a class="btn btn-primary" data-ng-click="removeUser(user._id);">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="fb-comments " data-href="http://developers.facebook.com/docs/plugins/comments/"
+                 data-numposts="5" data-colorscheme="light" data-width="100%"></div>
+        </div>
+
+    </div>
 
 </section>
