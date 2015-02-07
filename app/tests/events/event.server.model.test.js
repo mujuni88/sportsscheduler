@@ -6,6 +6,7 @@
 var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
+	Group = mongoose.model('Group'),
 	EventModel = mongoose.model('Event'),
 	superagent = require('superagent'),
 	chaiExpect = require('chai').expect,
@@ -20,7 +21,21 @@ var user, eventModel;
  * Unit tests
  */
 describe('Event Model Unit Tests:', function() {
+	
+	var groupId = null;
 	var id = null;
+	before(function(done) {
+		superagent.post('http://localhost:3000/api/users/groups')
+	        .send({
+			  name: 'Event Model Unit Test Group'
+			})
+	        .end(function(e,res){
+	   
+	            groupId = res.body.data._id;
+	            console.log('created Group ID: ' + groupId);
+	            done();
+	        });
+	});
 
 	it('POST: check if creation of event works when req has the required parameters', function(done) {
     	superagent.post('http://localhost:3000/api/users/groups/events')
@@ -34,7 +49,8 @@ describe('Event Model Unit Tests:', function() {
 				minVotes: 0,
 				minimumVotes: 5,
 				time: '2014-11-19T21:33:00.244Z',
-				voteEnabled: true
+				voteEnabled: true,
+				group: groupId
 			})
 	        .end(function(e,res){
 	            console.log(e);
@@ -137,4 +153,12 @@ describe('Event Model Unit Tests:', function() {
 	            done();
 	        });
 	    });
+
+	after(function(done) {
+		superagent.del('http://localhost:3000/api/users/groups/'+groupId)
+            .end(function(e,res){
+                console.log('deleted ID: ' + groupId);
+                done();
+            });
+	});
 });
