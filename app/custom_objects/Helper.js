@@ -31,22 +31,22 @@ Helper.isValidObjectID = function(id,model,respond) {
 Helper.isValidObjectIDs = function(ids,model,respond) {
 
 	model.find({
-		_id: { $in: ids}}, function (err, admins) {
-		console.log('admins: ' + admins);
-		var notFoundAdmins  = [];
+		_id: { $in: ids}}, function (err, models) {
+		console.log('models: ' + models);
+		var notFoundModels  = [];
 
-        if (err || !admins) {
+        if (err || !models) {
            respond(false);
         } 
-        else if(ids.length !== admins.length) {
+        else if(ids.length !== models.length) {
         	/*
         	for(var i = 0; i < ids.length; ++i) {
 
         		var found = false;
 
-        		for(var j = 0; j < admins.length; ++j)
+        		for(var j = 0; j < models.length; ++j)
         		{
-        			if(ids[i] === admins[j])
+        			if(ids[i] === models[j])
         			{
         				found = true;
         				break;
