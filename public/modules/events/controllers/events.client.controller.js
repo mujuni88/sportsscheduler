@@ -7,8 +7,14 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.event = $scope.event || {};
 		$scope.event = {
 			voteEnabled:true,
-			minVotes:0
+			minimumVotes:0
 		};
+
+		// Google places
+		$scope.options = {
+			country: 'us'
+		};
+		$scope.details="";
 
 
 		// Datepicker
@@ -67,6 +73,13 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 			$scope.timeError = (hrsDiff < HRS_MS)? true: false;
 		};
 
+		// watch if places api changes
+		$scope.$watch("details.geometry.location", function(newVal, oldVal){
+			if(!newVal){return;}
+
+			$scope.event.location.lat = newVal.lat();
+			$scope.event.location.lng = newVal.lng();
+		});
 
 		// Create new Event
 		$scope.create = function() {
@@ -77,7 +90,14 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 
 			// Redirect after save
 			event.$save(function(response) {
-				$location.path('events/' + response._id);
+				if(response.status === 200 && response.data){
+					$location.path('events/' + response.data._id);
+				} else if(response.error){
+					$scope.error = response.error.clientMessage;
+				} else{
+					console.log("Unknown error, Status: "+response.status);
+					$scope.error = "Unknown error";
+				}
 
 				// Clear form fields
 				$scope.name = '';
@@ -109,6 +129,11 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 			var event = $scope.event ;
 
 			event.$update(function() {
+				console.log("Update "+event);
+				if(!event){
+					$scope.error = "Error with the server";
+					return;
+				}
 				$location.path('events/' + event._id);
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
@@ -119,15 +144,16 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 		$scope.find = function() {
 			var events = Events.query(function(){
 				$scope.events = events;
+
 			});
 		};
 
 		// Find existing Event
 		$scope.findOne = function() {
-			$scope.event = Events.get({
+			var event = Events.get({
 				eventId: $stateParams.eventId
 			}, function(){
-				console.log($scope.event);
+				$scope.event = event;
 			});
 		};
 	}

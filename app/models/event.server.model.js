@@ -31,18 +31,10 @@ var EventSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	updated: {
-		type: Date,
-		default: Date.now
+	user: {
+		type: Schema.ObjectId,
+		ref: 'User'
 	},
-	// user: {
-	// 	type: Schema.ObjectId,
-	// 	ref: 'User'
-	// },
-	// group:{
-	// 	type:Schema.ObjectId,
-	// 	ref:'Group'
-	// },
 	location:{
 		//type: Object,
 		//required: 'Please fill location name',
@@ -79,16 +71,16 @@ var EventSchema = new Schema({
 		match: [new RegExp(serverJSON.api.users.groups.events.time.invalid.regex), serverJSON.api.users.groups.events.time.invalid.clientMessage],
 	},
 	voteEnabled:{
-		type: Boolean,
-		default: true
+		type:Boolean,
+		default:true
 	},
 	minimumVotes:{
-		type: Number,
-		default: 0
+		type:Number,
+		default:0
 	},
 	vote_count:{
-		type: Number,
-		default: 0
+		type:Number,
+		default:0
 	},
 	votes: 
 	{

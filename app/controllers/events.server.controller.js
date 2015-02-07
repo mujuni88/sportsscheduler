@@ -79,6 +79,7 @@ exports.update = function(req, res) {
 			event = _.extend(event , req.body);
 			event.updated = Date.now();
 
+
 			event.save(function(err) {
 				console.log('err: ' + err);
 				if (err) {
@@ -163,7 +164,6 @@ exports.eventByID = function(req, res, next, id) {
 		// next();
 		//if(err)
 		//	res.json(errorHandler.getErrorMessage(err));
-		
 		next();
 	});
 };

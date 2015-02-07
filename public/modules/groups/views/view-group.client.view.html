@@ -1,21 +1,50 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1 data-ng-bind="group.name"></h1>
-	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == group.user._id">
-		<a class="btn btn-primary" href="/#!/groups/{{group._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
-	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="group.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="group.user.displayName"></span>
-		</em>
-	</small>
+    <div class="page-header">
+        <h1 data-ng-bind="group.name"></h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <small>
+                <em class="text-muted">
+                    Posted on
+                    <span data-ng-bind="group.created | date:'mediumDate'"></span>
+                    by
+                    <span data-ng-bind="group.user.displayName"></span>
+                </em>
+            </small>
+        </div>
+        <div class="col-sm-8">
+            <div class="pull-right" data-ng-show="authentication.user._id == group.user._id">
+                <a class="btn btn-primary" href="/#!/groups/{{group._id}}/members/edit">
+                    <i class="glyphicon glyphicon-plus"></i> Add Users
+                </a>
+                <a class="btn btn-primary" href="/#!/groups/{{group._id}}/edit">
+                    <i class="glyphicon glyphicon-edit"></i> Edit Group
+                </a>
+                <a class="btn btn-primary" data-ng-click="remove();">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12" data-ng-hide="groups.users">
+            <div class="alert alert-info text-center">No members in this group</div>
+        </div>
+        <div class="col-xs-12" data-ng-if="groups.users">
+            <div class="list-groups">
+                <a data-ng-repeat="user in groups.users" data-ng-href="#!/users/{{user._id}}" class="list-group-item">
+                    <h4 class="list-group-item-heading" data-ng-bind="user.displayName"></h4>
+                </a>
+                <div class="pull-right">
+                    <a class="btn btn-primary" data-ng-click="removeUser(user._id);">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </section>
