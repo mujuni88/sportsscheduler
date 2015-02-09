@@ -20,11 +20,11 @@ describe('GET Requests', function() {
 });
 */
 
-describe('POST Requests', function() {
+describe('SMS Unit Tests', function() {
 
 	it('POST: check if sms is sent when req has the required parameters', function(done) {
         superagent.post('http://localhost:3000/api/sms')
-            .send({ 
+            .send({
                 to: '6018801788@cspire1.com',
                 subject: 'SMS Test',
                 text: 'This is a message from sms_test.js for unit testing. Checking if sms is sent when req has the required parameters'
@@ -33,7 +33,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.successes._1.status);
+                chaiExpect(res.body.status).to.eql(200);
 
                 done();
             });
@@ -51,14 +51,13 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._1.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._1.status);
+                chaiExpect(typeof res.body.error).to.eql('object');
 
                 done();
             });
         });
 
-    it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788@cspire1.com', function(done) {
+    it('POST: throw an error if "to" parameter is in an incorrect format. Test case: 6018a801788@cspire1.com', function(done) {
         superagent.post('http://localhost:3000/api/sms')
             .send({ 
                 //from: 'treyqg15@gmail.com',
@@ -70,30 +69,10 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+                chaiExpect(typeof res.body.error).to.eql('object');
 
                 done();
             });
-        });
-
-    it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788_cspire1.com', function(done) {
-        superagent.post('http://localhost:3000/api/sms')
-            .send({ 
-                //from: 'treyqg15@gmail.com',
-                to: 'test case: 6018a801788_cspire1.com',
-                subject: 'SMS Test',
-                text: 'This is a message from sms_test.js for unit testing. check if "to" parameter is in the correct format'
-            })
-            .end(function(e,res){
-                console.log(e);
-                chaiExpect(e).to.eql(null);
-                console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
-
-                done();
-            }); 
         });
 
     it('POST: check if "to" parameter is in the correct format. Test case: 6018a801788 cspire1.com', function(done) {
@@ -108,8 +87,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+                chaiExpect(typeof res.body.error).to.eql('object');
                 done();
             });
         });
@@ -126,8 +104,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._2.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._2.status);
+                chaiExpect(typeof res.body.error).to.eql('object');
                 
                 done();
             });
@@ -145,8 +122,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._3.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._3.status);
+                chaiExpect(typeof res.body.error).to.eql('object');
                 
                 done();
             });
@@ -164,8 +140,7 @@ describe('POST Requests', function() {
                 console.log(e);
                 chaiExpect(e).to.eql(null);
                 console.log(res.body);
-                chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.sms.errors._4.clientMessage);
-                chaiExpect(res.body.status).to.eql(serverJSON.api.sms.errors._4.status);
+                chaiExpect(typeof res.body.error).to.eql('object');
                 
                 done();
             });

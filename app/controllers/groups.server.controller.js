@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Group = mongoose.model('Group'),
 	MyResponse = require('../custom_objects/MyResponse'),
+	serverJSON = require('../local_files/ui/server.ui.json'),
 	_ = require('lodash');
 
 /**
@@ -16,25 +17,14 @@ exports.create = function(req, res) {
 	var group = new Group(req.body);
 	group.user = req.user;
 
-	group.save(function(err) { 
+	group.save(function(err) {
 		console.log('in save');
 		var myResponse = new MyResponse();
 
 		if (err) {
 			console.log('error: ' + err);
-			res.json(errorHandler.getErrorMessage(err));
-			// if(err.errors)
-			// {
-			// 	for(var property in err.errors)
-			// 	{
-			// 		console.log(err.errors[property]);
-			// 		console.log('prop: ' + property);
-			// 		var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
-			// 		myResponse.setError(errorObj);
-			// 		res.json(myResponse);
-			// 		return;
-			// 	}
-			// }
+			myResponse.transformMongooseError('api.users.groups',String(err));
+			res.json(myResponse);
 		}
 		else {
 			console.log('saved successfully');
@@ -48,7 +38,22 @@ exports.create = function(req, res) {
  * Show the current Group
  */
 exports.read = function(req, res) {
-	res.jsonp(req.group);
+	
+	var id = req.params.groupId;
+
+	Group.findOne({_id: id}, function(err,group) {
+		
+		var myResponse = new MyResponse();
+
+		if(err)
+		{
+			console.log(err);
+			myResponse.transformMongooseError('api.users.groups',String(err));
+			res.json(myResponse);
+		}
+		else
+			res.jsonp(group);
+	});
 };
 
 /**
@@ -57,14 +62,17 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	
 	var myResponse = new MyResponse();
-	var id = req.body.id;
+	var id = req.params.groupId;
 
 	Group.findOne({_id: id}, function(err,group) {
+		
+		var myResponse = new MyResponse();
 
 		if(err)
 		{
 			console.log(err);
-			res.json(errorHandler.getErrorMessage(err));
+			myResponse.transformMongooseError('api.users.groups',String(err));
+			res.json(myResponse);
 		}
 		else
 		{
@@ -73,7 +81,8 @@ exports.update = function(req, res) {
 
 			group.save(function(err) {
 				if (err) {
-					res.json(errorHandler.getErrorMessage(err));
+					myResponse.transformMongooseError('api.users.groups',String(err));
+					res.json(myResponse);
 				} else {
 					myResponse.data = group;
 					res.jsonp(myResponse);
@@ -87,19 +96,23 @@ exports.update = function(req, res) {
  * Delete an Group
  */
 exports.delete = function(req, res) {
-	//var group = req.group ;
-	console.log(req.params);
+
 	var id = req.params.groupId;
 	console.log('group id: ' + id);
 	var myResponse = new MyResponse();
 
 	Group.findOne({_id: id}, function(err,group) {
+
+		var myResponse = new MyResponse();
+
 		group.remove(function(err) {
 			if (err) {
-				res.status(400);
-				res.json(errorHandler.getErrorMessage(err));
+				console.log(err);
+				myResponse.transformMongooseError('api.users.groups',String(err));
+				res.json(myResponse);
 			} else {
-				res.jsonp(group);
+				myResponse.data = group;
+				res.jsonp(myResponse);
 			}
 		});
 
@@ -110,12 +123,15 @@ exports.delete = function(req, res) {
  * List of Groups
  */
 exports.list = function(req, res) { Group.find().sort('-created').populate('user', 'displayName').exec(function(err, groups) {
+		
+		var myResponse = new MyResponse();
+
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
+			myResponse.transformMongooseError('api.users.groups',String(err));
+			res.json(myResponse);
 		} else {
-			res.jsonp(groups);
+			myResponse.data = groups;
+			res.jsonp(myResponse);
 		}
 	});
 };
@@ -123,10 +139,22 @@ exports.list = function(req, res) { Group.find().sort('-created').populate('user
 /**
  * Group middleware
  */
-exports.groupByID = function(req, res, next, id) { Group.findById(id).populate('user', 'displayName').exec(function(err, group) {
-		if (err) return next(err);
-		if (! group) return next(new Error('Failed to load Group ' + id));
-		req.group = group ;
+exports.groupByID = function(req, res, next, id) { 
+
+	var myResponse = new MyResponse();
+	
+	if(!mongoose.Types.ObjectId.isValid(id))
+	{
+		myResponse.setError(serverJSON.api.users.groups._id.invalid);
+		res.json(myResponse);
+		return;
+	}
+
+	Group.findById(id).populate('user', 'displayName').exec(function(err, group) {
+		//if (err) return next(err);
+		//if (! group) return next(new Error('Failed to load Group ' + id));
+		//req.group = group ;
+
 		next();
 	});
 };

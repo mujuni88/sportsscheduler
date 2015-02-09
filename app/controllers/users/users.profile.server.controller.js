@@ -17,39 +17,46 @@ var _ = require('lodash'),
  * Update user details
  */
 exports.update = function(req, res) {
+	
 	// Init Variables
-	var user = req.user;
+	var id = req.params.userId;
 	var message = null;
+	var myResponse = new MyResponse();
 
-	// For security measurement we remove the roles from the req.body object
-	delete req.body.roles;
+	User.findOne({_id: id}, function (err, user) {
+		if (user) {
+			
+			// For security measurement we remove the roles from the req.body object
+			delete req.body.roles;
+			
+			// Merge existing user
+			user = _.extend(user, req.body);
+			user.updated = Date.now();
+			user.displayName = user.firstName + ' ' + user.lastName;
 
-	if (user) {
-		// Merge existing user
-		user = _.extend(user, req.body);
-		user.updated = Date.now();
-		user.displayName = user.firstName + ' ' + user.lastName;
+			user.save(function(err) {
+				
 
-		user.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				req.login(user, function(err) {
-					if (err) {
-						res.status(400).send(err);
-					} else {
-						res.jsonp(user);
-					}
-				});
-			}
-		});
-	} else {
-		res.status(400).send({
-			message: 'User is not signed in'
-		});
-	}
+				if (err) {
+					myResponse.transformMongooseError('api.users',String(err));
+					res.json(myResponse);
+				} else {
+					req.login(user, function(err) {
+						if (err) {
+							myResponse.transformMongooseError('api.users',String(err));
+							res.jsonp(myResponse);
+						} else {
+							myResponse.data = user;
+							res.jsonp(myResponse);
+						}
+					});
+				}
+			});
+		} else {
+			myResponse.transformMongooseError('api.users',String(err));
+			res.jsonp(myResponse);
+		}
+	});
 };
 
 exports.delete = function(req, res) {
@@ -59,7 +66,12 @@ exports.delete = function(req, res) {
 
 	User.findOne({username: username}, function(err,user) {
 
-		if(user)
+		if (err) 
+		{
+			myResponse.transformMongooseError('api.users',String(err));
+			res.json(myResponse);
+		} 
+		else
 		{
 			user.remove();
 			req.user = null;
@@ -67,9 +79,48 @@ exports.delete = function(req, res) {
 			myResponse.data = user;
 			res.json(myResponse);
 		}
+	});
+};
+
+exports.list = function(req, res) { User.find().sort('-created').populate('user', 'displayName').exec(function(err, users) {
+		
+		var myResponse = new MyResponse();
+		console.log('list');
+
+		var username = req.query.username;
+		console.log('username: ' + username);
+		
+		if(username)
+		{
+			var regex = ".*"+username+".*";
+			console.log('regex: ' + regex);
+
+			User.find({
+				username: 
+				{
+					$regex: new RegExp(regex,'i')
+				}
+			},function(err,users) {
+				console.log('err: ' + err);
+
+				if (err) {
+					myResponse.transformMongooseError('api.users',String(err));
+					res.json(myResponse);
+				} else {
+					myResponse.data = users;
+					res.jsonp(myResponse);
+				}
+			});
+		}
 		else
 		{
-			res.send(username + ' does not exist in the DB');
+			if (err) {
+				myResponse.transformMongooseError('api.users',String(err));
+				res.json(myResponse);
+			} else {
+				myResponse.data = users;
+				res.jsonp(myResponse);
+			}
 		}
 	});
 };

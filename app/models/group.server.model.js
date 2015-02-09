@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	serverJSON = require('../local_files/ui/server.ui.json');
+	serverJSON = require('../local_files/ui/server.ui.json'),
+	Helper = require('../custom_objects/Helper');
 
 var validateNameProperty = function(property)
 {
@@ -27,8 +28,9 @@ var GroupSchema = new Schema({
 	name: {
 		type: String,
 		default: '',
-		required: serverJSON.api.users.groups.errors._1.clientMessage,
-		validate: [validateNameProperty, serverJSON.api.users.groups.errors._2.clientMessage],
+		required: serverJSON.api.users.groups.name.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.groups.name.invalid.regex), serverJSON.api.users.groups.name.invalid.clientMessage],
+		//validate: [validateNameProperty, serverJSON.api.users.groups.errors._2.clientMessage],
 		trim: true
 	},
 	created: {
@@ -39,10 +41,46 @@ var GroupSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
+	admins: 
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'User'
+		}
+	],
+	events: 
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'Event'
+		}
+	],
+	users:
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'User'
+		}
+	]
 });
+
+GroupSchema.path('admins').validate(function (ids,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate admins');
+	
+	Helper.isValidObjectIDs(ids, User,respond);
+	
+},serverJSON.api.users.groups.admins.validate.clientMessage);
+
+GroupSchema.path('users').validate(function (ids,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate users');
+	
+	Helper.isValidObjectIDs(ids, User,respond);
+	
+},serverJSON.api.users.groups.admins.validate.clientMessage);
+
 
 mongoose.model('Group', GroupSchema);

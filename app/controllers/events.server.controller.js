@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	EventModel = mongoose.model('Event'),
 	MyResponse = require('../custom_objects/MyResponse'),
+	serverJSON = require('../local_files/ui/server.ui.json'),
 	_ = require('lodash');
 
 /**
@@ -22,7 +23,8 @@ exports.create = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			res.json(errorHandler.getErrorMessage(err));
+			myResponse.transformMongooseError('api.users.groups.events',String(err));
+			res.json(myResponse);
 			// if(err.errors)
 			// {
 			// 	for(var property in err.errors)
@@ -48,8 +50,8 @@ exports.create = function(req, res) {
  * Show the current Event
  */
 exports.read = function(req, res) {
-	console.log(req.event);
-	res.jsonp(req.event);
+	//console.log(req.event);
+	//res.jsonp(req.event);
 };
 
 /**
@@ -57,28 +59,32 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
 	
-	console.log(req.params);
-	var id = req.params.eventId;
-	console.log('event id: ' + id);
 	var myResponse = new MyResponse();
+	var id = req.params.eventId;
 
 	EventModel.findOne({_id: id}, function(err,event) {
+		
+		var myResponse = new MyResponse();
+		var i = 0;
+		var id = null;
+
 		if(err)
 		{
-			res.status(400);
-			res.json(errorHandler.getErrorMessage(err));
+			console.log(err);
+			myResponse.transformMongooseError('api.users.groups.events',String(err));
+			res.json(myResponse);
 		}
 		else
 		{
-			console.log(req.body);
 			event = _.extend(event , req.body);
+			event.updated = Date.now();
 
 
 			event.save(function(err) {
-				var myResponse = new MyResponse();
+				console.log('err: ' + err);
 				if (err) {
-					//res.status(400);
-					res.json(errorHandler.getErrorMessage(err));
+					myResponse.transformMongooseError('api.users.groups.events',String(err));
+					res.json(myResponse);
 				} else {
 					myResponse.data = event;
 					res.jsonp(myResponse);
@@ -124,12 +130,15 @@ exports.delete = function(req, res) {
  * List of Events
  */
 exports.list = function(req, res) { EventModel.find().sort('-created').populate('user', 'displayName').exec(function(err, events) {
+		
+		var myResponse = new MyResponse();
+
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
+			myResponse.transformMongooseError('api.users.groups.events',String(err));
+			res.json(myResponse);
 		} else {
-			res.jsonp(events);
+			myResponse.data = events;
+			res.jsonp(myResponse);
 		}
 	});
 };
@@ -137,15 +146,24 @@ exports.list = function(req, res) { EventModel.find().sort('-created').populate(
 /**
  * Event middleware
  */
-exports.eventByID = function(req, res, next, id) { EventModel.findById(id).populate('user', 'displayName').exec(function(err, event) {
+exports.eventByID = function(req, res, next, id) { 
+
+	var myResponse = new MyResponse();
+	
+	if(!mongoose.Types.ObjectId.isValid(id))
+	{
+		myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+		res.json(myResponse);
+		return;
+	}
+
+	EventModel.findById(id).populate('group', 'name').exec(function(err, event) {
 		// if (err) return next(err);
 		// if (! event) return next(new Error('Failed to load Event ' + id));
 		// req.event = event ;
 		// next();
-		if(err)
-			res.json(errorHandler.getErrorMessage(err));
-
-		req.event = event ;
+		//if(err)
+		//	res.json(errorHandler.getErrorMessage(err));
 		next();
 	});
 };

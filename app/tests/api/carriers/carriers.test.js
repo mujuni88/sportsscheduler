@@ -4,7 +4,7 @@ var superagent = require('superagent');
 var chaiExpect = require('chai').expect;
 var serverJSON = require('../../../local_files/ui/server.ui.json');
 
-describe('GET Requests', function() {
+describe('Carrier Unit Tests', function() {
 
 	it('GET: check if requesting for all carriers returns successful', function(done) {
 		superagent.get('http://localhost:3000/api/carriers')
@@ -13,7 +13,6 @@ describe('GET Requests', function() {
             chaiExpect(e).to.eql(null);
 
             chaiExpect(typeof res.body.data).to.eql('object');
-            chaiExpect(res.body.status).to.eql(200);
 
             done();
         });
@@ -26,7 +25,6 @@ describe('GET Requests', function() {
             chaiExpect(e).to.eql(null);
 
             chaiExpect(typeof res.body.data).to.eql('object');
-            chaiExpect(res.body.status).to.eql(200);
 
             done();
         });
@@ -38,7 +36,6 @@ describe('GET Requests', function() {
             console.log(e);
             chaiExpect(e).to.eql(null);
             chaiExpect(typeof res.body.data).to.eql('object');
-            chaiExpect(res.body.status).to.eql(200);
 
             done();
       	});
@@ -51,7 +48,6 @@ describe('GET Requests', function() {
             chaiExpect(e).to.eql(null);
 
             chaiExpect(typeof res.body.data).to.eql('object');
-            chaiExpect(res.body.status).to.eql(200);
 
             done();
   	    });
@@ -63,9 +59,8 @@ describe('GET Requests', function() {
             console.log(e);
             chaiExpect(e).to.eql(null);
 
-            chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.carriers.errors._1.clientMessage);
-            chaiExpect(res.body.status).to.eql(400);
-
+            chaiExpect(typeof res.body.error).to.eql('object');
+            
             done();
         });
     });
@@ -76,8 +71,7 @@ describe('GET Requests', function() {
             console.log(e);
             chaiExpect(e).to.eql(null);
 
-            chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.carriers.errors._2.clientMessage);
-            chaiExpect(res.body.status).to.eql(400);
+            chaiExpect(typeof res.body.error).to.eql('object');
 
             done();
         });
@@ -89,8 +83,7 @@ describe('GET Requests', function() {
             console.log(e);
             chaiExpect(e).to.eql(null);
 
-            chaiExpect(res.body.clientMessage).to.eql(serverJSON.api.carriers.errors._1.clientMessage);
-            chaiExpect(res.body.status).to.eql(400);
+            chaiExpect(typeof res.body.error).to.eql('object');
 
             done();
         });

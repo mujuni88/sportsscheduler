@@ -1,14 +1,9 @@
 'use strict';
 
 var MyError = function() {
-    
-    //MUST BE STRING
-    this.clientMessage = ''; 
 
-    //MUST BE OBJECT
-    this.data = {};
-
-    this.status = null;
+    //array of objects
+    this.messages = [];
 };
 
 module.exports = MyError;

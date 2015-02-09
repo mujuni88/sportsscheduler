@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto'),
-	serverJSON = require('../local_files/ui/server.ui.json');
+	serverJSON = require('../local_files/ui/server.ui.json'),
+	Helper = require('../custom_objects/Helper');
 
 /**
  * A Validation function for local strategy properties
@@ -33,49 +34,58 @@ var UserSchema = new Schema({
 	firstName: {
 		type: String,
 		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._2.clientMessage]
+		required: serverJSON.api.users.firstName.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.firstName.invalid.regex), serverJSON.api.users.firstName.invalid.clientMessage]
 	},
 	lastName: {
 		type: String,
 		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._3.clientMessage]
-	},
-	displayName: {
-		type: String,
-		trim: true
+		required: serverJSON.api.users.lastName.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.lastName.invalid.regex), serverJSON.api.users.lastName.invalid.clientMessage]
 	},
 	email: {
 		type: String,
 		trim: true,
 		default: '',
-		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._4.clientMessage],
-		match: [/.+\@.+\..+/, serverJSON.api.users.errors._5.clientMessage]
+		match: [new RegExp(serverJSON.api.users.email.invalid.regex), serverJSON.api.users.email.invalid.clientMessage]
 	},
 	carrier: {
 		type: String,
 		trim: true,
 		default: '',
-		validate: [validateLocalStrategyProperty, serverJSON.api.users.errors._6.clientMessage]
 	},
 	phoneNumber: {
 		type: Number,
 		default: -1,
-		validate: [validateLocalStrategyPhoneNumber, serverJSON.api.users.errors._7.clientMessage]
+		match: [new RegExp(serverJSON.api.users.phoneNumber.invalid.regex), serverJSON.api.users.phoneNumber.invalid.clientMessage]
 	},
 	username: {
 		type: String,
 		unique: 'testing error message',
-		required: serverJSON.api.users.errors._8.clientMessage,
+		required: serverJSON.api.users.username.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.username.invalid.regex), serverJSON.api.users.username.invalid.clientMessage],
 		trim: true
 	},
 	password: {
 		type: String,
 		default: '',
-		required: serverJSON.api.users.errors._9.clientMessage,
-		match: [/[\d\w]{6,}/, serverJSON.api.users.errors._10.clientMessage]
+		required: serverJSON.api.users.password.empty.clientMessage,
+		match: [new RegExp(serverJSON.api.users.password.invalid.regex), serverJSON.api.users.password.invalid.clientMessage]
 	},
+	createdGroups: 
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'Group'
+		}
+	],
+	joinedGroups:
+	[
+		{
+			type: Schema.ObjectId,
+			ref: 'Group'
+		}
+	],
 	salt: {
 		type: String
 	},
@@ -160,5 +170,23 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 		}
 	});
 };
+
+UserSchema.path('createdGroups').validate(function (ids,respond) {
+
+	var Group = mongoose.model('Group');
+	console.log('validate created groups');
+	
+	Helper.isValidObjectIDs(ids, Group,respond);
+	
+},serverJSON.api.users.createdGroups.validate.clientMessage);
+
+UserSchema.path('joinedGroups').validate(function (ids,respond) {
+
+	var Group = mongoose.model('Group');
+	console.log('validate joined groups');
+	
+	Helper.isValidObjectIDs(ids, Group,respond);
+	
+},serverJSON.api.users.joinedGroups.validate.clientMessage);
 
 mongoose.model('User', UserSchema);

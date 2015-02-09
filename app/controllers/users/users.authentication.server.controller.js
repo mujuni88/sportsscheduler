@@ -33,7 +33,8 @@ exports.signup = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			res.json(errorHandler.getErrorMessage(err));
+			myResponse.transformMongooseError('api.users',String(err));
+			res.json(myResponse);
 			// if(err.errors)
 			// {
 			// 	for(var property in err.errors)
@@ -67,9 +68,13 @@ exports.signup = function(req, res) {
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
+
 	passport.authenticate('local', function(err, user, info) {
+		var myResponse = new MyResponse();
+
 		if (err || !user) {
-			res.status(400).send(info);
+			myResponse.transformMongooseError('api.users',String(err));
+			res.json(myResponse);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
@@ -79,6 +84,7 @@ exports.signin = function(req, res, next) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
+					myResponse.data = user;
 					res.jsonp(user);
 				}
 			});
