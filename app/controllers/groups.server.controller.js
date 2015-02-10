@@ -15,8 +15,8 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var group = new Group(req.body);
-	group.user = req.user;
-
+	group.admins = [req.user];
+	console.log(req.user);
 	group.save(function(err) {
 		console.log('in save');
 		var myResponse = new MyResponse();
@@ -153,7 +153,7 @@ exports.groupByID = function(req, res, next, id) {
 	Group.findById(id).populate('user', 'displayName').exec(function(err, group) {
 		//if (err) return next(err);
 		//if (! group) return next(new Error('Failed to load Group ' + id));
-		//req.group = group ;
+		req.group = group ;
 
 		next();
 	});

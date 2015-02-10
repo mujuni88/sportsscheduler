@@ -160,7 +160,7 @@ exports.eventByID = function(req, res, next, id) {
 	EventModel.findById(id).populate('group', 'name').exec(function(err, event) {
 		// if (err) return next(err);
 		// if (! event) return next(new Error('Failed to load Event ' + id));
-		// req.event = event ;
+		req.event = event ;
 		// next();
 		//if(err)
 		//	res.json(errorHandler.getErrorMessage(err));
