@@ -67,11 +67,17 @@ exports.update = function(req, res) {
 	Group.findOne({_id: id}, function(err,group) {
 		
 		var myResponse = new MyResponse();
-
+		console.log(err);
+		console.log('group1: ' + group);
 		if(err)
 		{
 			console.log(err);
 			myResponse.transformMongooseError('api.users.groups',String(err));
+			res.json(myResponse);
+		}
+		else if(!group)
+		{
+			myResponse.setError(serverJSON.api.users.groups._id.invalid);
 			res.json(myResponse);
 		}
 		else
@@ -104,18 +110,31 @@ exports.delete = function(req, res) {
 	Group.findOne({_id: id}, function(err,group) {
 
 		var myResponse = new MyResponse();
-
-		group.remove(function(err) {
-			if (err) {
-				console.log(err);
-				myResponse.transformMongooseError('api.users.groups',String(err));
-				res.json(myResponse);
-			} else {
-				myResponse.data = group;
-				res.jsonp(myResponse);
-			}
-		});
-
+		
+		if(err)
+		{
+			console.log(err);
+			myResponse.transformMongooseError('api.users.groups',String(err));
+			res.json(myResponse);
+		}
+		else if(!group)
+		{
+			myResponse.setError(serverJSON.api.users.groups._id.invalid);
+			res.json(myResponse);
+		}
+		else
+		{
+			group.remove(function(err) {
+				if (err) {
+					console.log(err);
+					myResponse.transformMongooseError('api.users.groups',String(err));
+					res.json(myResponse);
+				} else {
+					myResponse.data = group;
+					res.jsonp(myResponse);
+				}
+			});
+		}
 	});
 };
 

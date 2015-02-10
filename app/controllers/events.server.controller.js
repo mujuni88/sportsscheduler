@@ -74,11 +74,15 @@ exports.update = function(req, res) {
 			myResponse.transformMongooseError('api.users.groups.events',String(err));
 			res.json(myResponse);
 		}
+		else if(!event)
+		{
+			myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+			res.json(myResponse);
+		}
 		else
 		{
 			event = _.extend(event , req.body);
 			event.updated = Date.now();
-
 
 			event.save(function(err) {
 				console.log('err: ' + err);
@@ -109,6 +113,11 @@ exports.delete = function(req, res) {
 		{
 			res.status(400);
 			res.json(errorHandler.getErrorMessage(err));
+		}
+		else if(!event)
+		{
+			myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+			res.json(myResponse);
 		}
 		else
 		{
