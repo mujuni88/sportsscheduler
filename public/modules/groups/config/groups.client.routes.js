@@ -17,11 +17,19 @@ angular.module('groups').config(['$stateProvider',
                 url: '/groups/:groupId',
                 templateUrl: 'modules/groups/views/view-group.client.view.html'
             }).
-            state('viewGroup.members', {
+            state('viewGroup.listMembers', {
                 url: '/members',
                 templateUrl: 'modules/groups/views/view-members-group.client.view.html'
             }).
-            state('viewGroup.events', {
+            state('viewGroup.listMembers.viewMembers', {
+                url: '/list',
+                templateUrl: 'modules/groups/views/list-members-group.client.view.html'
+            }).
+            state('viewGroup.listMembers.addMembers', {
+                url: '/add',
+                templateUrl: 'modules/groups/views/add-members-group.client.view.html'
+            }).
+            state('viewGroup.listEvents', {
                 url: '/events',
                 templateUrl: 'modules/groups/views/view-events-group.client.view.html'
             }).

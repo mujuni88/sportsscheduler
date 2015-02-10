@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('validationrule').directive('match', [
+angular.module('validationrule').directive('vr-match', [
 	function() {
         return {
             require: 'ngModel',

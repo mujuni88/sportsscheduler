@@ -7,7 +7,24 @@ angular.module('groups').factory('Groups', ['$resource',
 		}, {
 			update: {
 				method: 'PUT'
-			}
+			},
+            query:{
+                method: 'GET'
+            }
 		});
 	}
-]);
+]).
+factory('Search', ['$http', function($http){
+        return {
+            getUsers:function(val) {
+                return $http.get('/api/users/', {
+                    params: {
+                        username: val
+                    }
+                }).then(function(response){
+                    console.log(response.data);
+                    return response.data;
+                });
+            }
+        };
+    }]);
