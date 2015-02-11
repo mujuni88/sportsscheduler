@@ -55,7 +55,7 @@ var GroupSchema = new Schema({
 			ref: 'Event'
 		}
 	],
-	users:
+	members:
 	[
 		{
 			type: Schema.ObjectId,
@@ -73,14 +73,23 @@ GroupSchema.path('admins').validate(function (ids,respond) {
 	
 },serverJSON.api.users.groups.admins.validate.clientMessage);
 
-GroupSchema.path('users').validate(function (ids,respond) {
+GroupSchema.path('events').validate(function (ids,respond) {
+
+	var Event = mongoose.model('Event');
+	console.log('validate events');
+	
+	Helper.isValidObjectIDs(ids, Event,respond);
+	
+},serverJSON.api.users.groups.admins.validate.clientMessage);
+
+GroupSchema.path('members').validate(function (ids,respond) {
 
 	var User = mongoose.model('User');
-	console.log('validate users');
+	console.log('validate members');
 	
 	Helper.isValidObjectIDs(ids, User,respond);
 	
-},serverJSON.api.users.groups.admins.validate.clientMessage);
+},serverJSON.api.users.groups.members.validate.clientMessage);
 
 
 mongoose.model('Group', GroupSchema);

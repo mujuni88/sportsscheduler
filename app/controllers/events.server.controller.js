@@ -74,11 +74,15 @@ exports.update = function(req, res) {
 			myResponse.transformMongooseError('api.users.groups.events',String(err));
 			res.json(myResponse);
 		}
+		else if(!event)
+		{
+			myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+			res.json(myResponse);
+		}
 		else
 		{
 			event = _.extend(event , req.body);
 			event.updated = Date.now();
-
 
 			event.save(function(err) {
 				console.log('err: ' + err);
@@ -109,6 +113,11 @@ exports.delete = function(req, res) {
 		{
 			res.status(400);
 			res.json(errorHandler.getErrorMessage(err));
+		}
+		else if(!event)
+		{
+			myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+			res.json(myResponse);
 		}
 		else
 		{
@@ -160,7 +169,7 @@ exports.eventByID = function(req, res, next, id) {
 	EventModel.findById(id).populate('group', 'name').exec(function(err, event) {
 		// if (err) return next(err);
 		// if (! event) return next(new Error('Failed to load Event ' + id));
-		// req.event = event ;
+		req.event = event ;
 		// next();
 		//if(err)
 		//	res.json(errorHandler.getErrorMessage(err));

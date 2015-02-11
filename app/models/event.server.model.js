@@ -76,11 +76,7 @@ var EventSchema = new Schema({
 	},
 	minimumVotes:{
 		type:Number,
-		default:0
-	},
-	vote_count:{
-		type:Number,
-		default:0
+		required: serverJSON.api.users.groups.events.minimumVotes.empty.clientMessage
 	},
 	votes: 
 	{
