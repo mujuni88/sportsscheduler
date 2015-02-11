@@ -1,27 +1,32 @@
 <script type="text/ng-template" id="customTemplate.html">
-    <a>
-        <span class="badge">{{match.displayName}}</span>
+    <a class="">
+        <span class="">{{match.model.username}}</span><span class="pull-right"><i
+            class="glyphicon glyphicon-plus-sign"></i></span>
     </a>
 </script>
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-1 col-xs-1">
+                <div class="col-sm-2">
                     <a class="btn btn-default btn-sm"
                        href="/#!/groups/{{group._id}}/members/list">
                         <i class="glyphicon glyphicon-arrow-left"></i> <span class="hidden-xs">Back</span>
                     </a>
                 </div>
-                <div class="col-sm-8 col-xs-10 col-xs-offset-1">
+                <div class="col-sm-6 col-sm-offset-1">
+                    <br class="visible-xs"/>
                     <div class="input-group">
-                        <input type="text" typeahead="member for member in getUsers($viewValue)" typeahead-loading="loading" typeahead-template-url="customTemplate.html" class="form-control"
+                        <input type="text" typeahead-on-select="onSelect($item, $model, $label)"
+                               typeahead="member as member.username for member in getMembers($viewValue)"
+                               typeahead-loading="loading" typeahead-template-url="customTemplate.html"
+                               class="form-control"
                                placeholder="Search for a member to add" data-ng-model="search.members"/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>
                     </div>
-                    <div ng-show="loading"><br/>loading...</div>
+                    <div data-ng-show="loading"><br/>loading...</div>
                 </div>
             </div>
         </div>
@@ -29,22 +34,17 @@
 
     </div>
     <div class="panel-body">
-        <div class="alert alert-warning text-center" data-ng-hide="temp.members">
+        <div class="alert alert-warning text-center" data-ng-hide="members.length">
             <i class="glyphicon glyphicon-exclamation-sign"></i> Search above using a members username to add them.
         </div>
-        <div class="list-groups">
-            <div data-ng-repeat="user in temp.members">
-                <a data-ng-href="#!/users/{{user._id}}"
-                   class="list-group-item">
-                    <h4 class="list-group-item-heading" data-ng-bind="user.displayName"></h4>
-                </a>
-                <div class="pull-right">
-                    <a class="btn btn-primary" data-ng-click="removeUser(user._id);">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </div>
-            </div >
-        </div>
+        <ul class="list-groups list-unstyled">
+            <li class="list-group-item" data-ng-repeat="member in members">
+                <span class="" data-ng-bind="member.username"></span>
+                <span class="pull-right btn-link" data-ng-click="removeMember($index, member._id);">
+                    <i class="glyphicon glyphicon-remove text-danger"></i>
+                </span>
+            </li>
+        </ul>
     </div>
 
     <div class="panel-footer">

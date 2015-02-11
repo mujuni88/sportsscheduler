@@ -1,14 +1,44 @@
 'use strict';
 
 // Groups controller
-angular.module('groups').controller('GroupsController', ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups','Search',
-    function ($scope, $state, $stateParams, $location, Authentication, Groups, Search) {
+angular.module('groups').controller('GroupsController', ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups','Search','lodash',
+    function ($scope, $state, $stateParams, $location, Authentication, Groups, Search, _) {
         $scope.authentication = Authentication;
-
         $scope.$state = $state;
 
         // Create new Group
-        $scope.create = function () {
+        $scope.create = create;
+
+        // Remove existing Group
+        $scope.remove = remove;
+
+        // Update existing Group
+        $scope.update = update;
+
+        // Find a list of Groups
+        $scope.find = find; 
+        
+        // Find existing Group
+        $scope.findOne = findOne;
+
+        
+        $scope.temp = {
+            members: []
+            };
+        
+        // Search for members
+        $scope.getMembers = Search.getUsers;
+        
+        // Called when a member is selected
+        $scope.onSelect = onSelect;
+        
+        // Save members to their group
+        $scope.saveMembers = saveMembers;
+        
+        // Remove member from temporary group
+        $scope.removeMember = removeMember;
+
+        function create() {
             // Create new Group object
             var group = new Groups($scope.group);
 
@@ -27,10 +57,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
-        };
-
-        // Remove existing Group
-        $scope.remove = function (group) {
+        }
+        
+        function remove(group) {
             if (group) {
                 group.$remove();
 
@@ -44,33 +73,53 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
                     $location.path('groups');
                 });
             }
-        };
-
-        // Update existing Group
-        $scope.update = function () {
+        }
+        
+        
+        
+        function update() {
             var group = $scope.group;
-
+            console.log(group);
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
-        };
-
-        // Find a list of Groups
-        $scope.find = function () {
+        }
+        
+        function find() {
             var groups = Groups.query(function () {
                 $scope.groups = groups.data;
             });
-        };
-
-        // Find existing Group
-        $scope.findOne = function () {
+        }
+        function findOne() {
             $scope.group = Groups.get({
                 groupId: $stateParams.groupId
+            }, function(){
+                $scope.members = $scope.group.members;
             });
-        };
+            
+        }
         
-        $scope.getUsers = Search.getUsers;
+        function onSelect($item, $model, $label){
+            var tempMembers = $scope.members;
+            tempMembers.push($model);
+            
+            $scope.members = _.uniq(tempMembers, 'username');
+        }
+        
+        function saveMembers(){
+            var union = _.union($scope.group.members, $scope.members);
+            var uniq = _.uniq(union,'_id');
+            var ids = _.pluck(uniq, "_id");
+            
+            $scope.group.members = ids;
+            update();
+        }
+        
+        function removeMember(index, id){
+            $scope.members.splice(index,1);
+        }
+        
     }
 ]);
