@@ -9,7 +9,8 @@ var _ = require('lodash'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
 	MyResponse = require('../../custom_objects/MyResponse'),
-	serverJSON = require('../../local_files/ui/server.ui.json');
+	serverJSON = require('../../local_files/ui/server.ui.json'),
+	Helper = require('../../custom_objects/Helper');
 
 /**
  * Signup
@@ -56,8 +57,7 @@ exports.signup = function(req, res) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
-					myResponse.data = user;
-					res.jsonp(myResponse);
+					Helper.populateModel(User,user,'api.users',res);
 				}
 			});
 		}

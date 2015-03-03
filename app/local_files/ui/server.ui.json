@@ -287,6 +287,15 @@
 							"clientMessage": "This Event must belong to a group",
 							"status": 400
 						}
+					},
+					"user":
+					{
+						"validate":
+						{
+							"devMessage": "The passed in ObjectId does not exist",
+							"clientMessage": "This User does not exist",
+							"status": 400
+						}
 					}
 				},
 				"_id":
@@ -328,6 +337,12 @@
 					"validate":
 					{
 						"devMessage": "The passed in ObjectId does not exist",
+						"clientMessage": "This User does not exist",
+						"status": 400
+					},
+					"invalid":
+					{
+						"devMessage": "Invalid ObjectID for event",
 						"clientMessage": "This User does not exist",
 						"status": 400
 					}

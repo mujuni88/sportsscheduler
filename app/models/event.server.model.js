@@ -31,10 +31,6 @@ var EventSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	},
 	location:{
 		//type: Object,
 		//required: 'Please fill location name',
@@ -104,9 +100,15 @@ var EventSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'Group',
 		required: serverJSON.api.users.groups.events.group.empty.clientMessage
+	},
+	user: {
+		type: Schema.ObjectId,
+		ref: 'User'
 	}
-
 });
+
+EventSchema.statics.objectIDAtts = ['user','group'];
+EventSchema.statics.title = serverJSON.constants.events;
 
 EventSchema.path('group').validate(function (id,respond) {
 
@@ -116,5 +118,14 @@ EventSchema.path('group').validate(function (id,respond) {
 	Helper.isValidObjectID(id, Group,respond);
 	
 },serverJSON.api.users.groups.events.group.validate.clientMessage);
+
+EventSchema.path('user').validate(function (id,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate user');
+	
+	Helper.isValidObjectID(id,User,respond);
+	
+},serverJSON.api.users.groups.events.user.validate.clientMessage);
 
 mongoose.model('Event', EventSchema);

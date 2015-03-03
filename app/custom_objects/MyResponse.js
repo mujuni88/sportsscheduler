@@ -85,8 +85,8 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		}
 		else
 			copyOfServerJSON = copyOfServerJSON[match];
-
-		this.setError(copyOfServerJSON.invalid);
+		console.log(copyOfServerJSON);
+		this.setError(copyOfServerJSON.validate);
 	}
 	else if(err.indexOf('ValidationError') !== -1)
 	{

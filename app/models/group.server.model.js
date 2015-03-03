@@ -64,6 +64,9 @@ var GroupSchema = new Schema({
 	]
 });
 
+GroupSchema.statics.objectIDAtts = ['admins','events','members'];
+GroupSchema.statics.title = serverJSON.constants.groups;
+
 GroupSchema.path('admins').validate(function (ids,respond) {
 
 	var User = mongoose.model('User');

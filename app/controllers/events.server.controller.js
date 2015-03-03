@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 	EventModel = mongoose.model('Event'),
 	MyResponse = require('../custom_objects/MyResponse'),
 	serverJSON = require('../local_files/ui/server.ui.json'),
+	Helper = require('../custom_objects/Helper'),
 	_ = require('lodash');
 
 /**
@@ -40,8 +41,7 @@ exports.create = function(req, res) {
 		}
 		else {
 			console.log('saved successfully');
-			myResponse.data = event;
-			res.jsonp(myResponse);
+			Helper.populateModel(EventModel,event,'api.users.groups.events',res);
 		}
 	});
 };
@@ -65,8 +65,6 @@ exports.update = function(req, res) {
 	EventModel.findOne({_id: id}, function(err,event) {
 		
 		var myResponse = new MyResponse();
-		var i = 0;
-		var id = null;
 
 		if(err)
 		{
@@ -82,6 +80,7 @@ exports.update = function(req, res) {
 		else
 		{
 			event = _.extend(event , req.body);
+			console.log('event: ' + event);
 			event.updated = Date.now();
 
 			event.save(function(err) {
@@ -90,8 +89,7 @@ exports.update = function(req, res) {
 					myResponse.transformMongooseError('api.users.groups.events',String(err));
 					res.json(myResponse);
 				} else {
-					myResponse.data = event;
-					res.jsonp(myResponse);
+					Helper.populateModel(EventModel,event,'api.users.groups.events',res);
 				}
 			});
 		}
@@ -126,8 +124,7 @@ exports.delete = function(req, res) {
 					res.status(400);
 					res.json(errorHandler.getErrorMessage(err));
 				} else {
-					myResponse.data = event;
-					res.jsonp(myResponse);
+					Helper.populateModel(EventModel,event,'api.users.groups.events',res);
 				}
 			});
 		}
@@ -138,7 +135,7 @@ exports.delete = function(req, res) {
 /**
  * List of Events
  */
-exports.list = function(req, res) { EventModel.find().sort('-created').populate('user', 'displayName').exec(function(err, events) {
+exports.list = function(req, res) { EventModel.find().sort('-created').populate(EventModel.objectIDAtts).exec(function(err, events) {
 		
 		var myResponse = new MyResponse();
 
@@ -146,8 +143,7 @@ exports.list = function(req, res) { EventModel.find().sort('-created').populate(
 			myResponse.transformMongooseError('api.users.groups.events',String(err));
 			res.json(myResponse);
 		} else {
-			myResponse.data = events;
-			res.jsonp(myResponse);
+			Helper.populateModel(EventModel,events,'api.users.groups.events',res);
 		}
 	});
 };
