@@ -10,7 +10,7 @@ var should = require('should'),
 	EventModel = mongoose.model('Event'),
 	superagent = require('superagent'),
 	chaiExpect = require('chai').expect,
-	serverJSON = require('../../local_files/ui/server.ui.json');
+	serverJSON = require('../../../../../local_files/ui/server.ui.json');
 
 /**
  * Globals
@@ -30,7 +30,7 @@ describe('Event Model Unit Tests:', function() {
 			  name: 'Event Model Unit Test Group'
 			})
 	        .end(function(e,res){
-	   
+	   			console.log(res.body.error);
 	            groupId = res.body.data._id;
 	            console.log('created Group ID: ' + groupId);
 	            done();

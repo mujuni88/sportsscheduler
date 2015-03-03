@@ -9,7 +9,7 @@ var should = require('should'),
 	Group = mongoose.model('Group'),
 	superagent = require('superagent'),
 	chaiExpect = require('chai').expect,
-	serverJSON = require('../../../local_files/ui/server.ui.json');
+	serverJSON = require('../../../../local_files/ui/server.ui.json');
 
 /**
  * Globals
@@ -21,25 +21,21 @@ var user, group;
  */
 describe('Group Model Unit Tests:', function() {
 	var id = null;
-	beforeEach(function(done) {
-		// user = new User({
-		// 	firstName: 'Full',
-		// 	lastName: 'Name',
-		// 	displayName: 'Full Name',
-		// 	email: 'test@test.com',
-		// 	username: 'username',
-		// 	password: 'password'
+	before(function(done) {
+		// var user = new User({
+		// 	password: "unittest",
+		// 	email: "unittest@postman.com",
+		// 	lastName: "test",
+		// 	firstName: "unit",
+		// 	username: "unittest",
+		// 	carrier: "unittestT&T",
+		// 	phoneNumber: "6018801788"
 		// });
 
 		// user.save(function() { 
-		// 	group = new Group({
-		// 		name: 'Group Name',
-		// 		user: user
-		// 	});
-
+			
 		// 	done();
 		// });
-		done();
 	});
 
 	it('POST: check if creation of group works when req has the required parameters', function(done) {
@@ -50,7 +46,7 @@ describe('Group Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
+	            console.log(res.body.error);
 	            chaiExpect(typeof res.body.data).to.eql('object');
 	            id = res.body.data._id;
 	            console.log('created ID: ' + id);
