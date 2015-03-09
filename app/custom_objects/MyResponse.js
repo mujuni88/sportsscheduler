@@ -58,7 +58,7 @@ MyResponse.prototype.setError = function(errObj)
 MyResponse.setData = function(data)
 {
 	this.data = data;
-}
+};
 
 MyResponse.prototype.transformMongooseError = function(modelPath,err)
 {

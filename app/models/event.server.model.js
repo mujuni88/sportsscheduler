@@ -114,14 +114,6 @@ var EventSchema = new Schema({
 EventSchema.statics.objectIDAtts = ['user','group'];
 EventSchema.statics.title = serverJSON.constants.events;
 
-var waterfall = function(arg1,arg2) {
-
-	return function(done) {
-		console.log('arg1: ' + arg1);
-		done(null,arg2);
-	};
-};
-
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {
 
