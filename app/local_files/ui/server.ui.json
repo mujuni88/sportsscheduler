@@ -249,8 +249,14 @@
 						{
 							"invalid":
 							{
-								"devMessage": "Invalid ObjectID for group",
-								"clientMessage": "This group does not exist",
+								"devMessage": "Invalid ObjectID for event",
+								"clientMessage": "This event does not exist",
+								"status": 400
+							},
+							"unique":
+							{
+								"devMessage": "Duplicate ObjectID has been found in both yes and no arrays",
+								"clientMessage": "You have already entered in your vote",
 								"status": 400
 							}
 						},
@@ -258,8 +264,14 @@
 						{
 							"invalid":
 							{
-								"devMessage": "Invalid ObjectID for group",
-								"clientMessage": "This group does not exist",
+								"devMessage": "Invalid ObjectID for event",
+								"clientMessage": "This event does not exist",
+								"status": 400
+							},
+							"unique":
+							{
+								"devMessage": "Duplicate ObjectID has been found in both yes and no arrays",
+								"clientMessage": "You have already entered in your vote",
 								"status": 400
 							}
 						}
@@ -275,7 +287,7 @@
 					},
 					"group":
 					{
-						"validate":
+						"invalid":
 						{
 							"devMessage": "The passed in ObjectId does not exist",
 							"clientMessage": "This Group does not exist",
@@ -290,7 +302,7 @@
 					},
 					"user":
 					{
-						"validate":
+						"invalid":
 						{
 							"devMessage": "The passed in ObjectId does not exist",
 							"clientMessage": "This User does not exist",
@@ -325,7 +337,7 @@
 				},
 				"admins":
 				{
-					"validate":
+					"invalid":
 					{
 						"devMessage": "The passed in ObjectId does not exist",
 						"clientMessage": "This User does not exist",
@@ -334,12 +346,6 @@
 				},
 				"members":
 				{
-					"validate":
-					{
-						"devMessage": "The passed in ObjectId does not exist",
-						"clientMessage": "This User does not exist",
-						"status": 400
-					},
 					"invalid":
 					{
 						"devMessage": "Invalid ObjectID for event",
@@ -483,21 +489,21 @@
 			},
 			"createdGroups":
 			{
-				"validate":
-					{
-						"devMessage": "The passed in ObjectId does not exist",
-						"clientMessage": "This Group does not exist",
-						"status": 400
-					}
+				"invalid":
+				{
+					"devMessage": "The passed in ObjectId does not exist",
+					"clientMessage": "This Group does not exist",
+					"status": 400
+				}
 			},
 			"joinedGroups":
 			{
-				"validate":
-					{
-						"devMessage": "The passed in ObjectId does not exist",
-						"clientMessage": "This Group does not exist",
-						"status": 400
-					}
+				"invalid":
+				{
+					"devMessage": "The passed in ObjectId does not exist",
+					"clientMessage": "This Group does not exist",
+					"status": 400
+				}
 			}
 		}
 	}

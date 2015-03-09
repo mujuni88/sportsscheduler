@@ -2,22 +2,15 @@
 
 var serverJSON = require('../local_files/ui/server.ui.json'),
 	mongoose = require('mongoose'),
-    MyResponse = require('./MyResponse');
+    MyResponse = require('./MyResponse'),
+    async = require('async');
 
 function Helper() {
 	
 }
 
 /*******PRIVATE FUNCTIONS***********/
-function getAttsString(arr)
-{
-    var attsString = '';
 
-    for(var i = 0; i < arr.length; ++i)
-        attsString += arr[i] + ' ';
-
-    return attsString;
-}
 /********END PRIVATE FUNCTIONS***********/
 
 Helper.getAttsString = function(arr)
@@ -30,66 +23,73 @@ Helper.getAttsString = function(arr)
     return attsString;
 };
 
+/**************** WATERFALL FUNCTIONS *********************/
+
 Helper.isValidObjectID = function(id,model,respond) {
 
-	//	console.log('function');
-	model.findOne({_id: id}, function (err, mod) {
-		
-		console.log('err: ' + err);
-        
-        if (err || !mod) {
-        	console.log('not valid');
-        	respond(false);
-        } else {
-        	console.log('valid');
-        	respond(true);
-        }
-    });
+	return function(done) {
+    	model.findOne({_id: id}, function (err, mod) {
+    		
+    		console.log('err: ' + err);
+            
+            if (err || !mod) {
+            	done(true,false);
+            } else {
+            	done(null,true);
+            }
+        });
+    };
 };
 
-Helper.isValidObjectIDs = function(ids,model,respond) {
 
-	model.find({
-		_id: { $in: ids}}, function (err, models) {
-		console.log('models: ' + models);
-		var notFoundModels  = [];
+Helper.isValidObjectIDs = function(ids,model) {
 
-        if (err || !models) {
-           respond(false);
-        } 
-        else if(ids.length !== models.length) {
-        	/*
-        	for(var i = 0; i < ids.length; ++i) {
+    return function(done)
+    {
+    	model.find({
+    		_id: { $in: ids}}, function (err, models) {
+    		console.log('models: ' + models);
+    		var notFoundModels  = [];
 
-        		var found = false;
+            if (err || !models) {
+               done(true,false);
+            } 
+            else if(ids.length !== models.length) {
+            	/*
+            	for(var i = 0; i < ids.length; ++i) {
 
-        		for(var j = 0; j < models.length; ++j)
-        		{
-        			if(ids[i] === models[j])
-        			{
-        				found = true;
-        				break;
-        			}
-        		}
+            		var found = false;
 
-        		if(!found)
-        			notFoundAdmins.push(ids[i]);
-        	}
-			*/
+            		for(var j = 0; j < models.length; ++j)
+            		{
+            			if(ids[i] === models[j])
+            			{
+            				found = true;
+            				break;
+            			}
+            		}
 
-        	respond(false);
-        }
-        
-        respond(true);
-	});
+            		if(!found)
+            			notFoundAdmins.push(ids[i]);
+            	}
+    			*/
+
+            	done(true,false);
+            }
+            
+            done(null, true);
+    	});
+    };
 };
+
+/**************** END WATERFALL FUNCTIONS *********************/
 
 Helper.findOne = function(model,query,errPath,res) {
     
     console.log('find one');
     var myResponse = new MyResponse();
     var atts = model.objectIDAtts;
-    var attsString = getAttsString(atts);
+    var attsString = Helper.getAttsString(atts);
 
     model.findOne(query)
     .populate({path: attsString})
@@ -141,7 +141,7 @@ Helper.populateModel = function(model,obj,errPath,res) {
     };
 
     model.populate(obj, options, function (err, obj) {
-        myResponse.data = obj;
+        myResponse.setData(obj);
         res.json(myResponse);
     });
         

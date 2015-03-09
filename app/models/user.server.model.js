@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto'),
 	serverJSON = require('../local_files/ui/server.ui.json'),
+	async = require('async'),
 	Helper = require('../custom_objects/Helper');
 
 /**
@@ -174,22 +175,40 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 	});
 };
 
+/*********** Validate Functions **************/
+
 UserSchema.path('createdGroups').validate(function (ids,respond) {
 
 	var Group = mongoose.model('Group');
 	console.log('validate created groups');
 	
-	Helper.isValidObjectIDs(ids, Group,respond);
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, Group)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
 	
-},serverJSON.api.users.createdGroups.validate.clientMessage);
+},serverJSON.api.users.createdGroups.invalid.clientMessage);
 
 UserSchema.path('joinedGroups').validate(function (ids,respond) {
 
 	var Group = mongoose.model('Group');
 	console.log('validate joined groups');
 	
-	Helper.isValidObjectIDs(ids, Group,respond);
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, Group)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
 	
-},serverJSON.api.users.joinedGroups.validate.clientMessage);
+},serverJSON.api.users.joinedGroups.invalid.clientMessage);
+
+/*********** END Validate Functions **************/
 
 mongoose.model('User', UserSchema);

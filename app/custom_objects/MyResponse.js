@@ -55,6 +55,11 @@ MyResponse.prototype.setError = function(errObj)
 	this.status = errObj.status;
 };
 
+MyResponse.setData = function(data)
+{
+	this.data = data;
+}
+
 MyResponse.prototype.transformMongooseError = function(modelPath,err)
 {
 	var i = 0;
@@ -67,8 +72,9 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		for(i = 0; i < path.length; ++i)
 			copyOfServerJSON = copyOfServerJSON[path[i]];
 
+		console.log('err: ' + err);
 		//("[\w]*")
-		var regEx = /path ("[\w]*")/;
+		var regEx = /path ("[\w.*]*")/;
 		var match = regEx.exec(err)[1].replace(/"/g,'');
 
 		if(match.indexOf('.') !== -1)
@@ -85,8 +91,8 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		}
 		else
 			copyOfServerJSON = copyOfServerJSON[match];
-		console.log(copyOfServerJSON);
-		this.setError(copyOfServerJSON.validate);
+
+		this.setError(copyOfServerJSON.invalid);
 	}
 	else if(err.indexOf('ValidationError') !== -1)
 	{

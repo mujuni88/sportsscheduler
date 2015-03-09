@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	MyResponse = require('../custom_objects/MyResponse'),
 	serverJSON = require('../local_files/ui/server.ui.json'),
 	Helper = require('../custom_objects/Helper'),
+	async = require('async'),
 	_ = require('lodash');
 
 /**
