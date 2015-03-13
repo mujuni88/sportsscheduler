@@ -6,8 +6,10 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Group = mongoose.model('Group'),
+	User = mongoose.model('User'),
 	MyResponse = require('../custom_objects/MyResponse'),
 	serverJSON = require('../local_files/ui/server.ui.json'),
+	Helper = require('../custom_objects/Helper'),
 	_ = require('lodash');
 
 /**
@@ -20,7 +22,6 @@ exports.create = function(req, res) {
 	group.save(function(err) {
 		console.log('in save');
 		var myResponse = new MyResponse();
-
 		if (err) {
 			console.log('error: ' + err);
 			myResponse.transformMongooseError('api.users.groups',String(err));
@@ -28,9 +29,23 @@ exports.create = function(req, res) {
 		}
 		else {
 			console.log('saved successfully');
-			myResponse.data = group;
-			res.jsonp(myResponse);
+			Helper.populateModel(Group,group,'api.users.groups',res);
 		}
+
+		
+
+		// Group.populate(group, {path:"admins"},function(err,group){
+		// 	if (err) {
+		// 		console.log('error: ' + err);
+		// 		myResponse.transformMongooseError('api.users.groups',String(err));
+		// 		res.json(myResponse);
+		// 	}
+		// 	else {
+		// 		console.log('saved successfully');
+		// 		myResponse.data = group;
+		// 		res.jsonp(myResponse);
+		// 	}
+		// });
 	});
 };
 
@@ -45,14 +60,14 @@ exports.read = function(req, res) {
 		
 		var myResponse = new MyResponse();
 
-		if(err)
-		{
-			console.log(err);
+		if (err) {
+			console.log('error: ' + err);
 			myResponse.transformMongooseError('api.users.groups',String(err));
 			res.json(myResponse);
 		}
-		else
-			res.jsonp(group);
+		else {
+			Helper.populateModel(Group,group,'api.users.groups',res);
+		}
 	});
 };
 
@@ -86,12 +101,16 @@ exports.update = function(req, res) {
 			group.updated = Date.now();
 
 			group.save(function(err) {
+				console.log('in save');
+
 				if (err) {
+					console.log('error: ' + err);
 					myResponse.transformMongooseError('api.users.groups',String(err));
 					res.json(myResponse);
-				} else {
-					myResponse.data = group;
-					res.jsonp(myResponse);
+				}
+				else {
+					console.log('saved successfully');
+					Helper.populateModel(Group,group,'api.users.groups',res);
 				}
 			});
 		}
@@ -126,12 +145,13 @@ exports.delete = function(req, res) {
 		{
 			group.remove(function(err) {
 				if (err) {
-					console.log(err);
+					console.log('error: ' + err);
 					myResponse.transformMongooseError('api.users.groups',String(err));
 					res.json(myResponse);
-				} else {
-					myResponse.data = group;
-					res.jsonp(myResponse);
+				}
+				else {
+					console.log('saved successfully');
+					Helper.populateModel(Group,group,'api.users.groups',res);
 				}
 			});
 		}
@@ -141,7 +161,7 @@ exports.delete = function(req, res) {
 /**
  * List of Groups
  */
-exports.list = function(req, res) { Group.find().sort('-created').populate('user', 'displayName').exec(function(err, groups) {
+exports.list = function(req, res) { Group.find().sort('-created').populate(Group.objectIDAtts).exec(function(err, groups) {
 		
 		var myResponse = new MyResponse();
 
@@ -149,8 +169,7 @@ exports.list = function(req, res) { Group.find().sort('-created').populate('user
 			myResponse.transformMongooseError('api.users.groups',String(err));
 			res.json(myResponse);
 		} else {
-			myResponse.data = groups;
-			res.jsonp(myResponse);
+			Helper.populateModel(Group,groups,'api.users.groups',res);
 		}
 	});
 };

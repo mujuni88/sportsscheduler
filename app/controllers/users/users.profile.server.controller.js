@@ -3,6 +3,7 @@
 var MyResponse = require('../../custom_objects/MyResponse');
 var Sender = require('../../custom_objects/Sender');
 var serverJSON = require('../../local_files/ui/server.ui.json');
+var Helper = require('../../custom_objects/Helper');
 
 /**
  * Module dependencies.
@@ -23,7 +24,9 @@ exports.update = function(req, res) {
 	var message = null;
 	var myResponse = new MyResponse();
 
-	User.findOne({_id: id}, function (err, user) {
+	User.findOne({_id: id})
+	.populate({path: Helper.getAttsString(User.objectIDAtts)})
+	.exec(function (err, user) {
 		if (user) {
 			
 			// For security measurement we remove the roles from the req.body object
@@ -43,11 +46,24 @@ exports.update = function(req, res) {
 				} else {
 					req.login(user, function(err) {
 						if (err) {
+							console.log('error: ' + err);
 							myResponse.transformMongooseError('api.users',String(err));
-							res.jsonp(myResponse);
-						} else {
-							myResponse.data = user;
-							res.jsonp(myResponse);
+							res.json(myResponse);
+						}
+						else {
+							console.log('saved successfully');
+
+							//Helper.findOne(User,{id: id},'api.users',res);
+							Helper.populateModel(User,user,'api.users',res);
+							//myResponse.data = user;
+							//res.json(myResponse);
+							/*
+							User.populate(user, {path:"createdGroups"}, function(err, user) {
+								myResponse.data = user;
+								res.json(myResponse);
+							});
+							*/
+
 						}
 					});
 				}
@@ -66,30 +82,28 @@ exports.delete = function(req, res) {
 
 	User.findOne({username: username}, function(err,user) {
 
-		if (err) 
-		{
+		if (err || !user) {
+			console.log('error: ' + err);
 			myResponse.transformMongooseError('api.users',String(err));
 			res.json(myResponse);
-		} 
-		else
-		{
+		}
+		else {
+			console.log('deleted successfully');
 			user.remove();
 			req.user = null;
-			//res.send(username + ' has been deleted');
-			myResponse.data = user;
-			res.json(myResponse);
+			Helper.populateModel(User,user,'api.users',res);
 		}
 	});
 };
 
-exports.list = function(req, res) { User.find().sort('-created').populate('user', 'displayName').exec(function(err, users) {
+exports.list = function(req, res) { User.find().sort('-created').populate(User.objectIDAtts + ' createdGroups.admins').exec(function(err, users) {
 		
 		var myResponse = new MyResponse();
 		console.log('list');
 
 		var username = req.query.username;
 		console.log('username: ' + username);
-		
+		console.log('users: ' + users);
 		if(username)
 		{
 			var regex = ".*"+username+".*";
@@ -100,15 +114,18 @@ exports.list = function(req, res) { User.find().sort('-created').populate('user'
 				{
 					$regex: new RegExp(regex,'i')
 				}
-			},function(err,users) {
+			})
+			.select('_id username email')
+			.exec(function(err,users) {
 				console.log('err: ' + err);
 
 				if (err) {
 					myResponse.transformMongooseError('api.users',String(err));
 					res.json(myResponse);
 				} else {
-					myResponse.data = users;
-					res.jsonp(myResponse);
+					Helper.populateModel(User,users,'api.users',res);
+					//myResponse.data = users;
+					//res.jsonp(myResponse);
 				}
 			});
 		}
@@ -118,8 +135,9 @@ exports.list = function(req, res) { User.find().sort('-created').populate('user'
 				myResponse.transformMongooseError('api.users',String(err));
 				res.json(myResponse);
 			} else {
-				myResponse.data = users;
-				res.jsonp(myResponse);
+				//myResponse.data = users;
+				//res.jsonp(myResponse);
+				Helper.populateModel(User,users,'api.users',res);
 			}
 		}
 	});

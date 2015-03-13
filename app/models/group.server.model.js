@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	serverJSON = require('../local_files/ui/server.ui.json'),
+	async = require('async'),
 	Helper = require('../custom_objects/Helper');
 
 var validateNameProperty = function(property)
@@ -64,32 +65,58 @@ var GroupSchema = new Schema({
 	]
 });
 
+GroupSchema.statics.objectIDAtts = ['admins','events','members'];
+GroupSchema.statics.title = serverJSON.constants.groups;
+
+/*********** Validate Functions **************/
 GroupSchema.path('admins').validate(function (ids,respond) {
 
 	var User = mongoose.model('User');
 	console.log('validate admins');
 	
-	Helper.isValidObjectIDs(ids, User,respond);
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, User)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
 	
-},serverJSON.api.users.groups.admins.validate.clientMessage);
+},serverJSON.api.users.groups.admins.invalid.clientMessage);
 
 GroupSchema.path('events').validate(function (ids,respond) {
 
 	var Event = mongoose.model('Event');
 	console.log('validate events');
 	
-	Helper.isValidObjectIDs(ids, Event,respond);
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, Event)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
 	
-},serverJSON.api.users.groups.admins.validate.clientMessage);
+},serverJSON.api.users.groups.events._id.invalid.clientMessage);
 
 GroupSchema.path('members').validate(function (ids,respond) {
 
 	var User = mongoose.model('User');
 	console.log('validate members');
 	
-	Helper.isValidObjectIDs(ids, User,respond);
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, User)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
 	
-},serverJSON.api.users.groups.members.validate.clientMessage);
+},serverJSON.api.users.groups.members.invalid.clientMessage);
 
+/*********** END Validate Functions **************/
 
 mongoose.model('Group', GroupSchema);

@@ -3,10 +3,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
+var _ = require('lodash'),
+	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	serverJSON = require('../local_files/ui/server.ui.json'),
-	Helper = require('../custom_objects/Helper');
+	Helper = require('../custom_objects/Helper'),
+	async = require('async'),
+	ValidationError = require('mongoose/lib/error/validation'),
+	ValidatorError =  require('mongoose/lib/error/validator');
 
 var validateNameProperty = function(property)
 {
@@ -30,10 +34,6 @@ var EventSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
-	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
 	},
 	location:{
 		//type: Object,
@@ -104,17 +104,114 @@ var EventSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'Group',
 		required: serverJSON.api.users.groups.events.group.empty.clientMessage
+	},
+	user: {
+		type: Schema.ObjectId,
+		ref: 'User'
 	}
-
 });
 
+EventSchema.statics.objectIDAtts = ['user','group'];
+EventSchema.statics.title = serverJSON.constants.events;
+
+/*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {
 
 	var Group = mongoose.model('Group');
 	console.log('validate group');
 	
-	Helper.isValidObjectID(id, Group,respond);
+	async.waterfall([
+		Helper.isValidObjectID(id, Group)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
 	
-},serverJSON.api.users.groups.events.group.validate.clientMessage);
+	
+},serverJSON.api.users.groups.events.group.invalid.clientMessage);
+
+EventSchema.path('user').validate(function (id,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate user');
+	
+	async.waterfall([
+		Helper.isValidObjectID(id, User)
+    ], function (error, success) {
+        if (error) 
+        	respond(false);
+        else
+        	respond(true);
+    });
+	
+},serverJSON.api.users.groups.events.user.invalid.clientMessage);
+
+EventSchema.path('votes.yes').validate(function (ids,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate votes "yes"');
+	
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, User)
+    ], function (error, success) {
+        if (error) 
+        	respond(false);
+        else
+        	respond(true);
+    });
+	
+},serverJSON.api.users.groups.events.votes.yes.invalid.clientMessage);
+
+EventSchema.path('votes.no').validate(function (ids,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate votes "no"');
+	
+	async.waterfall([
+		Helper.isValidObjectIDs(ids, User)
+    ], function (error, success) {
+        if (error) 
+        	respond(false);
+        else
+        	respond(true);
+    });
+	
+},serverJSON.api.users.groups.events.votes.no.invalid.clientMessage);
+
+/*********** END Validate Functions **************/
+
+/*********** PRE Functions ***********/
+EventSchema.pre('save', function (next) {
+	
+	console.log('event pre save: ' + this);
+
+	var yesArr = [];
+	var noArr = [];
+	var i = null;
+
+	for(i = 0; i < this.votes.yes.length; ++i)
+		yesArr.push(this.votes.yes[i].toString());
+
+	for(i = 0; i < this.votes.no.length; ++i)
+		noArr.push(this.votes.no[i].toString());
+
+	console.log('yesArr: ' + yesArr);
+	console.log('noArr: ' + noArr);
+
+	var intersection = _.intersection(yesArr,noArr);
+
+	console.log('intersection: ' + intersection);
+
+	var err = new ValidationError(this);
+	err.errors.votes = new ValidatorError('votes.yes', serverJSON.api.users.groups.events.votes.yes.unique.clientMessage, 'notunique', '');
+  	
+  	console.log(err);
+  	
+  	next(err);
+});
+
+/*********** END PRE Functions ***********/
 
 mongoose.model('Event', EventSchema);
