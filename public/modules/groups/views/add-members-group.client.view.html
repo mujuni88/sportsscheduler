@@ -1,7 +1,8 @@
 <script type="text/ng-template" id="customTemplate.html">
     <a class="">
-        <span class="">{{match.model.username}}</span><span class="pull-right"><i
-            class="glyphicon glyphicon-plus-sign"></i></span>
+        <span>{{match.model.displayName}} / {{match.model.username}} </span>
+        <!--<span class="badge"> </span>-->
+        <!--<span class="pull-right"><i class="glyphicon glyphicon-plus-sign"></i></span>-->
     </a>
 </script>
 <div class="panel panel-default">
@@ -40,7 +41,7 @@
         <ul class="list-groups list-unstyled">
             <li class="list-group-item" data-ng-repeat="member in members">
                 <span class="" data-ng-bind="member.username"></span>
-                <span class="pull-right btn-link" data-ng-click="removeMember($index, member._id);">
+                <span class="pull-right btn-link" data-ng-click="removeMember($index);">
                     <i class="glyphicon glyphicon-remove text-danger"></i>
                 </span>
             </li>
