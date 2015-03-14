@@ -1,6 +1,12 @@
 'use strict';
 
 /**
+* @fileOverview User Model Declaration
+* @author <a href="mailto:jd@example.com">Trey Gaines</a>
+*/
+
+
+/**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
@@ -29,9 +35,12 @@ var validateLocalStrategyPassword = function(password) {
 };
 
 /**
- * User Schema
+ *	@class User
  */
 var UserSchema = new Schema({
+	/**
+	*	@property firstName
+	*/
 	firstName: {
 		type: String,
 		trim: true,
@@ -43,6 +52,10 @@ var UserSchema = new Schema({
 		trim: true,
 		required: serverJSON.api.users.lastName.empty.clientMessage,
 		match: [new RegExp(serverJSON.api.users.lastName.invalid.regex), serverJSON.api.users.lastName.invalid.clientMessage]
+	},
+	displayName: {
+		type: String,
+		trim: true
 	},
 	email: {
 		type: String,
@@ -132,6 +145,9 @@ UserSchema.pre('save', function(next) {
 		this.password = this.hashPassword(this.password);
 	}
 
+	//concatenate firstName and lastName to make displayName
+	this.displayName = this.firstName + ' ' + this.lastName;
+	
 	next();
 });
 
