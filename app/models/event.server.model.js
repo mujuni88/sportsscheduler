@@ -202,14 +202,19 @@ EventSchema.pre('save', function (next) {
 
 	var intersection = _.intersection(yesArr,noArr);
 
-	console.log('intersection: ' + intersection);
 
-	var err = new ValidationError(this);
-	err.errors.votes = new ValidatorError('votes.yes', serverJSON.api.users.groups.events.votes.yes.unique.clientMessage, 'notunique', '');
-  	
-  	console.log(err);
-  	
-  	next(err);
+	console.log('intersection: ' + intersection);
+	if(intersection.length)
+	{
+		var err = new ValidationError(this);
+		err.errors.votes = new ValidatorError('votes.yes', serverJSON.api.users.groups.events.votes.yes.unique.clientMessage, 'notunique', '');
+	  	
+	  	console.log(err);
+	  	
+	  	next(err);
+	 }
+	 else
+	 	next();
 });
 
 /*********** END PRE Functions ***********/

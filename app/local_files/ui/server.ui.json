@@ -348,7 +348,7 @@
 				{
 					"invalid":
 					{
-						"devMessage": "Invalid ObjectID for event",
+						"devMessage": "The passed in ObjectId does not exist",
 						"clientMessage": "This User does not exist",
 						"status": 400
 					}

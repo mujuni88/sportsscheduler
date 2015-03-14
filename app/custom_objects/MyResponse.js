@@ -55,7 +55,7 @@ MyResponse.prototype.setError = function(errObj)
 	this.status = errObj.status;
 };
 
-MyResponse.setData = function(data)
+MyResponse.prototype.setData = function(data)
 {
 	this.data = data;
 };

@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 			},
 			serverJS: {
 				files: watchFiles.serverJS,
-				tasks: ['jshint'],
+				tasks: ['jshint','jsdoc'],
 				options: {
 					livereload: true
 				}
@@ -72,6 +72,23 @@ module.exports = function (grunt) {
 					jshintrc: true
 				}
 			}
+		},
+		jsdoc: {
+			dist:
+			{
+	            src:
+	            [
+	            	"app/controllers/**/*.js",
+			    	"app/models/**/*.js",
+			    	"app/routes/**/*.js"
+			    ],
+	            jsdoc: './node_modules/.bin/jsdoc',
+	            options: {
+	                destination: './documentation',
+	                configure: './jsdoc_config.json',
+	                template: './node_modules/ink-docstrap/template'
+	            }
+	        }
 		},
 		csslint: {
 			options: {
@@ -200,7 +217,12 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['lint', 'concurrent:default']);
+    grunt.registerTask('default', ['lint', 'concurrent:default', 'jsdoc']);
+
+    // Documentation task
+    grunt.loadNpmTasks('grunt-jsdoc');
+
+    //grunt.registerTask('docs',['jsdoc']);
 
     // Debug task.
     grunt.registerTask('debug', ['lint', 'concurrent:debug']);
