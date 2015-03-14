@@ -133,8 +133,7 @@ Helper.findOne = function(model,query,errPath,res) {
 
 Helper.populateModel = function(model,obj,errPath,res) {
 
-    
-    var MyResponse = require('./MyResponse');
+    var myResponse = new MyResponse();
     var atts = Helper.getAttsString(model.objectIDAtts);
     console.log('atts: ' + atts);
     var options = {
@@ -142,7 +141,6 @@ Helper.populateModel = function(model,obj,errPath,res) {
     };
 
     model.populate(obj, options, function (err, obj) {
-        var myResponse = new MyResponse();
         myResponse.setData(obj);
         res.json(myResponse);
     });
