@@ -6,7 +6,7 @@
 */
 
 
-/**
+/*
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
@@ -16,7 +16,7 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	Helper = require('../custom_objects/Helper');
 
-/**
+/*
  * A Validation function for local strategy properties
  */
 var validateLocalStrategyProperty = function(property) {
@@ -27,7 +27,7 @@ var validateLocalStrategyPhoneNumber = function(number) {
 	return (this.provider !== 'local' || number.toString().length >= 10);
 };
 
-/**
+/*
  * A Validation function for local strategy password
  */
 var validateLocalStrategyPassword = function(password) {
@@ -35,12 +35,29 @@ var validateLocalStrategyPassword = function(password) {
 };
 
 /**
- *	@class User
+	*	@class User
+	*	@property {string} firstName
+	*	@property {string} lastName
+	*	@property {string} displayName
+	*	@property {string} email
+	*	@property {string} carrier
+	*	@property {number} phoneNumber
+	*	@property {string} username
+	*	@property {string} password
+	*	@property {Group[]} createdGroups
+	*	@property {Group[]} joinedGroups
+	*	@property {string} salt
+	*	@property {string} provider
+	*	@property {object} providerData
+	*	@property {string} additionalProvidersData
+	*	@property {string} roles enum: ['user','admin'] default: 'user'
+	*	@property {date} updated
+	*	@property {date} created
+	*	@property {string} resetPasswordToken
+	*	@property {date} resetPasswordExpires
  */
+
 var UserSchema = new Schema({
-	/**
-	*	@property firstName
-	*/
 	firstName: {
 		type: String,
 		trim: true,

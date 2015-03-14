@@ -60,6 +60,11 @@ MyResponse.prototype.setData = function(data)
 	this.data = data;
 };
 
+MyResponse.prototype.handleResponse = function(err,res)
+{
+	
+};
+
 MyResponse.prototype.transformMongooseError = function(modelPath,err)
 {
 	var i = 0;

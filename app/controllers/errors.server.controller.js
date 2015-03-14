@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Get unique error field name
  */
 var getUniqueErrorMessage = function(err) {
@@ -17,7 +17,7 @@ var getUniqueErrorMessage = function(err) {
 	return output;
 };
 
-/**
+/*
  * Get the error message from error object
  */
 exports.getErrorMessage = function(err) {

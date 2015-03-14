@@ -5,7 +5,7 @@ var Sender = require('../../custom_objects/Sender');
 var serverJSON = require('../../local_files/ui/server.ui.json');
 var Helper = require('../../custom_objects/Helper');
 
-/**
+/*
  * Module dependencies.
  */
 var _ = require('lodash'),

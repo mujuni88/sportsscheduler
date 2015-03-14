@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Module dependencies.
  */
 var users = require('../../app/controllers/users'),

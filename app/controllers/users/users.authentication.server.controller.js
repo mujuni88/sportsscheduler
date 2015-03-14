@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Module dependencies.
  */
 var _ = require('lodash'),
@@ -74,6 +74,7 @@ exports.signin = function(req, res, next) {
 
 		if (err || !user) {
 			myResponse.transformMongooseError('api.users',String(err));
+			res.status(400);
 			res.json(myResponse);
 		} else {
 			// Remove sensitive data before login

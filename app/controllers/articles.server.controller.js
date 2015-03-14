@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 	Article = mongoose.model('Article'),
 	_ = require('lodash');
 
-/**
+/*
  * Create a article
  */
 exports.create = function(req, res) {
@@ -26,14 +26,14 @@ exports.create = function(req, res) {
 	});
 };
 
-/**
+/*
  * Show the current article
  */
 exports.read = function(req, res) {
 	res.jsonp(req.article);
 };
 
-/**
+/*
  * Update a article
  */
 exports.update = function(req, res) {
@@ -52,7 +52,7 @@ exports.update = function(req, res) {
 	});
 };
 
-/**
+/*
  * Delete an article
  */
 exports.delete = function(req, res) {
@@ -69,7 +69,7 @@ exports.delete = function(req, res) {
 	});
 };
 
-/**
+/*
  * List of Articles
  */
 exports.list = function(req, res) {
@@ -84,7 +84,7 @@ exports.list = function(req, res) {
 	});
 };
 
-/**
+/*
  * Article middleware
  */
 exports.articleByID = function(req, res, next, id) {
@@ -96,7 +96,7 @@ exports.articleByID = function(req, res, next, id) {
 	});
 };
 
-/**
+/*
  * Article authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
