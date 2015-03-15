@@ -3,7 +3,8 @@
 var MyError = function() {
 
     //array of objects
-    this.messages = [];
+    this.devMessage = [];
+    this.clientMessage = [];
 };
 
 module.exports = MyError;

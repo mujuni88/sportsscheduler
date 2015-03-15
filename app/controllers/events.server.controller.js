@@ -61,7 +61,8 @@ exports.update = function(req, res) {
 		}
 		else if(!event)
 		{
-			myResponse.setError(serverJSON.api.users.groups.events._id.invalid,res);
+			myResponse.addMessages(serverJSON.api.users.groups.events._id.invalid,res);
+			myResponse.setError(res);
 		}
 		else
 		{
@@ -98,8 +99,8 @@ exports.delete = function(req, res) {
 		}
 		else if(!event)
 		{
-			myResponse.setError(serverJSON.api.users.groups.events._id.invalid,res);
-			res.json(myResponse);
+			myResponse.addMessages(serverJSON.api.users.groups.events._id.invalid,res);
+			myResponse.setError(res);
 		}
 		else
 		{

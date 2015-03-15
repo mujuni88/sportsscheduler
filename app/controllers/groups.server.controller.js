@@ -74,7 +74,8 @@ exports.update = function(req, res) {
 		}
 		else if(!group)
 		{
-			myResponse.setError(serverJSON.api.users.groups._id.invalid,res);
+			myResponse.addMessages(serverJSON.api.users.groups._id.invalid);
+			myResponse.setError(res);
 		}
 		else
 		{
@@ -117,7 +118,8 @@ exports.delete = function(req, res) {
 		}
 		else if(!group)
 		{
-			myResponse.setError(serverJSON.api.users.groups._id.invalid,res);
+			myResponse.addMessages(serverJSON.api.users.groups._id.invalid);
+			myResponse.setError(res);
 		}
 		else
 		{

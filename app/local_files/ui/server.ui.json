@@ -354,6 +354,21 @@
 					}
 				}
 			},
+			"_id":
+			{
+				"invalid":
+				{
+					"devMessage": "Invalid ObjectID for user",
+					"clientMessage": "This user does not exist",
+					"status": 400
+				},
+				"login":
+				{
+					"devMessage": "These credentials do not exist in our Database",
+					"clientMessage": "Invalid Credentials",
+					"status": 400
+				}
+			},
 			"firstName":
 			{
 				"empty":

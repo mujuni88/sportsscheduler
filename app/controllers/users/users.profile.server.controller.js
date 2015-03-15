@@ -68,9 +68,14 @@ exports.delete = function(req, res) {
 
 	User.findOne({username: username}, function(err,user) {
 
-		if (err || !user) {
+		if (err) {
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(User.errPath,String(err),res);
+		}
+		else if(!user)
+		{
+			myResponse.addMessages(serverJSON.api.users._id.invalid);
+			myResponse.setError(res);
 		}
 		else {
 			console.log('deleted successfully');
