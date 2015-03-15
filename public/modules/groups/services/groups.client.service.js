@@ -20,8 +20,7 @@ factory('Search', ['$http', function($http){
                         username: val
                     }
                 }).then(function(response){
-                    console.log(response.data.data);
-                    return response.data.data;
+                    return response.data;
                 });
             }
         };
