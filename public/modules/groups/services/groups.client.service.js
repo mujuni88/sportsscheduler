@@ -8,9 +8,7 @@ angular.module('groups').factory('Groups', ['$resource',
 			update: {
 				method: 'PUT'
 			},
-            query:{
-                method: 'GET'
-            }
+            query:{method:'GET',isArray:true}
 		});
 	}
 ]).

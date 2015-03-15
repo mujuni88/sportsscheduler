@@ -24,28 +24,12 @@ exports.create = function(req, res) {
 		var myResponse = new MyResponse();
 		if (err) {
 			console.log('error: ' + err);
-			myResponse.transformMongooseError('api.users.groups',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(Group.errPath,String(err),res);
 		}
 		else {
 			console.log('saved successfully');
 			Helper.populateModel(Group,group,'api.users.groups',res);
 		}
-
-		
-
-		// Group.populate(group, {path:"admins"},function(err,group){
-		// 	if (err) {
-		// 		console.log('error: ' + err);
-		// 		myResponse.transformMongooseError('api.users.groups',String(err));
-		// 		res.json(myResponse);
-		// 	}
-		// 	else {
-		// 		console.log('saved successfully');
-		// 		myResponse.data = group;
-		// 		res.jsonp(myResponse);
-		// 	}
-		// });
 	});
 };
 
@@ -62,8 +46,7 @@ exports.read = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			myResponse.transformMongooseError('api.users.groups',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(Group.errPath,String(err),res);
 		}
 		else {
 			Helper.populateModel(Group,group,'api.users.groups',res);
@@ -87,13 +70,11 @@ exports.update = function(req, res) {
 		if(err)
 		{
 			console.log(err);
-			myResponse.transformMongooseError('api.users.groups',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(Group.errPath,String(err),res);
 		}
 		else if(!group)
 		{
-			myResponse.setError(serverJSON.api.users.groups._id.invalid);
-			res.json(myResponse);
+			myResponse.setError(serverJSON.api.users.groups._id.invalid,res);
 		}
 		else
 		{
@@ -105,8 +86,7 @@ exports.update = function(req, res) {
 
 				if (err) {
 					console.log('error: ' + err);
-					myResponse.transformMongooseError('api.users.groups',String(err));
-					res.json(myResponse);
+					myResponse.transformMongooseError(Group.errPath,String(err),res);
 				}
 				else {
 					console.log('saved successfully');
@@ -133,21 +113,18 @@ exports.delete = function(req, res) {
 		if(err)
 		{
 			console.log(err);
-			myResponse.transformMongooseError('api.users.groups',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(Group.errPath,String(err),res);
 		}
 		else if(!group)
 		{
-			myResponse.setError(serverJSON.api.users.groups._id.invalid);
-			res.json(myResponse);
+			myResponse.setError(serverJSON.api.users.groups._id.invalid,res);
 		}
 		else
 		{
 			group.remove(function(err) {
 				if (err) {
 					console.log('error: ' + err);
-					myResponse.transformMongooseError('api.users.groups',String(err));
-					res.json(myResponse);
+					myResponse.transformMongooseError(Group.errPath,String(err),res);
 				}
 				else {
 					console.log('saved successfully');
@@ -166,8 +143,7 @@ exports.list = function(req, res) { Group.find().sort('-created').populate(Group
 		var myResponse = new MyResponse();
 
 		if (err) {
-			myResponse.transformMongooseError('api.users.groups',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(Group.errPath,String(err),res);
 		} else {
 			Helper.populateModel(Group,groups,'api.users.groups',res);
 		}
@@ -183,8 +159,7 @@ exports.groupByID = function(req, res, next, id) {
 	
 	if(!mongoose.Types.ObjectId.isValid(id))
 	{
-		myResponse.setError(serverJSON.api.users.groups._id.invalid);
-		res.json(myResponse);
+		myResponse.setError(serverJSON.api.users.groups._id.invalid,res);
 		return;
 	}
 

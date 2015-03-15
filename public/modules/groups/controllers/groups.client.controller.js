@@ -44,7 +44,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
 
             // Redirect after save
             group.$save(function (response) {
-                $location.path('groups/' + response.data._id+'/members/list');
+                redirectHome(response._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.clientMessage;
             });
@@ -59,15 +59,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
 
         function update() {
             $scope.group.$update(function(response){
-                $location.path('groups/' + response.data._id+'/members/list');
+                redirectHome(response._id);
             }, function(errorResponse){
                 $scope.error = errorResponse.clientMessage;
             });
         }
 
         function find() {
-            $scope.groups = Groups.query(function (response) {
-                // success
+            $scope.groups = Groups.query(function(response) {
             },function(errorResponse){
                 $scope.error = errorResponse.clientMessage;
             });
@@ -101,6 +100,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         function removeMember(index) {
             $scope.members.splice(index, 1);
         }
+
+        function redirectHome(id) {
+            $location.path('groups/' + id + '/members/list');
+        }
+
 
     }
 ]);

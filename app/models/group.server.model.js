@@ -67,6 +67,7 @@ var GroupSchema = new Schema({
 
 GroupSchema.statics.objectIDAtts = ['admins','events','members'];
 GroupSchema.statics.title = serverJSON.constants.groups;
+GroupSchema.statics.errPath = 'api.users.groups';
 
 /*********** Validate Functions **************/
 GroupSchema.path('admins').validate(function (ids,respond) {
