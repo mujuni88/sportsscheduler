@@ -34,7 +34,6 @@ exports.signup = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			console.log(res);
 			myResponse.transformMongooseError(User.errPath,String(err),res);
 		} else {
 			// Remove sensitive data before login
@@ -60,8 +59,12 @@ exports.signin = function(req, res, next) {
 	passport.authenticate('local', function(err, user, info) {
 		var myResponse = new MyResponse();
 
-		if (err || !user) {
+		if (err) {
 			myResponse.transformMongooseError(User.errPath,String(err),res);
+		}
+		else if(!user) {
+			myResponse.addMessages(serverJSON.api.users._id.login);
+			myResponse.setError(res);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
