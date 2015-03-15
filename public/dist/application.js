@@ -94,7 +94,7 @@ angular.module('articles').controller('ArticlesController', [
         $scope.title = '';
         $scope.content = '';
       }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
+        $scope.error = errorResponse.clientMessage;
       });
     };
     $scope.remove = function (article) {
@@ -391,8 +391,8 @@ angular.module('users').controller('AuthenticationController', [
         $scope.authentication.user = response;
         // And redirect to the index page
         $location.path('/');
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).error(function (errorResponse) {
+        $scope.error = errorResponse.clientMessage;
       });
     };
     $scope.signin = function () {
@@ -401,8 +401,8 @@ angular.module('users').controller('AuthenticationController', [
         $scope.authentication.user = response;
         // And redirect to the index page
         $location.path('/');
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).error(function (errorResponse) {
+        $scope.error = errorResponse.clientMessage;
       });
     };
   }
@@ -424,11 +424,11 @@ angular.module('users').controller('PasswordController', [
       $http.post('/auth/forgot', $scope.credentials).success(function (response) {
         // Show user success message and clear form
         $scope.credentials = null;
-        $scope.success = response.message;
-      }).error(function (response) {
+        $scope.success = response.clientMessage;
+      }).error(function (errorResponse) {
         // Show user error message and clear form
         $scope.credentials = null;
-        $scope.error = response.message;
+        $scope.error = errorResponse.clientMessage;
       });
     };
     // Change user password
@@ -441,8 +441,8 @@ angular.module('users').controller('PasswordController', [
         Authentication.user = response;
         // And redirect to the index page
         $location.path('/password/reset/success');
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).error(function (errorResponse) {
+        $scope.error = errorResponse.clientMessage;
       });
     };
   }
@@ -476,8 +476,8 @@ angular.module('users').controller('SettingsController', [
         // If successful show success message and clear form
         $scope.success = true;
         $scope.user = Authentication.user = response;
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).error(function (errorResponse) {
+        $scope.error = errorResponse.clientMessage;
       });
     };
     // Update a user profile
@@ -488,8 +488,8 @@ angular.module('users').controller('SettingsController', [
         user.$update(function (response) {
           $scope.success = true;
           Authentication.user = response;
-        }, function (response) {
-          $scope.error = response.data.message;
+        }, function (errorResponse) {
+          $scope.error = errorResponse.clientMessage;
         });
       } else {
         $scope.submitted = true;
@@ -502,8 +502,8 @@ angular.module('users').controller('SettingsController', [
         // If successful show success message and clear form
         $scope.success = true;
         $scope.passwordDetails = null;
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).error(function (errorResponse) {
+        $scope.error = errorResponse.clientMessage;
       });
     };
   }
