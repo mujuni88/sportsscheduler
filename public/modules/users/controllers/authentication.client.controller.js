@@ -34,7 +34,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// And redirect to the index page
 				$location.path('/');
 			}).error(function(response) {
-				$scope.error = response.message;
+                $scope.error = response.message;
 			});
 		};
 

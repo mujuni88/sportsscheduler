@@ -44,51 +44,32 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
 
             // Redirect after save
             group.$save(function (response) {
-                if (response.status === 200 && response.data) {
-                    $location.path('groups/' + response.data._id+'/members/list');
-                } else if (response.error) {
-                    $scope.error = response.error.clientMessage;
-                } else {
-                    console.log("Unknown error, Status: " + response.status);
-                    $scope.error = "Unknown error";
-                }
-
-                $scope.name = '';
+                $location.path('groups/' + response.data._id+'/members/list');
             }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+                $scope.error = errorResponse.clientMessage;
             });
         }
 
-        function remove(group) {
-            if (group) {
-                group.$remove();
-
-                for (var i in $scope.groups) {
-                    if ($scope.groups [i] === group) {
-                        $scope.groups.splice(i, 1);
-                    }
-                }
-            } else {
-                $scope.group.$remove(function () {
-                    $location.path('groups');
-                });
-            }
+        function remove() {
+            $scope.group.$remove(function () {
+                $location.path('groups');
+            });
         }
 
 
         function update() {
-            var group = $scope.group,
-                _id = group._id;
-            group.$update(function (response) {
+            $scope.group.$update(function(response){
                 $location.path('groups/' + response.data._id+'/members/list');
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+            }, function(errorResponse){
+                $scope.error = errorResponse.clientMessage;
             });
         }
 
         function find() {
-            var groups = Groups.query(function () {
-                $scope.groups = groups.data;
+            $scope.groups = Groups.query(function (response) {
+                // success
+            },function(errorResponse){
+                $scope.error = errorResponse.clientMessage;
             });
         }
 

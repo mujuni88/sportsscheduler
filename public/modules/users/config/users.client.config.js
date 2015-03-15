@@ -4,8 +4,8 @@
 angular.module('users').config(['$httpProvider',
 	function($httpProvider) {
 		// Set the httpProvider "not authorized" interceptor
-		$httpProvider.interceptors.push(['$q', '$location', 'Authentication',
-			function($q, $location, Authentication) {
+		$httpProvider.interceptors.push(['$q', '$location', 'Authentication','lodash',
+			function($q, $location, Authentication, _) {
 				return {
 					responseError: function(rejection) {
 						switch (rejection.status) {
