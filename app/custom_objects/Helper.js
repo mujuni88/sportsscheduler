@@ -141,9 +141,7 @@ Helper.populateModel = function(model,obj,errPath,res) {
     };
 
     model.populate(obj, options, function (err, obj) {
-        myResponse.setData(obj);
-        res.status(myResponse.status);
-        res.json(myResponse);
+        myResponse.setData(obj,res);
     });
         
 };

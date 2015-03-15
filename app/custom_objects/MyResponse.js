@@ -5,13 +5,12 @@ var httpCodesJSON = require('../local_files/http/codes.json');
 var serverJSON = require('../local_files/ui/server.ui.json');
 var errMessage = null;
 var foundObj = null;
+var Helper = require('./Helper');
 
 function MyResponse() {
     
     this.data = undefined;
 
-    //default to successful http code
-    this.status = 200;
     this.devMessage = undefined;
     this.clientMessage = undefined;
     this.error = undefined;
@@ -46,26 +45,38 @@ function traverse(o,func) {
     }
 }
 
-MyResponse.prototype.setError = function(errObj)
+MyResponse.prototype.setError = function(errObj,res)
 {
 	if(typeof this.error === 'undefined')
 		this.error = new MyError();
 
 	this.error.messages.push(errObj);
-	this.status = errObj.status;
+	res.status(errObj.status);
+	res.json(this);
 };
 
-MyResponse.prototype.setData = function(data)
+MyResponse.prototype.setData = function(data,res)
 {
-	this.data = data;
+	res.status(200);
+    res.json(data);
 };
 
-MyResponse.prototype.handleResponse = function(err,res)
+MyResponse.prototype.handleResponse = function(err,model,obj,res)
 {
-	
+	var errPath = model.errPath;
+	if(err)
+	{
+		this.transformMongooseError(errPath,String(err));
+		res.status(this.status);
+		res.json(this);
+	}
+	else
+	{
+		Helper.populateModel(model,obj,errPath,res);
+	}
 };
 
-MyResponse.prototype.transformMongooseError = function(modelPath,err)
+MyResponse.prototype.transformMongooseError = function(modelPath,err,res)
 {
 	var i = 0;
 	var path = null;
@@ -97,7 +108,7 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		else
 			copyOfServerJSON = copyOfServerJSON[match];
 
-		this.setError(copyOfServerJSON.invalid);
+		this.setError(copyOfServerJSON.invalid,res);
 	}
 	else if(err.indexOf('ValidationError') !== -1)
 	{
@@ -115,14 +126,14 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 				errMessage = messages[i].trim();
 				console.log('errMessage: ' + errMessage);
 				traverse(copyOfServerJSON,findErrorObject);
-				this.setError(foundObj);
+				this.setError(foundObj,res);
 				foundObj = null;
 			}
 		}
 		else
 		{
 			traverse(copyOfServerJSON,findErrorObject);
-			this.setError(foundObj);
+			this.setError(foundObj,res);
 		}
 	}
 	else if(err.indexOf('MongoError') !== -1)
@@ -135,7 +146,7 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		var prop = err.substring(err.lastIndexOf("$")+1,err.lastIndexOf("_"));
 
 		if(err.indexOf('E11000') !== -1)
-			this.setError(copyOfServerJSON[prop].duplicate);
+			this.setError(copyOfServerJSON[prop].duplicate,res);
 	}
 };
 

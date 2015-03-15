@@ -41,36 +41,22 @@ exports.update = function(req, res) {
 				
 
 				if (err) {
-					myResponse.transformMongooseError('api.users',String(err));
-					res.json(myResponse);
+					myResponse.transformMongooseError(User.errPath,String(err),res);
 				} else {
 					req.login(user, function(err) {
 						if (err) {
 							console.log('error: ' + err);
-							myResponse.transformMongooseError('api.users',String(err));
-							res.json(myResponse);
+							myResponse.transformMongooseError(User.errPath,String(err),res);
 						}
 						else {
 							console.log('saved successfully');
-
-							//Helper.findOne(User,{id: id},'api.users',res);
 							Helper.populateModel(User,user,'api.users',res);
-							//myResponse.data = user;
-							//res.json(myResponse);
-							/*
-							User.populate(user, {path:"createdGroups"}, function(err, user) {
-								myResponse.data = user;
-								res.json(myResponse);
-							});
-							*/
-
 						}
 					});
 				}
 			});
 		} else {
-			myResponse.transformMongooseError('api.users',String(err));
-			res.jsonp(myResponse);
+			myResponse.transformMongooseError(User.errPath,String(err),res);
 		}
 	});
 };
@@ -84,8 +70,7 @@ exports.delete = function(req, res) {
 
 		if (err || !user) {
 			console.log('error: ' + err);
-			myResponse.transformMongooseError('api.users',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(User.errPath,String(err),res);
 		}
 		else {
 			console.log('deleted successfully');
@@ -120,8 +105,7 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 				console.log('err: ' + err);
 
 				if (err) {
-					myResponse.transformMongooseError('api.users',String(err));
-					res.json(myResponse);
+					myResponse.transformMongooseError(User.errPath,String(err),res);
 				} else {
 					Helper.populateModel(User,users,'api.users',res);
 					//myResponse.data = users;
@@ -132,8 +116,7 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 		else
 		{
 			if (err) {
-				myResponse.transformMongooseError('api.users',String(err));
-				res.json(myResponse);
+				myResponse.transformMongooseError(User.errPath,String(err),res);
 			} else {
 				//myResponse.data = users;
 				//res.jsonp(myResponse);

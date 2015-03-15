@@ -113,6 +113,7 @@ var EventSchema = new Schema({
 
 EventSchema.statics.objectIDAtts = ['user','group'];
 EventSchema.statics.title = serverJSON.constants.events;
+EventSchema.statics.errPath = 'api.users.groups.events';
 
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {

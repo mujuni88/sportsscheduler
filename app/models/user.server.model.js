@@ -152,6 +152,7 @@ var UserSchema = new Schema({
 
 UserSchema.statics.objectIDAtts = ['createdGroups','joinedGroups'];
 UserSchema.statics.title = serverJSON.constants.users;
+UserSchema.statics.errPath = 'api.users';
 
 /**
  * Hook a pre save method to hash the password

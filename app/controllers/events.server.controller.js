@@ -25,20 +25,7 @@ exports.create = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			myResponse.transformMongooseError('api.users.groups.events',String(err));
-			res.json(myResponse);
-			// if(err.errors)
-			// {
-			// 	for(var property in err.errors)
-			// 	{
-			// 		console.log(err.errors[property]);
-			// 		console.log('prop: ' + property);
-			// 		var errorObj = myResponse.getErrorObjectByClientMessage(err.errors[property].message);
-			// 		myResponse.setError(errorObj);
-			// 		res.json(myResponse);
-			// 		return;
-			// 	}
-			// }
+			myResponse.transformMongooseError(EventModel.errPath,String(err),res);
 		}
 		else {
 			console.log('saved successfully');
@@ -70,13 +57,11 @@ exports.update = function(req, res) {
 		if(err)
 		{
 			console.log(err);
-			myResponse.transformMongooseError('api.users.groups.events',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(EventModel.errPath,String(err),res);
 		}
 		else if(!event)
 		{
-			myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
-			res.json(myResponse);
+			myResponse.setError(serverJSON.api.users.groups.events._id.invalid,res);
 		}
 		else
 		{
@@ -87,8 +72,7 @@ exports.update = function(req, res) {
 			event.save(function(err) {
 				console.log('err: ' + err);
 				if (err) {
-					myResponse.transformMongooseError('api.users.groups.events',String(err));
-					res.json(myResponse);
+					myResponse.transformMongooseError(EventModel.errPath,String(err),res);
 				} else {
 					Helper.populateModel(EventModel,event,'api.users.groups.events',res);
 				}
@@ -110,20 +94,18 @@ exports.delete = function(req, res) {
 	EventModel.findOne({_id: id}, function(err,event) {
 		if(err)
 		{
-			res.status(400);
-			res.json(errorHandler.getErrorMessage(err));
+			myResponse.transformMongooseError(EventModel.errPath,String(err),res);
 		}
 		else if(!event)
 		{
-			myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
+			myResponse.setError(serverJSON.api.users.groups.events._id.invalid,res);
 			res.json(myResponse);
 		}
 		else
 		{
 			event.remove(function(err) {
 				if (err) {
-					res.status(400);
-					res.json(errorHandler.getErrorMessage(err));
+					myResponse.transformMongooseError(EventModel.errPath,String(err),res);
 				} else {
 					Helper.populateModel(EventModel,event,'api.users.groups.events',res);
 				}
@@ -141,8 +123,7 @@ exports.list = function(req, res) { EventModel.find().sort('-created').populate(
 		var myResponse = new MyResponse();
 
 		if (err) {
-			myResponse.transformMongooseError('api.users.groups.events',String(err));
-			res.json(myResponse);
+			myResponse.transformMongooseError(EventModel.errPath,String(err),res);
 		} else {
 			Helper.populateModel(EventModel,events,'api.users.groups.events',res);
 		}
@@ -158,8 +139,7 @@ exports.eventByID = function(req, res, next, id) {
 	
 	if(!mongoose.Types.ObjectId.isValid(id))
 	{
-		myResponse.setError(serverJSON.api.users.groups.events._id.invalid);
-		res.json(myResponse);
+		myResponse.setError(serverJSON.api.users.groups.events._id.invalid,res);
 		return;
 	}
 
