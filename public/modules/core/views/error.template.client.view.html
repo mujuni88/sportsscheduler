@@ -1,5 +1,5 @@
-<div class="container content" data-ng-controller="ErrorController">
+<div class="container" data-ng-controller="ErrorController">
     <div class="global-error" >
-        <alert ng-repeat="error in errors" type="danger" close="closeAlert($index)" class="animated slideInDown">{{error}}</alert>
+    <alert ng-repeat="error in errors" type="danger" close="closeAlert($index)" class="animated slideInDown alert-sm">{{error}}</alert>
     </div>
 </div>   
