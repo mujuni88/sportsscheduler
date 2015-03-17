@@ -120,4 +120,9 @@ GroupSchema.path('members').validate(function (ids,respond) {
 
 /*********** END Validate Functions **************/
 
+GroupSchema.pre('save', function(next){
+  this.members = this.members.map(function(option) { return option._id; });
+  next();
+});
+
 mongoose.model('Group', GroupSchema);

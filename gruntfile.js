@@ -38,13 +38,14 @@ module.exports = function (grunt) {
 			},
 			clientViews: {
 				files: watchFiles.clientViews,
+                tasks:['preprocess:html'],
 				options: {
 					livereload: true,
 				}
 			},
 			clientJS: {
 				files: watchFiles.clientJS,
-				tasks: ['jshint'],
+				tasks: ['jshint','preprocess:js'],
 				options: {
 					livereload: true
 				}
@@ -197,8 +198,24 @@ module.exports = function (grunt) {
                     command: 'webdriver-manager start'
                 }
             }
+        },
+        preprocess : {
+            options: {
+                context : {
+                    DEBUG: true
+                }
+            },
+            html : {
+                src : watchFiles.clientViews,
+                dest : 'html'
+            },
+            js:{
+                src: watchFiles.clientJS,
+                dest:'js'
+            }
         }
-	});
+
+    });
 
 
     // Load NPM tasks

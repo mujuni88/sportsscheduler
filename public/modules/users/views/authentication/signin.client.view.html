@@ -21,10 +21,6 @@
 	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
 		<form name="signInForm" class="form-horizontal" autocomplete="off">
 			<fieldset>
-				<div data-ng-repeat="err in error" class="text-center text-danger">
-					<strong data-ng-bind="err"></strong>
-				</div>
-
 				<div class="form-group">
 					<label for="username">Username</label>
 					<input type="text" id="username" name="username" class="form-control" data-ng-model="credentials.username" placeholder="Username" validator="required">

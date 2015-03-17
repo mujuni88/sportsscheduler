@@ -38,6 +38,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         // Remove member from temporary group
         $scope.removeMember = removeMember;
 
+        // Close alert
+        $scope.closeAlert = closeAlert;
+
         function create() {
             // Create new Group object
             var group = new Groups($scope.group);
@@ -61,7 +64,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
             $scope.group.$update(function(response){
                 redirectHome(response._id);
             }, function(errorResponse){
-                $scope.error = errorResponse.clientMessage;
+                $scope.error = errorResponse.data.clientMessage;
             });
         }
 
@@ -77,6 +80,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
                 groupId: $stateParams.groupId
             }, function () {
                 $scope.members = $scope.group.members;
+            }, function(errorResponse){
+                $scope.error = errorResponse.clientMessage;
             });
 
         }
@@ -93,7 +98,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
                 uniq = _.uniq(union, '_id'),
                 ids = _.pluck(uniq, "_id");
 
-            $scope.group.members = ids;
+            $scope.group.members = uniq;
             update();
         }
 
@@ -105,6 +110,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
             $location.path('groups/' + id + '/members/list');
         }
 
+        function closeAlert(index){
+           $scope.error.splice(index, 1); 
+        }
 
     }
 ]);
