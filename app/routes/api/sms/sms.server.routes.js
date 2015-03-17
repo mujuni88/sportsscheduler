@@ -28,13 +28,13 @@ app.route('/api/sms')
     		
             return;
     	}
-        else if(!regEx.test(req.body.to))
-        {
-            myResponse.setError(serverJSON.api.sms.to.invalid);
-            res.json(myResponse);
+        // else if(!regEx.test(req.body.to))
+        // {
+        //     myResponse.setError(serverJSON.api.sms.to.invalid);
+        //     res.json(myResponse);
             
-            return;
-        }
+        //     return;
+        // }
     	else
     		to = req.body.to;
 
@@ -60,6 +60,9 @@ app.route('/api/sms')
     		text = req.body.text;
 
         console.log('sending sms');
+        console.log('to: '+ to);
+        console.log('subject: ' + subject);
+        console.log('text: ' + text);
         
         Sender.sendSMS(to,subject,text,outputCallback);
     });

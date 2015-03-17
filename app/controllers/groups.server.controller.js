@@ -54,6 +54,24 @@ exports.read = function(req, res) {
 	});
 };
 
+function custom(att,value) {
+	debugger;
+	
+	console.log('arg1: ' + att);
+	console.log('arg2: ' + value);
+
+	if(typeof value === "undefined")
+		return value;
+
+	console.log(typeof value._id);
+	if(typeof value._id !== "undefined")
+	{
+		console.log('custom id: ' + value._id);
+		return value._id;
+	}
+	return value;
+	
+}
 /**
  * Update a Group
  */
@@ -79,7 +97,13 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			group = _.extend(group , req.body);
+			//console.log('json: ' + group.toJSON());
+			var data = _.merge(group,req.body);
+			//console.log('body: ' + req.body.admins);
+			console.log('data: ' + data);
+			_.extend(group,data,custom);
+			//console.log('id: ' + group.admins[0]._id);
+			//console.log('id: ' + String(group.admins[0]._id));
 			group.updated = Date.now();
 
 			group.save(function(err) {
