@@ -13,10 +13,11 @@
     "angular-ui-router": "~0.2.10",
     "angular-validation": "https://github.com/huei90/angular-validation.git",
     "ng-google-places-autocomplete": "https://github.com/mujuni88/ngAutocomplete.git",
-    "ng-lodash": "~0.2.0"
+    "ng-lodash": "~0.2.0",
+    "animate.css": "~3.2.3",
+    "angular-fx": "~1.0.0"
   },
   "resolutions": {
-    "angular": ">= 1.0.2",
-    "ng-lodash": "~0.2.0"
+    "angular": ">= 1.0.2"
   }
 }

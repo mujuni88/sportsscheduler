@@ -33,8 +33,8 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				// If successful show success message and clear form
 				$scope.success = true;
 				$scope.user = Authentication.user = response;
-			}).error(function(response) {
-				$scope.error = response.message;
+			}).error(function(errorResponse) {
+				$scope.error = errorResponse.clientMessage;
 			});
 		};
 
@@ -47,8 +47,8 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				user.$update(function(response) {
 					$scope.success = true;
 					Authentication.user = response;
-				}, function(response) {
-					$scope.error = response.data.message;
+				}, function(errorResponse) {
+					$scope.error = errorResponse.clientMessage;
 				});
 			} else {
 				$scope.submitted = true;
@@ -63,8 +63,8 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				// If successful show success message and clear form
 				$scope.success = true;
 				$scope.passwordDetails = null;
-			}).error(function(response) {
-				$scope.error = response.message;
+			}).error(function(errorResponse) {
+				$scope.error = errorResponse.clientMessage;
 			});
 		};
 	}

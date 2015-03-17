@@ -2,10 +2,10 @@
     <a class="">
         <span>{{match.model.displayName}} / {{match.model.username}} </span>
         <!--<span class="badge"> </span>-->
-        <!--<span class="pull-right"><i class="glyphicon glyphicon-plus-sign"></i></span>-->
+        <span class="pull-right"><i class="glyphicon glyphicon-plus-sign"></i></span>
     </a>
 </script>
-<div class="panel panel-default">
+<div class="panel panel-default animated fadeIn">
     <div class="panel-heading clearfix">
         <div class="form-horizontal">
             <div class="form-group">
@@ -54,7 +54,7 @@
                data-ng-click="saveMembers()">
                 <i class="glyphicon glyphicon-ok"></i> <span class="">Save</span>
             </a>
-            <a class="btn btn-danger btn-sm" ui-sref=".members">
+            <a class="btn btn-danger btn-sm" ui-sref="list">
                 <i class="glyphicon glyphicon-remove"></i> <span class="">Cancel</span>
             </a>
 

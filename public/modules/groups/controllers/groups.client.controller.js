@@ -38,57 +38,40 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         // Remove member from temporary group
         $scope.removeMember = removeMember;
 
+        // Close alert
+        $scope.closeAlert = closeAlert;
+
         function create() {
             // Create new Group object
             var group = new Groups($scope.group);
 
             // Redirect after save
             group.$save(function (response) {
-                if (response.status === 200 && response.data) {
-                    $location.path('groups/' + response.data._id+'/members/list');
-                } else if (response.error) {
-                    $scope.error = response.error.clientMessage;
-                } else {
-                    console.log("Unknown error, Status: " + response.status);
-                    $scope.error = "Unknown error";
-                }
-
-                $scope.name = '';
+                redirectHome(response._id);
             }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+                $scope.error = errorResponse.clientMessage;
             });
         }
 
-        function remove(group) {
-            if (group) {
-                group.$remove();
-
-                for (var i in $scope.groups) {
-                    if ($scope.groups [i] === group) {
-                        $scope.groups.splice(i, 1);
-                    }
-                }
-            } else {
-                $scope.group.$remove(function () {
-                    $location.path('groups');
-                });
-            }
+        function remove() {
+            $scope.group.$remove(function () {
+                $location.path('groups');
+            });
         }
 
 
         function update() {
-            var group = $scope.group,
-                _id = group._id;
-            group.$update(function (response) {
-                $location.path('groups/' + response.data._id+'/members/list');
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+            $scope.group.$update(function(response){
+                redirectHome(response._id);
+            }, function(errorResponse){
+                $scope.error = errorResponse.data.clientMessage;
             });
         }
 
         function find() {
-            var groups = Groups.query(function () {
-                $scope.groups = groups.data;
+            $scope.groups = Groups.query(function(response) {
+            },function(errorResponse){
+                $scope.error = errorResponse.clientMessage;
             });
         }
 
@@ -97,6 +80,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
                 groupId: $stateParams.groupId
             }, function () {
                 $scope.members = $scope.group.members;
+            }, function(errorResponse){
+                $scope.error = errorResponse.clientMessage;
             });
 
         }
@@ -113,12 +98,20 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
                 uniq = _.uniq(union, '_id'),
                 ids = _.pluck(uniq, "_id");
 
-            $scope.group.members = ids;
+            $scope.group.members = uniq;
             update();
         }
 
         function removeMember(index) {
             $scope.members.splice(index, 1);
+        }
+
+        function redirectHome(id) {
+            $location.path('groups/' + id + '/members/list');
+        }
+
+        function closeAlert(index){
+           $scope.error.splice(index, 1); 
         }
 
     }

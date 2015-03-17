@@ -90,19 +90,12 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 
 			// Redirect after save
 			event.$save(function(response) {
-				if(response.status === 200 && response.data){
-					$location.path('events/' + response.data._id);
-				} else if(response.error){
-					$scope.error = response.error.clientMessage;
-				} else{
-					console.log("Unknown error, Status: "+response.status);
-					$scope.error = "Unknown error";
-				}
+                $location.path('events/' + response.data._id);
 
-				// Clear form fields
+                // Clear form fields
 				$scope.name = '';
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				$scope.error = errorResponse.clientMessage;
 			});
 		};
 
@@ -136,7 +129,7 @@ angular.module('events').controller('EventsController', ['$scope', '$stateParams
 				}
 				$location.path('events/' + event._id);
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				$scope.error = errorResponse.clientMessage;
 			});
 		};
 

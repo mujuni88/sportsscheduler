@@ -9,7 +9,8 @@ angular.module('events').factory('Events', ['$resource',
 				method: 'PUT'
 			},
             query:{
-                method: 'GET'
+                method: 'GET',
+                isArray:true
             }
 		});
 	}

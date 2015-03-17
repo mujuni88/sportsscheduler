@@ -8,9 +8,7 @@ angular.module('groups').factory('Groups', ['$resource',
 			update: {
 				method: 'PUT'
 			},
-            query:{
-                method: 'GET'
-            }
+            query:{method:'GET',isArray:true}
 		});
 	}
 ]).
@@ -22,8 +20,7 @@ factory('Search', ['$http', function($http){
                         username: val
                     }
                 }).then(function(response){
-                    console.log(response.data.data);
-                    return response.data.data;
+                    return response.data;
                 });
             }
         };

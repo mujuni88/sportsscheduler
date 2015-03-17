@@ -16,10 +16,10 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 				$scope.credentials = null;
 				$scope.success = response.message;
 
-			}).error(function(response) {
+			}).error(function(errorResponse) {
 				// Show user error message and clear form
 				$scope.credentials = null;
-				$scope.error = response.message;
+				$scope.error = errorResponse.clientMessage;
 			});
 		};
 
@@ -36,8 +36,8 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 
 				// And redirect to the index page
 				$location.path('/password/reset/success');
-			}).error(function(response) {
-				$scope.error = response.message;
+			}).error(function(errorResponse) {
+				$scope.error = errorResponse.clientMessage;
 			});
 		};
 	}
