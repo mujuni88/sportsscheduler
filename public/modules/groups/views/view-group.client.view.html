@@ -39,8 +39,8 @@
         <div class="col-sm-12">
 
             <ul class="nav nav-tabs">
-                <li role="presentation" ng-class="{active:$state.includes('*-*')}" ui-sref-active="active" class="active"><a ui-sref=".listMembers.viewMembers">Members</a></li>
-                <li role="presentation" ng-class="{active:$state.includes('*events*')}" ui-sref-active="active"><a ui-sref=".listEvents">Events</a></li>
+                <li role="presentation"  data-ng-class="{ active: $state.includes('viewGroup.listMembers') }"><a ui-sref=".listMembers.viewMembers">Members</a></li>
+                <li role="presentation"  data-ng-class="{ active: $state.includes('viewGroup.listEvents') }"><a ui-sref=".listEvents">Events</a></li>
             </ul>
             <br/>
 
