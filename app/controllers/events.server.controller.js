@@ -66,7 +66,8 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			event = _.extend(event , req.body);
+			var data = _.merge(event,req.body,Helper.cleanMergeObj);
+			_.extend(event,data);
 			console.log('event: ' + event);
 			event.updated = Date.now();
 
