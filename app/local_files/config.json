@@ -1,0 +1,13 @@
+{
+	"nodemailer":
+	{
+		"xoauth2":
+		{
+			"clientID": "158333886741-9njradfhbt1j2t7k5g8fcn5n60klkljs.apps.googleusercontent.com",
+			"emailAddress": "158333886741-9njradfhbt1j2t7k5g8fcn5n60klkljs@developer.gserviceaccount.com",
+			"clientSecret": "ov21eaR7Rw6tVr7q_fcVisKB",
+			"refreshToken": "1/d6JNlz9ZzfX6Sm072VNCgLIWsB9tkvfyoPd7iwE8AEEMEudVrK5jSpoR30zcRFq6",
+			"accessToken": "ya29.OAFHrdpu_E_5p0_tk4IkW6loobOlb3p8Gbx6MXATQTZYeyfvoPNWBUR2Wc_znrNHr5q7L7OkQ33HLA"
+		}
+	}
+}
