@@ -15,7 +15,8 @@
     "ng-google-places-autocomplete": "https://github.com/mujuni88/ngAutocomplete.git",
     "ng-lodash": "~0.2.0",
     "animate.css": "~3.2.3",
-    "angular-fx": "~1.0.0"
+    "angular-fx": "~1.0.0",
+    "angular-xeditable": "~0.1.8"
   },
   "resolutions": {
     "angular": ">= 1.0.2"

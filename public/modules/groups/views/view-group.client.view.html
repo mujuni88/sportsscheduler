@@ -1,12 +1,21 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()" class="group animated fadeIn">
-
+    <form editable-form name="editableForm" onaftersave="saveUser()">
     <div class="row">
         <div class="col-sm-3 col-sm-offset-9">
+            
             <div class="pull-right">
-                <a class="btn btn-primary btn-sm" href="/#!/groups/{{group._id}}/edit">
+                <a class="btn btn-primary btn-sm" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">
                     <i class="glyphicon glyphicon-edit"></i>
                     <!--<span class="hidden-xs"> Edit Group</span>-->
                 </a>
+                <span ng-show="editableForm.$visible">
+                <button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">
+                    Save
+                </button>
+                <button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">
+                    Cancel
+                </button>
+                </span>
                 <a class="btn btn-danger btn-sm" data-ng-click="remove();">
                     <i class="glyphicon glyphicon-trash"></i>
                     <!--<span class="hidden-xs"> Delete Group</span>-->
@@ -14,7 +23,7 @@
             </div>
         </div>
         <div class="jumbotron text-center">
-            <h1 data-ng-bind="group.name"></h1>
+            <h1 data-ng-bind="group.name" editable-text="group.name" e-name="groupName"></h1>
             <ul class="text-center list-unstyled">
                 <li><h3>Admins:</h3></li>
                 <li data-ng-repeat="admin in group.admins"><h5 class="text-info" data-ng-bind="admin.displayName"></h5></li>
@@ -23,6 +32,7 @@
 
         <br/>
     </div>
+        </form>
     <!--<div class="row">-->
         <!--<div class="col-sm-2">-->
             <!--<div class="list-group">-->

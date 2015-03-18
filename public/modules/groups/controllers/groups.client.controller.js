@@ -89,8 +89,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         function onSelect($item, $model, $label) {
             var tempMembers = $scope.members;
             tempMembers.push($model);
-
+            
             $scope.members = _.uniq(tempMembers, 'username');
+            
         }
 
         function saveMembers() {

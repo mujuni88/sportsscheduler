@@ -16,7 +16,8 @@ module.exports = {
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'public/lib/animate.css/animate.min.css',
-                'public/lib/angular-fx/src/css/angular-fx.css'
+                'public/lib/angular-fx/src/css/angular-fx.css',
+                'public/lib/angular-xeditable/dist/css/xeditable.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -29,7 +30,8 @@ module.exports = {
 				'http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false',
 				'public/lib/ng-google-places-autocomplete/src/ngAutocomplete.js',
 				'public/lib/ng-lodash/build/ng-lodash.min.js',
-				'public/lib/angular-fx/src/js/angular-fx.js'
+				'public/lib/angular-fx/src/js/angular-fx.js',
+                'public/lib/angular-xeditable/dist/js/xeditable.min.js'
             ]
 		},
 		css: [

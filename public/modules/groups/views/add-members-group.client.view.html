@@ -35,8 +35,8 @@
 
     </div>
     <div class="panel-body">
-        <div class="alert alert-warning text-center" data-ng-hide="members.length">
-            <i class="glyphicon glyphicon-exclamation-sign"></i> Search above using a members username to add them.
+        <div class="alert alert-warning alert-sm text-center" data-ng-hide="members.length">
+            <i class="glyphicon glyphicon-exclamation-sign"></i> No members added yet
         </div>
         <ul class="list-groups list-unstyled">
             <li class="list-group-item" data-ng-repeat="member in members">
@@ -54,7 +54,7 @@
                data-ng-click="saveMembers()">
                 <i class="glyphicon glyphicon-ok"></i> <span class="">Save</span>
             </a>
-            <a class="btn btn-danger btn-sm" ui-sref="list">
+            <a class="btn btn-danger btn-sm" href="/#!/groups/{{group._id}}/members/list">
                 <i class="glyphicon glyphicon-remove"></i> <span class="">Cancel</span>
             </a>
 
