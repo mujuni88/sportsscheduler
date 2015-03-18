@@ -66,7 +66,6 @@ exports.update = function(req, res) {
 		
 		var myResponse = new MyResponse();
 		console.log(err);
-		console.log('group1: ' + group);
 		if(err)
 		{
 			console.log(err);
