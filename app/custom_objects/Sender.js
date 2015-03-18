@@ -3,7 +3,7 @@
 var nodemailer = require('nodemailer');
 var MyResponse = require('./MyResponse');
 var serverJSON = require('../local_files/ui/server.ui.json');
-var configJSON = require('../local_files/email_sms_mms_gateways/config.json');
+var configJSON = require('../local_files/config.json');
 
 //Should be used in the same manner as a singleton
 function Sender() {
