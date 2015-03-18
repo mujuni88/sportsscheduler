@@ -79,7 +79,9 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			group = _.extend(group , req.body);
+			var data = _.merge(group,req.body,Helper.cleanMergeObj);
+			_.extend(group,data);
+
 			group.updated = Date.now();
 
 			group.save(function(err) {

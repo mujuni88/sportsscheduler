@@ -62,7 +62,12 @@ var GroupSchema = new Schema({
 			type: Schema.ObjectId,
 			ref: 'User'
 		}
-	]
+	],
+	createdBy:
+	{
+		type: Schema.ObjectId,
+		ref: 'User'
+	}
 });
 
 GroupSchema.statics.objectIDAtts = ['admins','events','members'];
@@ -117,6 +122,22 @@ GroupSchema.path('members').validate(function (ids,respond) {
     });
 	
 },serverJSON.api.users.groups.members.invalid.clientMessage);
+
+GroupSchema.path('createdBy').validate(function (id,respond) {
+
+	var User = mongoose.model('User');
+	console.log('validate createdBy');
+	
+	async.waterfall([
+		Helper.isValidObjectID(id, User)
+    ], function (error, success) {
+        if (error) 
+        	respond(false); 
+        else
+        	respond(true);
+    });
+	
+},serverJSON.api.users.groups.createdBy.invalid.clientMessage);
 
 /*********** END Validate Functions **************/
 

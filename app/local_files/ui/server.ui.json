@@ -339,7 +339,7 @@
 				{
 					"invalid":
 					{
-						"devMessage": "The passed in ObjectId does not exist",
+						"devMessage": "The passed in ObjectId does not exist for admins",
 						"clientMessage": "This User does not exist",
 						"status": 400
 					}
@@ -348,7 +348,16 @@
 				{
 					"invalid":
 					{
-						"devMessage": "The passed in ObjectId does not exist",
+						"devMessage": "The passed in ObjectId does not exist for members",
+						"clientMessage": "This User does not exist",
+						"status": 400
+					}
+				},
+				"createdBy":
+				{
+					"invalid":
+					{
+						"devMessage": "The passed in ObjectId does not exist for createdBy",
 						"clientMessage": "This User does not exist",
 						"status": 400
 					}

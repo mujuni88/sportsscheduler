@@ -84,6 +84,33 @@ Helper.isValidObjectIDs = function(ids,model) {
 
 /**************** END WATERFALL FUNCTIONS *********************/
 
+Helper.cleanMergeObj = function(oldVal,newVal) {
+
+    //console.log('oldVal: ' + oldVal);
+    console.log('newVal: ' + JSON.stringify(newVal, null, 4));
+    console.log('isArray: ' + Array.isArray(newVal));
+    if(Array.isArray(newVal))
+    {
+        if(newVal.length > 0)
+        {
+            //as long as the first index has an _id, then i know that this array is an array of refs
+            if(typeof newVal[0]._id !== "undefined")
+            {
+                var arr = [];
+                for(var i = 0; i < newVal.length; ++i)
+                {
+                    console.log('id: ' + newVal[i]._id);
+                    arr.push(newVal[i]._id.toString());
+                }
+
+                return arr;
+            }
+        }
+    }
+    
+    return newVal;
+};
+
 Helper.findOne = function(model,query,errPath,res) {
     
     console.log('find one');

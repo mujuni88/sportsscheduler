@@ -198,8 +198,7 @@ module.exports = function (grunt) {
                 }
             }
         }
-
-    });
+	});
 
 
     // Load NPM tasks
