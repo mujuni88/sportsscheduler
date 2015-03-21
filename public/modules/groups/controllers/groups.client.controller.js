@@ -41,7 +41,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
 
             // Redirect after save
             group.$save(function (response) {
-                redirectHome(response._id);
+                //redirectHome(response._id);
             });
         }
 
@@ -54,8 +54,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
 
         function update() {
             $scope.group.$update(function(response){
-                AppAlert.add('success','Group updated successfully')
-                redirectHome(response._id);
+                AppAlert.add('success','Group updated successfully', 5000);
+                //redirectHome(response._id);
             });
         }
 
@@ -78,8 +78,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         }
 
         function removeMember(index) {
-            alert(Yes or no);
             $scope.group.members.splice(index, 1);
+            update();
         }
 
         function redirectHome(id) {
