@@ -14,12 +14,13 @@
         function responseError(rejection) {
             switch (rejection.status) {
                 case 400:
+                    var timeout = 6000;
                     if(rejection.data){
                         rejection.data.clientMessage.forEach(function(msg){
-                            AppAlert.add('danger',msg);
+                            AppAlert.add('danger',msg, timeout);
                         });
                         rejection.data.devMessage.forEach(function(msg){
-                            AppAlert.add('danger',msg);
+                            AppAlert.add('danger',msg, timeout);
                         });
                     }
                     break;

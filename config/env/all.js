@@ -13,11 +13,12 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
-				'public/lib/bootstrap/dist/css/bootstrap.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				//'public/modules/**/css/*.csspublic/lib/bootstrap/dist/css/bootstrap.css',
+				//'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/modules/core/css/bootstrap.css',
                 'public/lib/animate.css/animate.min.css',
                 'public/lib/angular-fx/src/css/angular-fx.css',
-                'public/lib/angular-xeditable/dist/css/xeditable.css'
+                'public/lib/angular-xeditable/dist/css/xeditable.css',
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -31,11 +32,12 @@ module.exports = {
 				'public/lib/ng-google-places-autocomplete/src/ngAutocomplete.js',
 				'public/lib/ng-lodash/build/ng-lodash.min.js',
 				'public/lib/angular-fx/src/js/angular-fx.js',
-                'public/lib/angular-xeditable/dist/js/xeditable.min.js'
+                'public/lib/angular-xeditable/dist/js/xeditable.min.js',
             ]
 		},
 		css: [
-			'public/modules/**/css/*.css'
+			'public/modules/**/css/*.css',
+			'public/modules/**/css/!bootstrap*.css'
 		],
 		js: [
 			'public/config.js',
