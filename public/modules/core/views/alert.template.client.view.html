@@ -1,0 +1,5 @@
+<div class="container" data-ng-controller="AppAlertController as ac">
+    <div class="global-error" >
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ac.closeAlertIdx($index)" class="animated slideInDown alert-sm">{{alert.msg}}</alert>
+    </div>
+</div>   
