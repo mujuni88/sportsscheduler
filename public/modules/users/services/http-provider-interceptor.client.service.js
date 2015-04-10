@@ -16,10 +16,11 @@
                 case 400:
                     var timeout = 6000;
                     if(rejection.data){
-                        rejection.data.clientMessage.forEach(function(msg){
+                        var data = rejection.data;
+                        data.clientMessage.forEach(function(msg){
                             AppAlert.add('danger',msg, timeout);
                         });
-                        rejection.data.devMessage.forEach(function(msg){
+                        data.devMessage.forEach(function(msg){
                             AppAlert.add('danger',msg, timeout);
                         });
                     }
