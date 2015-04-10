@@ -22,9 +22,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         $scope.findOne = findOne;
 
 
-        $scope.temp = {
-            members: []
-        };
+        $scope.tempMembers = [];
 
         // Search for members
         $scope.getMembers = Search.getUsers;
@@ -32,8 +30,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         // Called when a member is selected
         $scope.onSelect = onSelect;
 
-        // Remove member from temporary group
+        // Remove member from group
         $scope.removeMember = removeMember;
+        
+        // Remove member from temporary group
+        $scope.removeTempMember = removeTempMember;
+        
+        $scope.saveMember = saveMember;
+        
+        $scope.isModified = false;
 
         function create() {
             // Create new Group object
@@ -66,24 +71,49 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         function findOne() {
             $scope.group = Groups.get({
                 groupId: $stateParams.groupId
+            }, function(){
+                angular.copy($scope.group.members,$scope.tempMembers);
+                $scope.isModified = false;
             });
 
         }
 
         function onSelect($item, $model, $label) {
-            var tempMembers = $scope.group.members;
+            var tempMembers = $scope.tempMembers;
             tempMembers.push($model);
             
-            $scope.group.members = _.uniq(tempMembers, '_id');
+            $scope.tempMembers = _.uniq(tempMembers, '_id');
+            
+            _isModified();
         }
 
         function removeMember(index) {
             $scope.group.members.splice(index, 1);
         }
+        
+        function removeTempMember(index) {
+            $scope.tempMembers.splice(index, 1);
+        }
+        
+        function saveMember(){
+            angular.copy($scope.tempMembers, $scope.group.members);
+            $scope.isModified = false;
+            update();
+        }
 
         function redirectHome(id) {
             $location.path('groups/' + id + '/members/list');
         }
+        
+        function _isModified(){
+            var arr = _.filter($scope.group.members, function(item){
+                return !_.findWhere($scope.tempMembers,{'_id':item._id});
+            });
+            
+            $scope.isModified =   (_.size($scope.tempMembers) > _.size($scope.group.members)) || (_.size(arr) > 0);
+        }
+        
+        
         
 
     }

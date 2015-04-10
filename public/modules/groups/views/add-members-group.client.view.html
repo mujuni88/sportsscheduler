@@ -5,7 +5,7 @@
         <span class="pull-right"><i class="glyphicon glyphicon-plus-sign"></i></span>
     </a>
 </script>
-<div class="panel panel-default animated fadeIn">
+<div class="panel panel-default animated fadeIn"  data-ng-init="findOne()">
     <div class="panel-heading clearfix">
         <div class="form-horizontal">
             <div class="form-group">
@@ -35,13 +35,16 @@
 
     </div>
     <div class="panel-body">
-        <div class="alert alert-warning alert-sm text-center" data-ng-hide="group.members.length">
+        <div class="alert alert-warning alert-sm text-center" data-ng-hide="tempMembers.length">
             <i class="glyphicon glyphicon-exclamation-sign"></i> No members added yet
         </div>
+        <div class="alert alert-info alert-sm text-center" data-ng-show="isModified">
+            <i class="glyphicon glyphicon-exclamation-sign"></i> Don't forget to save
+        </div>
         <ul class="list-groups list-unstyled">
-            <li class="list-group-item" data-ng-repeat="member in group.members">
+            <li class="list-group-item" data-ng-repeat="member in tempMembers">
                 <span class="" data-ng-bind="member.username"></span>
-                <span class="pull-right btn-link" data-ng-click="removeMember($index);">
+                <span class="pull-right btn-link" data-ng-click="removeTempMember($index);">
                     <i class="glyphicon glyphicon-remove text-danger"></i>
                 </span>
             </li>
@@ -51,7 +54,7 @@
     <div class="panel-footer">
         <div class="text-right">
             <a class="btn btn-primary btn-sm"
-               data-ng-click="update()">
+               data-ng-click="saveMember()">
                 <i class="glyphicon glyphicon-ok"></i> <span class="">Save</span>
             </a>
             <a class="btn btn-danger btn-sm" href="/#!/groups/{{group._id}}/members/list">

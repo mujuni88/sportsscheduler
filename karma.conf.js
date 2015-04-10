@@ -62,7 +62,7 @@ module.exports = function(config) {
 		captureTimeout: 60000,
 
 		// Continuous Integration mode
-		// If true, it capture browsers, xeditableOptions tests and exit
+		// If true, it capture browsers, run tests and exit
 		singleRun: true,
 
         // report which specs are slower than 500ms

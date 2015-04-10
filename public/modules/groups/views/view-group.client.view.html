@@ -9,15 +9,15 @@
                         <!--<span class="hidden-xs"> Edit Group</span>-->
                     </a>
                 <span ng-show="editableForm.$visible">
-                <button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">
+                <button type="submit" class="btn btn-primary btn-sm" ng-disabled="editableForm.$waiting">
                     Save
                 </button>
-                <button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting"
+                <button type="button" class="btn btn-default btn-sm" ng-disabled="editableForm.$waiting"
                         ng-click="editableForm.$cancel()">
                     Cancel
                 </button>
                 </span>
-                    <a class="btn btn-danger btn-sm" data-ng-click="remove();">
+                    <a class="btn btn-danger btn-sm" data-ng-click="remove();"  ng-show="!editableForm.$visible">
                         <i class="glyphicon glyphicon-trash"></i>
                         <!--<span class="hidden-xs"> Delete Group</span>-->
                     </a>
