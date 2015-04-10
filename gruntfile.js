@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         localFiles: ['app/local_files/**/*'],
         clientViews: ['public/modules/**/views/**/*.html'],
         clientJS: ['public/js/*.js', 'public/modules/**/*![e2e]*.js'],
-        clientCSS: ['public/modules/**/*.css'],
+        clientCSS: ['public/modules/**/!(bootstrap)*.css'],
         mochaTests: ['app/tests/**/*.js'],
         e2eTests: ['public/modules/*/tests/e2e/*.js']
     };

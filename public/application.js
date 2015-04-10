@@ -5,7 +5,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName)
-    .run(['editableOptions', run])
+    .run(['editableOptions', xeditableOptions])
     .config(['$locationProvider',config]);
 //Then define the init function for starting up the application
 angular.element(document).ready(ready);
@@ -14,8 +14,10 @@ function config($locationProvider) {
     $locationProvider.hashPrefix('!');
 }
 
-function run(editableOptions) {
+function xeditableOptions(editableOptions, editableThemes) {
     editableOptions.theme = 'bs3';
+    editableThemes.bs3.inputClass = 'input-sm';
+    editableThemes.bs3.buttonsClass = 'btn-sm';
 }
 function ready() {
     //Fixing facebook bug with redirect
