@@ -25,10 +25,9 @@ var validateNameProperty = function(property)
 var EventSchema = new Schema({
 	name: {
 		type: String,
-		required: serverJSON.api.users.groups.events.name.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.groups.events.name.invalid.regex), serverJSON.api.users.groups.events.name.invalid.clientMessage],
-		//validate: [validateNameProperty, serverJSON.api.users.groups.events.errors._2.clientMessage],
-		default: '',
+		required: 'name.empty',
+		match: [new RegExp(serverJSON.api.events.name.invalid.regex), 'name.invalid'],
+		//validate: [validateNameProperty, serverJSON.api.events.errors._2],
 		trim: true
 	},
 	created: {
@@ -45,30 +44,30 @@ var EventSchema = new Schema({
 		},
 		address: {
 			type: String,
-			required: serverJSON.api.users.groups.events.location.address.empty.clientMessage,
-			match: [new RegExp(serverJSON.api.users.groups.events.location.address.invalid.regex), serverJSON.api.users.groups.events.location.address.invalid.clientMessage],
+			required: 'location.address.empty',
+			match: [new RegExp(serverJSON.api.events.location.address.invalid.regex), 'location.address.invalid'],
 			trim: true
 		},
 		lat: {
 			type: Number,
-			//required: serverJSON.api.users.groups.events.errors._3.clientMessage,
+			//required: serverJSON.api.events.errors._3,
 			default: -1
 		},
 		lng: {
 			type: Number,
-			//required: serverJSON.api.users.groups.events.errors._4.clientMessage,
+			//required: serverJSON.api.events.errors._4,
 			default: -1
 		}
 	},
 	date:{
 		type: Date,
-		required: serverJSON.api.users.groups.events.date.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.groups.events.date.invalid.regex), serverJSON.api.users.groups.events.date.invalid.clientMessage],
+		required: 'date.empty',
+		match: [new RegExp(serverJSON.api.events.date.invalid.regex), 'date.invalid'],
 	},
 	time:{
 		type: Date,
-		required: serverJSON.api.users.groups.events.time.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.groups.events.time.invalid.regex), serverJSON.api.users.groups.events.time.invalid.clientMessage],
+		required: 'time.empty',
+		match: [new RegExp(serverJSON.api.events.time.invalid.regex), 'time.invalid'],
 	},
 	voteEnabled:{
 		type:Boolean,
@@ -76,34 +75,59 @@ var EventSchema = new Schema({
 	},
 	minimumVotes:{
 		type:Number,
-		required: serverJSON.api.users.groups.events.minimumVotes.empty.clientMessage
+		required: 'minimumVotes.empty'
 	},
 	votes: 
 	{
-		yes: 
-		[
-			{
-				type: Schema.ObjectId,
-				ref: 'User'
-			}
-		],
-		no: 
-		[
-			{
-				type: Schema.ObjectId,
-				ref: 'User'
-			}
-		],
+		yes:
+		{
+			type: [Schema.ObjectId],
+			ref: 'User',
+			validate:
+			[
+				{
+					validator: Helper.isValidObjectIDs,
+					msg: 'votes.yes.invalid'
+				},
+				{
+					validator: Helper.isUniqueArray,
+					msg: 'votes.yes.duplicate'
+				}
+			]
+		},
+		no:
+		{
+			type: [Schema.ObjectId],
+			ref: 'User',
+			validate:
+			[
+				{
+					validator: Helper.isValidObjectIDs,
+					msg: 'votes.no.invalid'
+				},
+				{
+					validator: Helper.isUniqueArray,
+					msg: 'votes.no.duplicate'
+				}
+			]
+		},
 	},
 
 	message:{
 		type: String,
-		required: serverJSON.api.users.groups.events.message.empty.clientMessage
+		required: 'message.empty'
 	},
 	group: {
 		type: Schema.ObjectId,
 		ref: 'Group',
-		required: serverJSON.api.users.groups.events.group.empty.clientMessage
+		//required: serverJSON.api.events.group.empty,
+		validate: 
+		[
+			{
+				validator: Helper.isValidObjectID,
+				msg: 'group.invalid'
+			}
+		]
 	},
 	user: {
 		type: Schema.ObjectId,
@@ -113,73 +137,78 @@ var EventSchema = new Schema({
 
 EventSchema.statics.objectIDAtts = ['user','group'];
 EventSchema.statics.title = serverJSON.constants.events;
-EventSchema.statics.errPath = 'api.users.groups.events';
+EventSchema.statics.errPath = 'api.events';
 
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {
 
 	var Group = mongoose.model('Group');
-	console.log('validate group');
-	
-	async.waterfall([
-		Helper.isValidObjectID(id, Group)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
-	
-	
-},serverJSON.api.users.groups.events.group.invalid.clientMessage);
+	var query = {
+		_id : id
+	};
 
-EventSchema.path('user').validate(function (id,respond) {
+	console.log('validate group: ' + id);
+	
+	Helper.find(Group,query,function(err,mod) {
 
-	var User = mongoose.model('User');
-	console.log('validate user');
+		if(err || !mod) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-	async.waterfall([
-		Helper.isValidObjectID(id, User)
-    ], function (error, success) {
-        if (error) 
-        	respond(false);
-        else
-        	respond(true);
-    });
 	
-},serverJSON.api.users.groups.events.user.invalid.clientMessage);
+},'group.exist');
 
 EventSchema.path('votes.yes').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+
 	var User = mongoose.model('User');
-	console.log('validate votes "yes"');
+	var query = {
+    	_id: 
+    	{
+    		$in: ids
+    	}
+    };
+
+	console.log('validate votes "yes"' + ids);
 	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, User)
-    ], function (error, success) {
-        if (error) 
-        	respond(false);
-        else
-        	respond(true);
-    });
+	Helper.find(User,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-},serverJSON.api.users.groups.events.votes.yes.invalid.clientMessage);
+},'votes.yes.exist');
 
 EventSchema.path('votes.no').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+
 	var User = mongoose.model('User');
-	console.log('validate votes "no"');
+	var query = {
+    	_id: 
+    	{
+    		$in: ids
+    	}
+    };
+
+	console.log('validate votes "no"' + ids);
 	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, User)
-    ], function (error, success) {
-        if (error) 
-        	respond(false);
-        else
-        	respond(true);
-    });
+	Helper.find(User,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-},serverJSON.api.users.groups.events.votes.no.invalid.clientMessage);
+},'votes.no.exist');
 
 /*********** END Validate Functions **************/
 
@@ -208,7 +237,7 @@ EventSchema.pre('save', function (next) {
 	if(intersection.length)
 	{
 		var err = new ValidationError(this);
-		err.errors.votes = new ValidatorError('votes.yes', serverJSON.api.users.groups.events.votes.yes.unique.clientMessage, 'notunique', '');
+		err.errors.votes = new ValidatorError('votes.yes', 'votes.yes.duplicate', 'notunique', '');
 	  	
 	  	console.log(err);
 	  	

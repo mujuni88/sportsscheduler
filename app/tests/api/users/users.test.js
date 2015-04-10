@@ -23,8 +23,7 @@ describe('POST Requests', function() {
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body);
-                chaiExpect(typeof res.body.data).to.eql('object');
+                chaiExpect(res.statusCode).to.eql(200);
 
                 done();
             });
@@ -44,8 +43,7 @@ describe('POST Requests', function() {
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body);
-                chaiExpect(typeof res.body.error).to.eql('object');
+                chaiExpect(res.statusCode).to.eql(400);
 
                 done();
             });
@@ -57,8 +55,7 @@ describe('POST Requests', function() {
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body);
-                chaiExpect(typeof res.body.data).to.eql('object');
+                chaiExpect(res.statusCode).to.eql(200);
 
                 done();
             });

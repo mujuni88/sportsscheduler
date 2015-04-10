@@ -1,9 +1,9 @@
 'use strict';
 
-var MyResponse = require('../../../custom_objects/MyResponse');
-var serverJSON = require('../../../local_files/ui/server.ui.json');
-var smsJSON = require('../../../local_files/ui/sms.ui.json');
-
+var MyResponse = require('../../../custom_objects/MyResponse'),
+    serverJSON = require('../../../local_files/ui/server.ui.json'),
+    smsJSON = require('../../../local_files/ui/sms.ui.json'),
+    Helper = require('../../../custom_objects/Helper');
 
 
 function formatCarrierInfo(carrierInfo) 
@@ -43,9 +43,8 @@ app.route('/api/carriers')
             }
         }
 
-        myResponse.data = carriersArr;
-        
-        res.json(myResponse);
+        myResponse.setData(carriersArr);
+        Helper.output(myResponse,res);
     });
 
 app.route('/api/carriers/countries')
@@ -76,9 +75,8 @@ app.route('/api/carriers/countries')
 
         }
 
-        myResponse.data = countries;
-
-        res.json(myResponse);
+        myResponse.setData(countries);
+        Helper.output(myResponse,res);
     });
 
 app.route('/api/carriers/countries/:countryName')
@@ -91,8 +89,9 @@ app.route('/api/carriers/countries/:countryName')
 
         if(typeof country === 'undefined')
         {
-            myResponse.setError(serverJSON.api.carriers.countries.invalid);
-            res.json(myResponse);
+            myResponse.addMessages(serverJSON.api.carriers.countries.invalid);
+            Helper.output(myResponse,res);
+
             return;
         }
 
@@ -101,9 +100,8 @@ app.route('/api/carriers/countries/:countryName')
         	carrierArr.push(formatCarrierInfo(country[carrier]));
         }
 
-        myResponse.data = carrierArr;
-
-        res.json(myResponse);
+        myResponse.setData(carrierArr);
+        Helper.output(myResponse,res);
 
 	});
 
@@ -117,8 +115,9 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
 
         if(typeof countryCarriers === 'undefined')
         {
-            myResponse.setError(serverJSON.api.carriers.countries.carriers.invalid);
-            res.json(myResponse);
+            myResponse.addMessages(serverJSON.api.carriers.carrier.invalid);
+            Helper.output(myResponse,res);
+         
             return;
         }
 
@@ -126,16 +125,16 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
 
         if(typeof carrierInfo === 'undefined')
         {
-            myResponse.setError(serverJSON.api.carriers.countries.invalid);
-            res.json(myResponse);
+            myResponse.addMessages(serverJSON.api.carriers.countries.invalid);
+            Helper.output(myResponse,res);
+
             return;
         }
 
         var carrier = formatCarrierInfo(carrierInfo);
 
-        myResponse.data = carrier;
-
-        res.json(myResponse);
+        myResponse.setData(carrier);
+        Helper.output(myResponse,res);
 
 	});
 };

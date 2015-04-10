@@ -11,35 +11,14 @@ function MyResponse() {
     this.error = undefined;
 
     this.status = 200;
+    this.data = undefined;
 }
 
-function findErrorObject(obj) {
+function getMessage(json,path) {
+	for(var i = 0; i < path.length; ++i)
+		json = json[path[i]];
 
-	//console.log('errMessage: ' + errMessage);
-	if(errMessage === obj)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-function traverse(o,func) {
-    for (var i in o) {        
-
-        if (o[i] !== null && typeof(o[i]) === 'object') {
-            //going on step down in the object tree!!
-            traverse(o[i],func);   
-        }
-        else
-        {
-        	if(func(o[i]))
-        		foundObj = o;
-        }
-
-        if(foundObj)
-        	return;
-    }
+	return json;
 }
 
 MyResponse.prototype.addMessages = function(errObj)
@@ -53,42 +32,19 @@ MyResponse.prototype.addMessages = function(errObj)
 	this.status = errObj.status;
 };
 
-MyResponse.prototype.setError = function(res)
+MyResponse.prototype.setData = function(data)
 {
-	if(typeof this.error === 'undefined')
-		this.error = new MyError();
-
-	res.status(this.status);
-	res.json(this.error);
+	this.data = data;
 };
 
-MyResponse.prototype.setData = function(data,res)
-{
-	res.status(this.status);
-    res.json(data);
-};
-
-MyResponse.prototype.handleResponse = function(err,model,obj,res)
-{
-	var errPath = model.errPath;
-	if(err)
-	{
-		this.transformMongooseError(errPath,String(err));
-		res.status(this.status);
-		res.json(this);
-	}
-	else
-	{
-		Helper.populateModel(model,obj,errPath,res);
-	}
-};
-
-MyResponse.prototype.transformMongooseError = function(modelPath,err,res)
+MyResponse.prototype.transformMongooseError = function(modelPath,err)
 {
 	var i = 0;
 	var path = null;
 	var copyOfServerJSON = serverJSON;
-	
+	var message = null;
+	var completePath = null;
+
 	if(err.indexOf('CastError') !== -1)
 	{
 		path = modelPath.split('.');
@@ -122,26 +78,25 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err,res)
 	{
 		err = err.split(':')[1];
 		errMessage = err.trim();
-
+		console.log('stuff: ' + err);
 		var messages = errMessage.split(',');
-		var att = null;
-		var errorType = null;
 
 		if(Array.isArray(messages))
 		{
 			for(i = 0; i < messages.length; ++i)
 			{
 				errMessage = messages[i].trim();
-				console.log('errMessage: ' + errMessage);
-				traverse(copyOfServerJSON,findErrorObject);
-				this.addMessages(foundObj);
-				foundObj = null;
+				completePath = modelPath + '.' + errMessage;
+				path = completePath.split('.');
+				message = getMessage(copyOfServerJSON,path);
+				this.addMessages(message);
 			}
-
 		}
 		else
 		{
-			traverse(copyOfServerJSON,findErrorObject);
+			completePath = modelPath + '.' + errMessage;
+			path = completePath.split('.');
+			message = getMessage(copyOfServerJSON,path);
 			this.addMessages(foundObj);
 		}
 	}
@@ -157,8 +112,6 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err,res)
 		if(err.indexOf('E11000') !== -1)
 			this.addMessages(copyOfServerJSON[prop].duplicate);
 	}
-
-	this.setError(res);
 };
 
 module.exports = MyResponse;

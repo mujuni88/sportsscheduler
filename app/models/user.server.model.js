@@ -34,6 +34,22 @@ var validateLocalStrategyPassword = function(password) {
 	return (this.provider !== 'local' || (password && password.length > 6));
 };
 
+function isValidObjectIDs(ids) {
+
+	if(!Helper.isValidObjectIDs(ids))
+		return false;
+
+	return true;
+}
+
+function isUniqueArray(ids) {
+	
+	if(!Helper.isUniqueArray(ids))
+		return false;
+
+	return true;
+}
+
 /**
 	*	@class User
 	*	@property {string} firstName
@@ -61,14 +77,14 @@ var UserSchema = new Schema({
 	firstName: {
 		type: String,
 		trim: true,
-		required: serverJSON.api.users.firstName.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.firstName.invalid.regex), serverJSON.api.users.firstName.invalid.clientMessage]
+		required: 'firstName.empty',
+		match: [new RegExp(serverJSON.api.users.firstName.invalid.regex), 'firstName.invalid']
 	},
 	lastName: {
 		type: String,
 		trim: true,
-		required: serverJSON.api.users.lastName.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.lastName.invalid.regex), serverJSON.api.users.lastName.invalid.clientMessage]
+		required: 'lastName.empty',
+		match: [new RegExp(serverJSON.api.users.lastName.invalid.regex), 'lastName.invalid']
 	},
 	displayName: {
 		type: String,
@@ -78,7 +94,7 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		default: '',
-		match: [new RegExp(serverJSON.api.users.email.invalid.regex), serverJSON.api.users.email.invalid.clientMessage]
+		match: [new RegExp(serverJSON.api.users.email.invalid.regex), 'email.invalid']
 	},
 	carrier: {
 		type: String,
@@ -88,35 +104,51 @@ var UserSchema = new Schema({
 	phoneNumber: {
 		type: Number,
 		default: -1,
-		match: [new RegExp(serverJSON.api.users.phoneNumber.invalid.regex), serverJSON.api.users.phoneNumber.invalid.clientMessage]
+		match: [new RegExp(serverJSON.api.users.phoneNumber.invalid.regex), 'phoneNumber.invalid']
 	},
 	username: {
 		type: String,
 		unique: 'testing error message',
-		required: serverJSON.api.users.username.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.username.invalid.regex), serverJSON.api.users.username.invalid.clientMessage],
+		required: 'username.empty',
+		match: [new RegExp(serverJSON.api.users.username.invalid.regex), 'username.invalid'],
 		trim: true
 	},
 	password: {
 		type: String,
 		default: '',
-		required: serverJSON.api.users.password.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.password.invalid.regex), serverJSON.api.users.password.invalid.clientMessage]
+		required: 'password.empty',
+		match: [new RegExp(serverJSON.api.users.password.invalid.regex), 'password.invalid']
 	},
-	createdGroups: 
-	[
-		{
-			type: Schema.ObjectId,
-			ref: 'Group'
-		}
-	],
-	joinedGroups:
-	[
-		{
-			type: Schema.ObjectId,
-			ref: 'Group'
-		}
-	],
+	createdGroups: {
+		type: [Schema.ObjectId],
+		ref: 'Group',
+		validate: 
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'createdGroups.invalid'
+			},
+			{
+				validator: Helper.isUniqueArray,
+				msg: 'createdGroups.duplicate'
+			}
+		]
+	},
+	joinedGroups: {
+		type: [Schema.ObjectId],
+		ref: 'Group',
+		validate: 
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'joinedGroups.invalid'
+			},
+			{
+				validator: Helper.isUniqueArray,
+				msg: 'joinedGroups.duplicate'
+			}
+		]
+	},
 	salt: {
 		type: String
 	},
@@ -209,40 +241,58 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 	});
 };
 
-/*********** Validate Functions **************/
+/*********** Validate Functions Middleware **************/
 
 UserSchema.path('createdGroups').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+
 	var Group = mongoose.model('Group');
-	console.log('validate created groups');
+	var query = {
+                	_id: 
+                	{
+                		$in: ids
+                	}
+                };
+
+	console.log('validate created groups: ' + ids);
+
+	Helper.find(Group,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, Group)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
-	
-},serverJSON.api.users.createdGroups.invalid.clientMessage);
+ },'createdGroups.exist');
 
 UserSchema.path('joinedGroups').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+	
 	var Group = mongoose.model('Group');
-	console.log('validate joined groups');
-	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, Group)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
-	
-},serverJSON.api.users.joinedGroups.invalid.clientMessage);
+	var query = {
+                	_id: 
+                	{
+                		$in: ids
+                	}
+                };
 
-/*********** END Validate Functions **************/
+	console.log('validate joined groups: ' + ids);
+	
+	Helper.find(Group,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
+	
+},'joinedGroups.exist');
+
+/*********** END Validate Functions Middleware **************/
 
 mongoose.model('User', UserSchema);

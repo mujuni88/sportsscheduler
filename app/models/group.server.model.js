@@ -9,29 +9,15 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	Helper = require('../custom_objects/Helper');
 
-var validateNameProperty = function(property)
-{
-	//console.log('answer: ' + ((this.provider !== 'local' && !this.updated) || property.length));
-	//return ((this.provider !== 'local' && !this.updated) || property.length);
-	var regEx = new RegExp(/^[\d\w-]{5,30}$/);
-	console.log('property: ' + property);
-	return regEx.test(property);
-};
-
-var validateLocalStrategyProperty = function(property) {
-	return ((this.provider !== 'local' && !this.updated) || property.length);
-};
-
 /**
  * Group Schema
  */
 var GroupSchema = new Schema({
 	name: {
 		type: String,
-		default: '',
-		required: serverJSON.api.users.groups.name.empty.clientMessage,
-		match: [new RegExp(serverJSON.api.users.groups.name.invalid.regex), serverJSON.api.users.groups.name.invalid.clientMessage],
-		//validate: [validateNameProperty, serverJSON.api.users.groups.errors._2.clientMessage],
+		required: 'name.empty',
+		match: [new RegExp(serverJSON.api.groups.name.invalid.regex), 'name.invalid'],
+		//validate: [validateNameProperty, serverJSON.api.groups.errors._2],
 		trim: true
 	},
 	created: {
@@ -43,106 +29,191 @@ var GroupSchema = new Schema({
 		default: Date.now
 	},
 	admins: 
-	[
-		{
-			type: Schema.ObjectId,
-			ref: 'User'
-		}
-	],
+	{
+		type: [Schema.ObjectId],
+		ref: 'User',
+		validate: 
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'admins.invalid'
+			},
+			{
+				validator: Helper.isUniqueArray,
+				msg: 'admins.duplicate'
+			}
+		]
+	},
 	events: 
-	[
-		{
-			type: Schema.ObjectId,
-			ref: 'Event'
-		}
-	],
+	{
+		type: [Schema.ObjectId],
+		ref: 'Event',
+		validate: 
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'events.invalid'
+			},
+			{
+				validator: Helper.isUniqueArray,
+				msg: 'events.duplicate'
+			}
+		]
+	},
 	members:
-	[
-		{
-			type: Schema.ObjectId,
-			ref: 'User'
-		}
-	],
+	{
+		type: [Schema.ObjectId],
+		ref: 'User',
+		validate:
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'members.invalid'
+			},
+			{
+				validator: Helper.isUniqueArray,
+				msg: 'members.duplicate'
+			}
+		]
+	},
 	createdBy:
 	{
 		type: Schema.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		validate: 
+		[
+			{
+				validator: Helper.isValidObjectID,
+				msg: 'createdBy.invalid'
+			}
+		]
 	}
 });
 
 GroupSchema.statics.objectIDAtts = ['admins','events','members'];
 GroupSchema.statics.title = serverJSON.constants.groups;
-GroupSchema.statics.errPath = 'api.users.groups';
+GroupSchema.statics.errPath = 'api.groups';
+
+GroupSchema.path('name').validate(function (name,respond) {
+
+	var Group = mongoose.model('Group');
+	var query = {
+		name: name
+	};
+
+	console.log('validating name: ' + name);
+	
+	Helper.find(Group,query,function(err,mod) {
+		if(err || !mod || mod.length > 0) 
+			respond(false);
+		else
+			respond(true);
+	});
+
+},'name.duplicate');
 
 /*********** Validate Functions **************/
 GroupSchema.path('admins').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+
 	var User = mongoose.model('User');
-	console.log('validate admins');
+	var query = {
+    	_id: 
+    	{
+    		$in: ids
+    	}
+    };
+
+    console.log('validate admins: ' + ids);
 	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, User)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
+	Helper.find(User,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-},serverJSON.api.users.groups.admins.invalid.clientMessage);
+},'admins.exist');
 
 GroupSchema.path('events').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+
 	var Event = mongoose.model('Event');
-	console.log('validate events');
+	var query = {
+    	_id: 
+    	{
+    		$in: ids
+    	}
+    };
+
+	console.log('validate events: ' + ids);
 	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, Event)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
+	Helper.find(Event,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-},serverJSON.api.users.groups.events._id.invalid.clientMessage);
+},'events.exist');
 
 GroupSchema.path('members').validate(function (ids,respond) {
 
+	if(ids.length === 0)
+		respond(true);
+
 	var User = mongoose.model('User');
-	console.log('validate members');
+	var query = {
+    	_id: 
+    	{
+    		$in: ids
+    	}
+    };
+
+	console.log('validate members: ' + ids);
 	
-	async.waterfall([
-		Helper.isValidObjectIDs(ids, User)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
+	Helper.find(User,query,function(err,mods) {
+
+		if(err || !mods || ids.length !== mods.length) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-},serverJSON.api.users.groups.members.invalid.clientMessage);
+},'members.exist');
 
 GroupSchema.path('createdBy').validate(function (id,respond) {
 
 	var User = mongoose.model('User');
-	console.log('validate createdBy');
+	var query = {
+		_id: id
+	};
+
+	console.log('validate createdBy: ' + id);
 	
-	async.waterfall([
-		Helper.isValidObjectID(id, User)
-    ], function (error, success) {
-        if (error) 
-        	respond(false); 
-        else
-        	respond(true);
-    });
+	Helper.find(User,query,function(err,mod) {
+
+		if(err || !mod) 
+			respond(false);
+		else
+			respond(true);
+	});
 	
-},serverJSON.api.users.groups.createdBy.invalid.clientMessage);
+},'createdBy.exist');
 
 /*********** END Validate Functions **************/
 
 GroupSchema.pre('save', function(next){
   this.members = this.members.map(function(option) { return option._id; });
+
+  //var functionsArray = Helper.
+  //Group.findOne({_id: id}, function(err,group) {
   next();
 });
 

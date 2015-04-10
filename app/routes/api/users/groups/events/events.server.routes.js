@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function(app) {
-	var users = require('../../../../../../app/controllers/users');
-	var events = require('../../../../../../app/controllers/events');
+	var users = require('../../../../../../app/controllers/users/users');
+	var events = require('../../../../../../app/controllers/users/groups/events/events');
 
 	// Events Routes
 	app.route('/api/users/groups/events')
