@@ -23,13 +23,13 @@
 				"empty":
 				{
 					"devMessage": "No value has been entered for the 'to' parameter",
-					"clientMessage": "Please fill in the recipient",
+					"clientMessage": "Please fill in the Recipient(s) field",
 					"status": 400
 				},
 				"invalid":
 				{
 					"regex": "^[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}$",
-					"devMessage": "To does not pass the proper validation regex of '^[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}$'",
+					"devMessage": "The 'to' parameter does not pass the proper validation regex of '^[\\d]{10,}@[a-z]*[\\d]*\\.[a-z]{1,4}$'",
 					"clientMessage": "Please fill in a valid Recipient",
 					"status": 400
 				}
@@ -39,7 +39,7 @@
 				"empty":
 				{
 					"devMessage": "No value has been entered for the 'from' parameter",
-					"clientMessage": "Please fill in the sender",
+					"clientMessage": "Please fill in the Sender field",
 					"status": 400
 				},
 				"invalid":
@@ -55,7 +55,7 @@
 				"empty":
 				{
 					"devMessage": "No value has been entered for the 'subject' parameter",
-					"clientMessage": "Please fill in the subject",
+					"clientMessage": "Please fill in the Subject field",
 					"status": 400
 				},
 				"invalid":
@@ -71,303 +71,46 @@
 				"empty":
 				{
 					"devMessage": "No value has been entered for the 'text' parameter",
-					"clientMessage": "Please fill in the message",
+					"clientMessage": "Please fill in the Message field",
 					"status": 400
 				},
 				"invalid":
 				{
 					"regex": "^[\\d\\w\\-@]{5,30}$",
 					"devMessage": "Text does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
-					"clientMessage": "Please fill in a valid message",
+					"clientMessage": "Please fill in a valid Message",
 					"status": 400
 				}
 			}
 		},
 		"carriers":
 		{
-			"countries":
+			"carrier":
 			{
-				"carriers":
-				{
-					"invalid":
-					{
-						"devMessage": "Carrier does not exist",
-						"clientMessage": "Carrier does not exist",
-						"status": 400
-					}
-				},
 				"invalid":
 				{
-					"devMessage": "Country Name does not exist",
-					"clientMessage": "Country Name does not exist",
+					"devMessage": "The Carrier does not exist in our DB",
+					"clientMessage": "The Carrier does not exist",
+					"status": 400
+				}
+			},
+			"countries":
+			{
+				"invalid":
+				{
+					"devMessage": "Country Name does not exist in our DB",
+					"clientMessage": "The Country Name does not exist",
 					"status": 400
 				}
 			}
 		},
-		"file":
-		{
-			"errors":
-			{
-				"_1":"File Does not Exist"
-			}
-		},
 		"users":
 		{
-			"groups":
-			{
-				"events":
-				{
-					"_id":
-					{
-						"invalid":
-						{
-							"devMessage": "Invalid ObjectID for event",
-							"clientMessage": "This Event does not exist",
-							"status": 400
-						}
-					},
-					"name":
-					{
-						"empty":
-						{
-							"devMessage": "No value has been entered for the 'name' parameter",
-							"clientMessage": "Please fill in your Event Name",
-							"status": 400
-						},
-						"invalid":
-						{
-							"regex": "^[\\d\\w\\-@\\s]{5,30}$",
-							"devMessage": "Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
-							"clientMessage": "Please fill in a valid Event Name",
-							"status": 400
-						}
-					},
-					"location":
-					{
-						"name":
-						{
-							"empty":
-							{
-								"devMessage": "No value has been entered for the 'name' parameter of the location attribute",
-								"clientMessage": "Please fill in your Location Name",
-								"status": 400
-							},
-							"invalid":
-							{
-								"regex": "^[\\d\\w\\-@]{5,30}$",
-								"devMessage": "location 'name' does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
-								"clientMessage": "Please fill in a valid Location Name",
-								"status": 400
-							}
-						},
-						"address":
-						{
-							"empty":
-							{
-								"devMessage": "No value has been entered for the 'address' parameter of the location attribute",
-								"clientMessage": "Please fill in your Location Address",
-								"status": 400
-							},
-							"invalid":
-							{
-								"regex": "^[\\d\\w\\-\\s]{5,30}$",
-								"devMessage": "location 'address' does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
-								"clientMessage": "Please fill in a valid Location Address",
-								"status": 400
-							}
-						},
-						"lat":
-						{
-							"empty":
-							{
-								"devMessage": "No value has been found for the 'lat' attribute",
-								"clientMessage": "Could not find location for this address",
-								"status": 400
-							}
-						},
-						"lng":
-						{
-							"empty":
-							{
-								"devMessage": "No value has been found for the 'lng' attribute",
-								"clientMessage": "Could not find location for this address",
-								"status": 400
-							}
-						}
-					},
-					"date":
-					{
-						"empty":
-						{
-							"devMessage": "No value has been entered for the 'date' parameter",
-							"clientMessage": "Please fill in your Event Date",
-							"status": 400
-						},
-						"invalid":
-						{
-							"regex": "^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$",
-							"devMessage": "location 'date' does not pass the proper validation regex of '^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$'",
-							"clientMessage": "Please fill in a valid Location Date",
-							"status": 400
-						}
-					},
-					"time":
-					{
-						"empty":
-						{
-							"devMessage": "No value has been entered for the 'time' parameter",
-							"clientMessage": "Please fill in your Event Time",
-							"status": 400
-						},
-						"invalid":
-						{
-							"regex": "^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$",
-							"devMessage": "location 'time' does not pass the proper validation regex of '^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$'",
-							"clientMessage": "Please fill in a valid Location Time",
-							"status": 400
-						}
-					},
-					"minimumVotes":
-					{
-						"empty":
-						{
-							"devMessage": "No value has been entered for the 'minimumVotes' parameter",
-							"clientMessage": "Please fill in the Minimum Votes needed for this event",
-							"status": 400
-						},
-						"invalid":
-						{
-							"regex": "^\\d*$",
-							"devMessage": "Minimum Votes value does not match the proper validation regex of '^\\d*$'",
-							"clientMessage": "Please fill in a valid Minimum Votes",
-							"status": 400
-						}
-					},
-					"votes":
-					{
-						"yes":
-						{
-							"invalid":
-							{
-								"devMessage": "Invalid ObjectID for event",
-								"clientMessage": "This event does not exist",
-								"status": 400
-							},
-							"unique":
-							{
-								"devMessage": "Duplicate ObjectID has been found in both yes and no arrays",
-								"clientMessage": "You have already entered in your vote",
-								"status": 400
-							}
-						},
-						"no":
-						{
-							"invalid":
-							{
-								"devMessage": "Invalid ObjectID for event",
-								"clientMessage": "This event does not exist",
-								"status": 400
-							},
-							"unique":
-							{
-								"devMessage": "Duplicate ObjectID has been found in both yes and no arrays",
-								"clientMessage": "You have already entered in your vote",
-								"status": 400
-							}
-						}
-					},
-					"message":
-					{
-						"empty":
-						{
-							"devMessage": "No value has been entered for the 'message' parameter",
-							"clientMessage": "Please fill in your Event Message",
-							"status": 400
-						}
-					},
-					"group":
-					{
-						"invalid":
-						{
-							"devMessage": "The passed in ObjectId does not exist",
-							"clientMessage": "This Group does not exist",
-							"status": 400
-						},
-						"empty":
-						{
-							"devMessage": "No group id has been entered for the 'empty' parameter",
-							"clientMessage": "This Event must belong to a group",
-							"status": 400
-						}
-					},
-					"user":
-					{
-						"invalid":
-						{
-							"devMessage": "The passed in ObjectId does not exist",
-							"clientMessage": "This User does not exist",
-							"status": 400
-						}
-					}
-				},
-				"_id":
-				{
-					"invalid":
-					{
-						"devMessage": "Invalid ObjectID for group",
-						"clientMessage": "This group does not exist",
-						"status": 400
-					}
-				},
-				"name":
-				{
-					"empty":
-					{
-						"devMessage": "No value has been entered for the 'name' parameter",
-						"clientMessage": "Please fill in your Group Name",
-						"status": 400
-					},
-					"invalid":
-					{
-						"regex": "^[\\d\\w\\-@\\s]{5,30}$",
-						"devMessage": "Group Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
-						"clientMessage": "Please fill in a valid Group Name",
-						"status": 400
-					}
-				},
-				"admins":
-				{
-					"invalid":
-					{
-						"devMessage": "The passed in ObjectId does not exist for admins",
-						"clientMessage": "This User does not exist",
-						"status": 400
-					}
-				},
-				"members":
-				{
-					"invalid":
-					{
-						"devMessage": "The passed in ObjectId does not exist for members",
-						"clientMessage": "This User does not exist",
-						"status": 400
-					}
-				},
-				"createdBy":
-				{
-					"invalid":
-					{
-						"devMessage": "The passed in ObjectId does not exist for createdBy",
-						"clientMessage": "This User does not exist",
-						"status": 400
-					}
-				}
-			},
 			"_id":
 			{
 				"invalid":
 				{
-					"devMessage": "Invalid ObjectID for user",
+					"devMessage": "The passed in ObjectId is in an invalid format for the Events model",
 					"clientMessage": "This user does not exist",
 					"status": 400
 				},
@@ -382,8 +125,8 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'name' parameter",
-					"clientMessage": "Please fill in your First Name",
+					"devMessage": "No value has been entered for the 'firstName' attribute",
+					"clientMessage": "Please fill in the First Name field",
 					"status": 400
 				},
 				"invalid":
@@ -398,8 +141,8 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'name' parameter",
-					"clientMessage": "Please fill in your Last Name",
+					"devMessage": "No value has been entered for the 'lastName' attribute",
+					"clientMessage": "Please fill in the Last Name field",
 					"status": 400
 				},
 				"invalid":
@@ -414,8 +157,8 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'displayName' parameter",
-					"clientMessage": "Please fill in your Display Name",
+					"devMessage": "No value has been entered for the 'displayName' attribute",
+					"clientMessage": "Please fill in the Display Name field",
 					"status": 400
 				},
 				"invalid":
@@ -430,8 +173,8 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'email' parameter",
-					"clientMessage": "Please fill in your Email",
+					"devMessage": "No value has been entered for the 'email' attribute",
+					"clientMessage": "Please fill in the Email field",
 					"status": 400
 				},
 				"invalid":
@@ -446,14 +189,14 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'carrier' parameter",
-					"clientMessage": "Please fill in your Carrier",
+					"devMessage": "No value has been entered for the 'carrier' attribute",
+					"clientMessage": "Please select your Carrier",
 					"status": 400
 				},
 				"invalid":
 				{
 					"devMessage": "carrier does not pass the proper validation regex of '^[\\w]{2,50}$'",
-					"clientMessage": "Please fill in a valid Carrier",
+					"clientMessage": "Please select a valid Carrier",
 					"status": 400
 				}
 			},
@@ -461,8 +204,8 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'phoneNumber' parameter",
-					"clientMessage": "Please fill in your Phone Number",
+					"devMessage": "No value has been entered for the 'phoneNumber' attribute",
+					"clientMessage": "Please fill in the Phone Number field",
 					"status": 400
 				},
 				"invalid":
@@ -477,8 +220,8 @@
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'username' parameter",
-					"clientMessage": "Please fill in your Username",
+					"devMessage": "No value has been entered for the 'username' attribute",
+					"clientMessage": "Please fill in the Username field",
 					"status": 400
 				},
 				"invalid":
@@ -490,17 +233,17 @@
 				},
 				"duplicate":
 				{
-					"devMessage": "username already exists in DB",
-					"clientMessage": "This username is already taken",
-					"status": 500
+					"devMessage": "This username already exists in DB",
+					"clientMessage": "This username is already taken. Please try another username.",
+					"status": 400
 				}
 			},
 			"password":
 			{
 				"empty":
 				{
-					"devMessage": "No value has been entered for the 'password' parameter",
-					"clientMessage": "Please fill in your Password",
+					"devMessage": "No value has been entered for the 'password' attribute",
+					"clientMessage": "Please fill in the Password field",
 					"status": 400
 				},
 				"invalid":
@@ -515,7 +258,19 @@
 			{
 				"invalid":
 				{
-					"devMessage": "The passed in ObjectId does not exist",
+					"devMessage": "There is at least one '_id' attribute of the array of Group objects passed in for the 'createdGroups' attribute that is in an invalid format",
+					"clientMessage": "This Group is invalid",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The array of Group objects of the 'createdGroups' attribute contains multiple Group objects with the same '_ids'",
+					"clientMessage": "This Group already exists",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in Group object does not exist in our Database for the 'createdGroups' attribute",
 					"clientMessage": "This Group does not exist",
 					"status": 400
 				}
@@ -524,8 +279,357 @@
 			{
 				"invalid":
 				{
-					"devMessage": "The passed in ObjectId does not exist",
+					"devMessage": "There is at least one '_id' attribute of the array of Group objects passed in for the 'joinedGroups' attribute that is in an invalid format",
+					"clientMessage": "This Group is invalid",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The array of Group objects of the 'joinedGroups' attribute contains multiple Group objects with the same '_ids'",
+					"clientMessage": "This Group already exists",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in Group object does not exist in our Database for the 'joinedGroups' attribute",
 					"clientMessage": "This Group does not exist",
+					"status": 400
+				}
+			}
+		},
+		"groups":
+		{
+			"_id":
+			{
+				"invalid":
+				{
+					"devMessage": "The passed in ObjectId is in an invalid format for the Groups model",
+					"clientMessage": "This Group does not exist",
+					"status": 400
+				}
+			},
+			"name":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'name' parameter",
+					"clientMessage": "Please fill in the Group Name entry",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d\\w\\-@\\s]{5,30}$",
+					"devMessage": "Group Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
+					"clientMessage": "Please fill in a valid Group Name",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The passed in group name already exists in our Database",
+					"clientMessage": "This Group already exists",
+					"status": 400
+				}
+			},
+			"admins":
+			{
+				"invalid":
+				{
+					"devMessage": "There is at least one '_id' attribute of the array of User objects passed in for the 'admins' attribute that is in an invalid format",
+					"clientMessage": "This User does not exist",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The array of User objects of the 'admins' attribute contains multiple User objects with the same '_ids'",
+					"clientMessage": "This User already exists",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in User object does not exist in our Database for the 'admins' attribute",
+					"clientMessage": "This User does not exist",
+					"status": 400
+				}
+			},
+			"events":
+			{
+				"invalid":
+				{
+					"devMessage": "There is at least one '_id' attribute of the array of Event objects passed in for the 'events' attribute that is in an invalid format",
+					"clientMessage": "This Event does not exist",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The array of Event objects of the 'events' attribute contains multiple Event objects with the same '_ids'",
+					"clientMessage": "This Event has been duplicated",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in Event object does not exist in our Database for the 'events' attribute",
+					"clientMessage": "This Event does not exist",
+					"status": 400
+				}
+			},
+			"members":
+			{
+				"invalid":
+				{
+					"devMessage": "There is at least one '_id' attribute of the array of User objects passed in for the 'members' attribute that is in an invalid format",
+					"clientMessage": "This User does not exist",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The array of User objects of the 'members' attribute contains multiple User objects with the same _ids",
+					"clientMessage": "This User has been duplicated",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in User object does not exist in our Database for the 'members' attribute",
+					"clientMessage": "This User does not exist",
+					"status": 400
+				}
+			},
+			"createdBy":
+			{
+				"invalid":
+				{
+					"devMessage": "The '_id' attribute of the passed in User object is in an invalid format for the 'createdBy' attribute",
+					"clientMessage": "This User does not exist",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The '_id' attribute of the passed in User object does not exist in our Database for the 'createdBy' attribute",
+					"clientMessage": "This User does not exist",
+					"status": 400
+				}
+			}
+		},
+		"events":
+		{
+			"_id":
+			{
+				"invalid":
+				{
+					"devMessage": "The passed in ObjectId is in an invalid format for the Events model",
+					"clientMessage": "This Event does not exist",
+					"status": 400
+				},
+				"duplicate":
+				{
+					"devMessage": "The passed in array contains two group objects with the same '_ids' for the Events model",
+					"clientMessage": "This Event has been duplicated",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in ObjectId does not exist in our Database for the Events model",
+					"clientMessage": "This Event does not exist",
+					"status": 400
+				}
+			},
+			"name":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'name' parameter",
+					"clientMessage": "Please fill in the Event Name field",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d\\w\\-@\\s]{5,30}$",
+					"devMessage": "Name does not pass the proper validation regex of '^[\\d\\w\\-@\\s]{5,30}$'",
+					"clientMessage": "Please fill in a valid Event Name",
+					"status": 400
+				}
+			},
+			"location":
+			{
+				"name":
+				{
+					"empty":
+					{
+						"devMessage": "No value has been entered for the 'location.name' attribute",
+						"clientMessage": "Please fill in your Location Name",
+						"status": 400
+					},
+					"invalid":
+					{
+						"regex": "^[\\d\\w\\-@]{5,30}$",
+						"devMessage": "The 'location.name' attribute does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+						"clientMessage": "Please fill in a valid Location Name",
+						"status": 400
+					}
+				},
+				"address":
+				{
+					"empty":
+					{
+						"devMessage": "No value has been entered for the 'location.address' attribute",
+						"clientMessage": "Please fill in your Location Address",
+						"status": 400
+					},
+					"invalid":
+					{
+						"regex": "^[\\d\\w\\-\\s]{5,30}$",
+						"devMessage": "The 'location.address' does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
+						"clientMessage": "Please fill in a valid Location Address",
+						"status": 400
+					}
+				},
+				"lat":
+				{
+					"empty":
+					{
+						"devMessage": "No value has been found for the 'location.lat' attribute",
+						"clientMessage": "Could not find location for this address",
+						"status": 400
+					}
+				},
+				"lng":
+				{
+					"empty":
+					{
+						"devMessage": "No value has been found for the 'location.lng' attribute",
+						"clientMessage": "Could not find location for this address",
+						"status": 400
+					}
+				}
+			},
+			"date":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'date' attribute",
+					"clientMessage": "Please fill in the Event Date field",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$",
+					"devMessage": "location 'date' does not pass the proper validation regex of '^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$'",
+					"clientMessage": "Please fill in a valid Location Date",
+					"status": 400
+				}
+			},
+			"time":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'time' attribute",
+					"clientMessage": "Please fill in the Event Time field",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$",
+					"devMessage": "location 'time' does not pass the proper validation regex of '^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}T[\\d]{1,2}:[\\d]{1,2}:[\\d]{1,2}\\.[\\d]{0,3}Z$'",
+					"clientMessage": "Please fill in a valid Location Time",
+					"status": 400
+				}
+			},
+			"minimumVotes":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'minimumVotes' attribute",
+					"clientMessage": "Please fill in the Minimum Votes needed for this event",
+					"status": 400
+				},
+				"invalid":
+				{
+					"regex": "^\\d*$",
+					"devMessage": "Minimum Votes value does not match the proper validation regex of '^\\d*$'",
+					"clientMessage": "Please fill in a valid value for Minimum Votes",
+					"status": 400
+				}
+			},
+			"votes":
+			{
+				"yes":
+				{
+					"invalid":
+					{
+						"devMessage": "The passed in ObjectId is in an invalid format for the User model",
+						"clientMessage": "This User does not exist",
+						"status": 400
+					},
+					"exist":
+					{
+						"devMessage": "The passed in ObjectId does not exist in our Database for the User model",
+						"clientMessage": "This User does not exist",
+						"status": 400
+					},
+					"duplicate":
+					{
+						"devMessage": "The passed in array contains two group objects with the same '_ids' for the User model",
+						"clientMessage": "This User has been duplicated",
+						"status": 400
+					}
+				},
+				"no":
+				{
+					"invalid":
+					{
+						"devMessage": "The passed in ObjectId is in an invalid format for the User model",
+						"clientMessage": "This User does not exist",
+						"status": 400
+					},
+					"exist":
+					{
+						"devMessage": "The passed in ObjectId does not exist in our Database for the User model",
+						"clientMessage": "This User does not exist",
+						"status": 400
+					},
+					"duplicate":
+					{
+						"devMessage": "The passed in array contains two group objects with the same '_ids' for the User model",
+						"clientMessage": "This User has been duplicated",
+						"status": 400
+					}
+				}
+			},
+			"message":
+			{
+				"empty":
+				{
+					"devMessage": "No value has been entered for the 'message' attribute",
+					"clientMessage": "Please fill in the Event Message field",
+					"status": 400
+				}
+			},
+			"group":
+			{
+				"invalid":
+				{
+					"devMessage": "The passed in ObjectId is in an invalid format for the group attribute",
+					"clientMessage": "This Group does not exist",
+					"status": 400
+				},
+				"empty":
+				{
+					"devMessage": "No ObjectId has been entered for the 'empty' attribute",
+					"clientMessage": "This Group must belong to a group",
+					"status": 400
+				},
+				"exist":
+				{
+					"devMessage": "The passed in ObjectId does not exist in our Database for the group attribute",
+					"clientMessage": "This Group does not exist",
+					"status": 400
+				}
+			},
+			"user":
+			{
+				"invalid":
+				{
+					"devMessage": "The passed in ObjectId is in an invalid format for the User atribute",
+					"clientMessage": "This User does not exist",
 					"status": 400
 				}
 			}

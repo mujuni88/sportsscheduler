@@ -44,22 +44,28 @@ exports.update = function(req, res) {
 				
 
 				if (err) {
-					myResponse.transformMongooseError(User.errPath,String(err),res);
+					myResponse.transformMongooseError(User.errPath,String(err));
+					Helper.output(myResponse,res);
 				} else {
 					req.login(user, function(err) {
 						if (err) {
 							console.log('error: ' + err);
-							myResponse.transformMongooseError(User.errPath,String(err),res);
+							myResponse.transformMongooseError(User.errPath,String(err));
+							Helper.output(myResponse,res);
 						}
 						else {
 							console.log('saved successfully');
-							Helper.populateModel(User,user,'api.users',res);
+							Helper.populateModel(User,user,User.errPath,function(mod) {
+								myResponse.setData(mod);
+								Helper.output(myResponse,res);
+							});
 						}
 					});
 				}
 			});
 		} else {
-			myResponse.transformMongooseError(User.errPath,String(err),res);
+			myResponse.transformMongooseError(User.errPath,String(err));
+			Helper.output(myResponse,res);
 		}
 	});
 };
@@ -73,18 +79,22 @@ exports.delete = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			myResponse.transformMongooseError(User.errPath,String(err),res);
+			myResponse.transformMongooseError(User.errPath,String(err));
+			Helper.output(myResponse,res);
 		}
 		else if(!user)
 		{
 			myResponse.addMessages(serverJSON.api.users._id.invalid);
-			myResponse.setError(res);
+			Helper.output(myResponse,res);
 		}
 		else {
 			console.log('deleted successfully');
 			user.remove();
 			req.user = null;
-			Helper.populateModel(User,user,'api.users',res);
+			Helper.populateModel(User,user,User.errPath,function(mod) {
+				myResponse.setData(mod);
+				Helper.output(myResponse,res);
+			});
 		}
 	});
 };
@@ -113,9 +123,14 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 				console.log('err: ' + err);
 
 				if (err) {
-					myResponse.transformMongooseError(User.errPath,String(err),res);
+					myResponse.transformMongooseError(User.errPath,String(err));
+					Helper.output(myResponse,res);
 				} else {
-					Helper.populateModel(User,users,'api.users',res);
+					Helper.populateModel(User,users,User.errPath,function(mod) {
+						myResponse.setData(mod);
+						Helper.output(myResponse,res);
+					});
+
 					//myResponse.data = users;
 					//res.jsonp(myResponse);
 				}
@@ -124,11 +139,15 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 		else
 		{
 			if (err) {
-				myResponse.transformMongooseError(User.errPath,String(err),res);
+				myResponse.transformMongooseError(User.errPath,String(err));
+				Helper.output(myResponse,res);
 			} else {
 				//myResponse.data = users;
 				//res.jsonp(myResponse);
-				Helper.populateModel(User,users,'api.users',res);
+				Helper.populateModel(User,users,User.errPath,function(mod) {
+					myResponse.setData(mod);
+					Helper.output(myResponse,res);
+				});
 			}
 		}
 	});

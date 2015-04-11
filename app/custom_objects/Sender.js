@@ -50,7 +50,7 @@ Sender.prototype.sendSMS = function(to,subject,text,callback) {
 	    	//response.setError(serverJSON.api.sms.errors._5,err);
 	        console.log(err);
 	    }else{
-	        console.log('Message sent: ' + info.response);
+	        console.log('Message sent: ' + info);
 	    }
 
     	callback(response);

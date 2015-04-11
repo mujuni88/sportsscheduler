@@ -3,7 +3,7 @@
 /*
  * Module dependencies.
  */
-var users = require('../../app/controllers/users'),
+var users = require('../../app/controllers/users/users'),
 	articles = require('../../app/controllers/articles');
 
 module.exports = function(app) {

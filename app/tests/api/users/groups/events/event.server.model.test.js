@@ -22,19 +22,40 @@ var user, eventModel;
  */
 describe('Event Model Unit Tests:', function() {
 	
-	var groupId = null;
-	var id = null;
+	var groupID = null;
+	var eventID = null;
+	var memberID = null;
+	var userID = null;
+	var username = 'unittest';
+
 	before(function(done) {
-		superagent.post('http://localhost:3000/api/users/groups')
-	        .send({
-			  name: 'Event Model Unit Test Group'
+		superagent.post('http://localhost:3000/api/users')
+			.send({
+				carrier: '@sms.alltelwireless.com',
+				email: 'treyqg15@gmail.com',
+				firstName: 'Trey',
+				lastName: 'Gaines',
+				password: 'Password1',
+				phoneNumber: '6018801788',
+				username: username,
 			})
-	        .end(function(e,res){
-	   			console.log(res.body.error);
-	            groupId = res.body.data._id;
-	            console.log('created Group ID: ' + groupId);
-	            done();
-	        });
+			.end(function(e,res){
+				
+				userID = res.body._id;
+				console.log('userID: ' + userID);
+				superagent.post('http://localhost:3000/api/users/groups')
+			        .send({
+					  name: 'Event Model Unit Test Group',
+					  admins: [userID],
+					  createdBy: userID
+					})
+			        .end(function(e,res){
+			   			console.log(res.body);
+			            groupID = res.body._id;
+			            console.log('created Group ID: ' + groupID);
+			            done();
+	        		});
+			});
 	});
 
 	it('POST: check if creation of event works when req has the required parameters', function(done) {
@@ -50,22 +71,21 @@ describe('Event Model Unit Tests:', function() {
 				minimumVotes: 5,
 				time: '2014-11-19T21:33:00.244Z',
 				voteEnabled: true,
-				group: groupId
+				group: groupID
 			})
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.data).to.eql('object');
-	            id = res.body.data._id;
-	            console.log('created ID: ' + id);
+	            chaiExpect(res.statusCode).to.eql(200);
+	            eventID = res.body._id;
+	            console.log('created eventID: ' + eventID);
 	            done();
 	        });
 	    });
 
 	it('PUT: check if updating an event works when req has the required parameters', function(done) {
 		var name = 'PostMan Updated Event Name';
-    	superagent.put('http://localhost:3000/api/users/groups/events/'+id)
+    	superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)
 	        .send({
 	        	name: name,
 			  	location: {
@@ -81,9 +101,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.data).to.eql('object');
-	            console.log('updated ID: ' + id);
+	            chaiExpect(res.statusCode).to.eql(200);
+	            console.log('updated eventID: ' + eventID);
 	            done();
 	        });
 	    });
@@ -105,28 +124,25 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.error).to.eql('object');
+	            chaiExpect(res.statusCode).to.eql(400);
 
-	            console.log('updated ID: ' + id);
 	            done();
 	        });
 	    });
 
 	it('DELETE: check if deletion of group works when sent the required parameters', function(done) {
-        superagent.del('http://localhost:3000/api/users/groups/events/'+id)
+        superagent.del('http://localhost:3000/api/users/groups/events/'+eventID)
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body.data);
-                chaiExpect(typeof res.body.data).to.eql('object');
-                console.log('deleted ID: ' + id);
+                chaiExpect(res.statusCode).to.eql(200);
+                console.log('deleted eventID: ' + eventID);
                 done();
             });
         });
     
 
-	it('POST: should be able to show an error when try to save without name', function(done) { 
+	it('POST: should be able to show an error when try to save without name', function(done) {
 		superagent.post('http://localhost:3000/api/users/groups/events')
 	        .send({
 			  name: ''
@@ -134,8 +150,8 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.error).to.eql('object');
+	            
+	            chaiExpect(res.statusCode).to.eql(400);
 	            done();
 	        });
 	    });
@@ -148,17 +164,21 @@ describe('Event Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.error).to.eql('object');
+	            chaiExpect(res.statusCode).to.eql(400);
 	            done();
 	        });
 	    });
 
 	after(function(done) {
-		superagent.del('http://localhost:3000/api/users/groups/'+groupId)
+		superagent.del('http://localhost:3000/api/users/'+username)
             .end(function(e,res){
-                console.log('deleted ID: ' + groupId);
-                done();
-            });
+                console.log('deleted username: ' + username);
+            
+				superagent.del('http://localhost:3000/api/users/groups/'+groupID)
+		            .end(function(e,res){
+		                console.log('deleted groupID: ' + groupID);
+		                done();
+		            });
+		    });
 	});
 });

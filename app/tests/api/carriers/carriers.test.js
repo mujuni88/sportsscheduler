@@ -11,8 +11,7 @@ describe('Carrier Unit Tests', function() {
           .end(function(e, res){
             console.log(e);
             chaiExpect(e).to.eql(null);
-
-            chaiExpect(typeof res.body.data).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(200);
 
             done();
         });
@@ -23,31 +22,29 @@ describe('Carrier Unit Tests', function() {
           .end(function(e, res){
             console.log(e);
             chaiExpect(e).to.eql(null);
-
-            chaiExpect(typeof res.body.data).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(200);
 
             done();
         });
     });
 
-	it('GET: check if requesting for all carriers in a country returns successful', function(done) {
+	it('GET: check if requesting for all carriers in a valid country returns successful', function(done) {
 		superagent.get('http://localhost:3000/api/carriers/countries/us/')
           .end(function(e, res){
             console.log(e);
             chaiExpect(e).to.eql(null);
-            chaiExpect(typeof res.body.data).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(200);
 
             done();
       	});
     });
 
-	it('GET: check if requesting for a specific carrier in a country returns successful', function(done) {
+	it('GET: check if requesting for a valid carrier in a valid country returns successful', function(done) {
 		superagent.get('http://localhost:3000/api/carriers/countries/us/carrier/at_and_t')
           .end(function(e, res){
             console.log(e);
             chaiExpect(e).to.eql(null);
-
-            chaiExpect(typeof res.body.data).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(200);
 
             done();
   	    });
@@ -59,19 +56,19 @@ describe('Carrier Unit Tests', function() {
             console.log(e);
             chaiExpect(e).to.eql(null);
 
-            chaiExpect(typeof res.body.error).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(400);
             
             done();
         });
     });
 
-    it('GET: check if requesting for an invalid carrier in a country fails properly', function(done) {
+    it('GET: check if requesting for an invalid carrier in a valid country fails properly', function(done) {
         superagent.get('http://localhost:3000/api/carriers/countries/us/carrier/at_and_')
           .end(function(e, res){
             console.log(e);
             chaiExpect(e).to.eql(null);
 
-            chaiExpect(typeof res.body.error).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(400);
 
             done();
         });
@@ -83,7 +80,7 @@ describe('Carrier Unit Tests', function() {
             console.log(e);
             chaiExpect(e).to.eql(null);
 
-            chaiExpect(typeof res.body.error).to.eql('object');
+            chaiExpect(res.statusCode).to.eql(400);
 
             done();
         });

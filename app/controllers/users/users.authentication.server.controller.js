@@ -34,7 +34,8 @@ exports.signup = function(req, res) {
 
 		if (err) {
 			console.log('error: ' + err);
-			myResponse.transformMongooseError(User.errPath,String(err),res);
+			myResponse.transformMongooseError(User.errPath,String(err));
+			Helper.output(myResponse,res);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
@@ -42,9 +43,13 @@ exports.signup = function(req, res) {
 			console.log('saved');
 			req.login(user, function(err) {
 				if (err) {
-					myResponse.transformMongooseError(User.errPath,String(err),res);
+					myResponse.transformMongooseError(User.errPath,String(err));
+					Helper.output(myResponse,res);
 				} else {
-					Helper.populateModel(User,user,'api.users',res);
+					Helper.populateModel(User,user,User.errPath,function(mod) {
+						myResponse.setData(mod);
+						Helper.output(myResponse,res);
+					});
 				}
 			});
 		}
@@ -60,11 +65,12 @@ exports.signin = function(req, res, next) {
 		var myResponse = new MyResponse();
 
 		if (err) {
-			myResponse.transformMongooseError(User.errPath,String(err),res);
+			myResponse.transformMongooseError(User.errPath,String(err));
+			Helper.output(myResponse,res);
 		}
 		else if(!user) {
 			myResponse.addMessages(serverJSON.api.users._id.login);
-			myResponse.setError(res);
+			Helper.output(myResponse,res);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
@@ -72,10 +78,12 @@ exports.signin = function(req, res, next) {
 
 			req.login(user, function(err) {
 				if (err) {
-					myResponse.transformMongooseError(User.errPath,String(err),res);
+					myResponse.transformMongooseError(User.errPath,String(err));
+					Helper.output(myResponse,res);
 				} else {
-					myResponse.data = user;
-					res.jsonp(user);
+					myResponse.setData(user);
+					Helper.output(myResponse,res);
+					//res.jsonp(user);
 				}
 			});
 		}

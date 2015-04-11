@@ -20,49 +20,56 @@ var user, group;
  * Unit tests
  */
 describe('Group Model Unit Tests:', function() {
-	var id = null;
-	before(function(done) {
-		// var user = new User({
-		// 	password: "unittest",
-		// 	email: "unittest@postman.com",
-		// 	lastName: "test",
-		// 	firstName: "unit",
-		// 	username: "unittest",
-		// 	carrier: "unittestT&T",
-		// 	phoneNumber: "6018801788"
-		// });
+	var groupID = null;
+	var userID = null;
+	var username = 'unittest';
 
-		// user.save(function() { 
-			
-		// 	done();
-		// });
+	before(function(done) {
+		
+		superagent.post('http://localhost:3000/api/users')
+			.send({
+				carrier: '@sms.alltelwireless.com',
+				email: 'treyqg15@gmail.com',
+				firstName: 'Trey',
+				lastName: 'Gaines',
+				password: 'Password1',
+				phoneNumber: '6018801788',
+				username: username,
+			})
+			.end(function(e,res){
+				userID = res.body._id;
+				done();
+			});
 	});
 
 	it('POST: check if creation of group works when req has the required parameters', function(done) {
     	superagent.post('http://localhost:3000/api/users/groups')
 	        .send({
-			  name: 'PostGroup'
+			  name: 'Unit Test Group',
+			  createdBy: userID,
+			  admins: [userID]
 			})
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.error);
-	            chaiExpect(typeof res.body.data).to.eql('object');
-	            id = res.body.data._id;
-	            console.log('created ID: ' + id);
+	            chaiExpect(res.statusCode).to.eql(200);
+	            groupID = res.body._id;
+	            console.log('created groupID: ' + groupID);
 	            done();
 	        });
 	    });
 
 	it('PUT: check if updating a group works when req has the required parameters', function(done) {
 		var name = 'UpdatedPostGroup';
-    	superagent.put('http://localhost:3000/api/users/groups/'+id)
+    	superagent.put('http://localhost:3000/api/users/groups/'+groupID)
+    		.send({
+    			name: name
+    		})
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.data).to.eql('object');
-	            console.log('updated ID: ' + id);
+	            chaiExpect(res.statusCode).to.eql(200);
+	            console.log('updated groupID: ' + groupID);
 	            done();
 	        });
 	    });
@@ -74,21 +81,20 @@ describe('Group Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body.data);
-	            chaiExpect(typeof res.body.error).to.eql('object');
+	            chaiExpect(res.statusCode).to.eql(400);
 
 	            done();
 	        });
 	    });
 
 	it('DELETE: check if deletion of group works when sent the required parameters', function(done) {
-        superagent.del('http://localhost:3000/api/users/groups/'+id)
+        superagent.del('http://localhost:3000/api/users/groups/'+groupID)
             .end(function(e,res){
                 console.log(e);
                 chaiExpect(e).to.eql(null);
-                console.log(res.body.data);
-                chaiExpect(res.body.data._id).to.not.be.null;
-                console.log('deleted ID: ' + id);
+                chaiExpect(res.statusCode).to.eql(200);
+                console.log('deleted ID: ' + groupID);
+
                 done();
             });
         });
@@ -102,8 +108,7 @@ describe('Group Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(typeof res.body.error).to.eql('object');
+	            chaiExpect(res.statusCode).to.eql(400);
 	            done();
 	        });
 	    });
@@ -116,9 +121,17 @@ describe('Group Model Unit Tests:', function() {
 	        .end(function(e,res){
 	            console.log(e);
 	            chaiExpect(e).to.eql(null);
-	            console.log(res.body);
-	            chaiExpect(typeof res.body.error).to.eql('object');
+	            chaiExpect(res.statusCode).to.eql(400);
 	            done();
 	        });
 	    });
+
+	after(function(done) {
+		superagent.del('http://localhost:3000/api/users/'+username)
+            .end(function(e,res){
+                console.log('deleted username: ' + username);
+
+		        done();
+		    });
+	});
 });
