@@ -19,9 +19,11 @@ module.exports = {
                 'public/lib/animate.css/animate.min.css',
                 'public/lib/angular-fx/src/css/angular-fx.css',
                 'public/lib/angular-xeditable/dist/css/xeditable.css',
+				'public/lib/angular-dialog-service/dist/dialogs.min.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
+                'public/lib/angular-sanitize/angular-sanitize.min.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-animate/angular-animate.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
@@ -33,6 +35,7 @@ module.exports = {
 				'public/lib/ng-lodash/build/ng-lodash.min.js',
 				'public/lib/angular-fx/src/js/angular-fx.js',
                 'public/lib/angular-xeditable/dist/js/xeditable.min.js',
+				'public/lib/angular-dialog-service/dist/dialogs.min.js'
             ]
 		},
 		css: [

@@ -10,8 +10,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-2">
-                    <a class="btn btn-default btn-sm"
-                       href="/#!/groups/{{group._id}}/members/list">
+                    <a class="btn btn-default btn-sm" ss-dialog dialog-ok="redirectHome(group._id)" dialog-enable="false" title="Save" message="Do you want to save? {{group._id}}">
                         <i class="glyphicon glyphicon-arrow-left"></i> <span class="hidden-xs">Back</span>
                     </a>
                 </div>
@@ -37,9 +36,6 @@
     <div class="panel-body">
         <div class="alert alert-warning alert-sm text-center" data-ng-hide="tempMembers.length">
             <i class="glyphicon glyphicon-exclamation-sign"></i> No members added yet
-        </div>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="isModified">
-            <i class="glyphicon glyphicon-exclamation-sign"></i> Don't forget to save
         </div>
         <ul class="list-groups list-unstyled">
             <li class="list-group-item" data-ng-repeat="member in tempMembers">
