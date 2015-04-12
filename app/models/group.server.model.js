@@ -98,6 +98,7 @@ GroupSchema.path('name').validate(function (name,respond) {
 
 	var Group = mongoose.model('Group');
 	var query = {
+		createdBy:  mongoose.Types.ObjectId(this.createdBy),
 		name: name
 	};
 

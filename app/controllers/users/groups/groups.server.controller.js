@@ -17,8 +17,8 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var group = new Group(req.body);
-	//group.admins = [req.user];
-	//group.createdBy = req.user;
+	group.admins = [req.user];
+	group.createdBy = req.user;
 
 	console.log(req.user);
 	group.save(function(err) {
