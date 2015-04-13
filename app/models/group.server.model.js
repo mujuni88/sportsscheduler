@@ -90,7 +90,23 @@ var GroupSchema = new Schema({
 	}
 });
 
-GroupSchema.statics.objectIDAtts = ['admins','events','members'];
+GroupSchema.statics.objectIDAtts = [
+	{
+		name: 'admins',
+		model: 'User'
+	},
+	{
+		name: 'events',
+		model: 'Event',
+	},
+	{
+		name: 'members',
+		model: 'User',
+	},
+	{	name: 'createdBy',
+		model: 'User'
+	}
+];
 GroupSchema.statics.title = serverJSON.constants.groups;
 GroupSchema.statics.errPath = 'api.groups';
 

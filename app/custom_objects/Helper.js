@@ -150,6 +150,7 @@ var Helper = (function() {
         cleanMergeObj: function(oldVal,newVal) {
 
             //console.log('oldVal: ' + oldVal);
+            console.log('typeof: ' + typeof newVal._id);
             console.log('newVal: ' + JSON.stringify(newVal, null, 4));
             console.log('isArray: ' + Array.isArray(newVal));
             if(Array.isArray(newVal))
@@ -170,21 +171,43 @@ var Helper = (function() {
                     }
                 }
             }
+            else if(typeof newVal._id === "string")
+            {
+                console.log('string: ' + newVal._id);
+                return newVal._id.toString();
+            }
             
             return newVal;
         },
         populateModel: function(model,obj,errPath,callback) {
 
             
-            var atts = Helper.getAttsString(model.objectIDAtts);
-            console.log('atts: ' + atts);
-            var options = {
-                path: atts
-            };
+            var atts = model.objectIDAtts.slice(0);
 
-            model.populate(obj, options, function (err, obj) {
-                callback(obj);
-            });
+            console.log('atts: ' + atts);
+
+            var rec = function(atts) {
+                var options = {
+                    path: atts[0].name,
+                    model: atts[0].model
+                };
+
+                model.populate(obj, options, function (err, obj) {
+                    
+                    
+                    atts.splice(0,1);
+                    console.log('new atts: ' + atts);
+                    if(atts.length === 0)
+                        callback(obj);
+                    else
+                    {
+                        console.log('populated obj: ' + obj);
+                        rec(atts);
+                    }
+                });    
+            };
+            
+            rec(atts);
         },
         output: function(myResponse,res) {
             

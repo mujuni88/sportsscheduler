@@ -135,7 +135,17 @@ var EventSchema = new Schema({
 	}
 });
 
-EventSchema.statics.objectIDAtts = ['user','group'];
+EventSchema.statics.objectIDAtts = [
+	{
+		name: 'user',
+		model: 'User'
+	},
+	{
+		name: 'group',
+		model: 'Group'
+	}
+];
+
 EventSchema.statics.title = serverJSON.constants.events;
 EventSchema.statics.errPath = 'api.events';
 

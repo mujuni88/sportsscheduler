@@ -17,10 +17,12 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var group = new Group(req.body);
-	group.admins = [req.user];
-	group.createdBy = req.user;
+	var data = _.merge(group,{admins: req.user,createdBy : req.user},Helper.cleanMergeObj);
+			_.extend(group,data);
+	//group.admins = [req.user];
+	//group.createdBy = req.user;
 
-	console.log(req.user);
+	console.log('group before save: ' + group);
 	group.save(function(err) {
 		console.log('in save');
 		var myResponse = new MyResponse();
@@ -161,7 +163,7 @@ exports.delete = function(req, res) {
 /**
  * List of Groups
  */
-exports.list = function(req, res) { Group.find().sort('-created').populate(Group.objectIDAtts).exec(function(err, groups) {
+exports.list = function(req, res) { Group.find().sort('-created').exec(function(err, groups) {
 		
 		var myResponse = new MyResponse();
 
