@@ -47,9 +47,12 @@ exports.create = function(req, res) {
 				}
 				else {
 					console.log('saved successfully');
-					Helper.populateModel(Group,group,Group.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
+					req.user.createdGroup = group;
+					req.user.save(function(userErr) {
+						Helper.populateModel(Group,group,Group.errPath,function(mod) {
+							myResponse.setData(mod);
+							Helper.output(myResponse,res);
+						});
 					});
 				}
 			});

@@ -118,7 +118,7 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 					$regex: new RegExp(regex,'i')
 				}
 			})
-			.select('_id username email')
+			.select('_id username email createdGroups joinedGroups')
 			.exec(function(err,users) {
 				console.log('err: ' + err);
 
