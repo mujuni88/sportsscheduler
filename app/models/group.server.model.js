@@ -110,25 +110,6 @@ GroupSchema.statics.objectIDAtts = [
 GroupSchema.statics.title = serverJSON.constants.groups;
 GroupSchema.statics.errPath = 'api.groups';
 
-GroupSchema.path('name').validate(function (name,respond) {
-
-	var Group = mongoose.model('Group');
-	var query = {
-		createdBy:  mongoose.Types.ObjectId(this.createdBy),
-		name: name
-	};
-
-	console.log('validating name: ' + name);
-	
-	Helper.find(Group,query,function(err,mod) {
-		if(err || !mod || mod.length > 0) 
-			respond(false);
-		else
-			respond(true);
-	});
-
-},'name.duplicate');
-
 /*********** Validate Functions **************/
 GroupSchema.path('admins').validate(function (ids,respond) {
 

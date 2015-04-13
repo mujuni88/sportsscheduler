@@ -16,26 +16,42 @@ var mongoose = require('mongoose'),
  * Create a Group
  */
 exports.create = function(req, res) {
+	
 	var group = new Group(req.body);
+	var myResponse = new MyResponse();
 	var data = _.merge(group,{admins: req.user,createdBy : req.user},Helper.cleanMergeObj);
-			_.extend(group,data);
-	//group.admins = [req.user];
-	//group.createdBy = req.user;
+	_.extend(group,data);
 
-	console.log('group before save: ' + group);
-	group.save(function(err) {
-		console.log('in save');
-		var myResponse = new MyResponse();
-		if (err) {
+	//detect if group with this name has already been created
+	var query = {
+		createdBy:  mongoose.Types.ObjectId(group.createdBy),
+		name: group.name
+	};
+	
+	Helper.find(Group,query,function(err,mod) {
+		if(err || !mod || mod.length > 0) 
+		{
 			console.log('error: ' + err);
-			myResponse.transformMongooseError(Group.errPath,String(err));
+			myResponse.addMessages(serverJSON.api.groups.name.duplicate);
 			Helper.output(myResponse,res);
 		}
-		else {
-			console.log('saved successfully');
-			Helper.populateModel(Group,group,Group.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
+		else
+		{
+			group.save(function(err) {
+				console.log('in save');
+				
+				if (err) {
+					console.log('error: ' + err);
+					myResponse.transformMongooseError(Group.errPath,String(err));
+					Helper.output(myResponse,res);
+				}
+				else {
+					console.log('saved successfully');
+					Helper.populateModel(Group,group,Group.errPath,function(mod) {
+						myResponse.setData(mod);
+						Helper.output(myResponse,res);
+					});
+				}
 			});
 		}
 	});
