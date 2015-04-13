@@ -149,6 +149,34 @@ var UserSchema = new Schema({
 			}
 		]
 	},
+	addedBy: {
+		type: Schema.ObjectId,
+		ref: 'User',
+		validate:
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'addedBy.invalid'
+			}
+		]
+	},
+	removedBy: {
+		type: Schema.ObjectId,
+		ref: 'User',
+		validate:
+		[
+			{
+				validator: Helper.isValidObjectIDs,
+				msg: 'removedBy.invalid'
+			}
+		]
+	},
+	addedDate: {
+		type: Date
+	},
+	removedDate: {
+		type: Date
+	},
 	salt: {
 		type: String
 	},
