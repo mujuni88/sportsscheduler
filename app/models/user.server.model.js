@@ -182,7 +182,17 @@ var UserSchema = new Schema({
   	}
 });
 
-UserSchema.statics.objectIDAtts = ['createdGroups','joinedGroups'];
+UserSchema.statics.objectIDAtts = [
+	{
+		name: 'createdGroups',
+		model: 'Group'
+	},
+	{
+		name: 'joinedGroups',
+		model: 'Group'
+	}
+];
+
 UserSchema.statics.title = serverJSON.constants.users;
 UserSchema.statics.errPath = 'api.users';
 

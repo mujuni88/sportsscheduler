@@ -90,28 +90,25 @@ var GroupSchema = new Schema({
 	}
 });
 
-GroupSchema.statics.objectIDAtts = ['admins','events','members'];
+GroupSchema.statics.objectIDAtts = [
+	{
+		name: 'admins',
+		model: 'User'
+	},
+	{
+		name: 'events',
+		model: 'Event',
+	},
+	{
+		name: 'members',
+		model: 'User',
+	},
+	{	name: 'createdBy',
+		model: 'User'
+	}
+];
 GroupSchema.statics.title = serverJSON.constants.groups;
 GroupSchema.statics.errPath = 'api.groups';
-
-GroupSchema.path('name').validate(function (name,respond) {
-
-	var Group = mongoose.model('Group');
-	var query = {
-		createdBy:  mongoose.Types.ObjectId(this.createdBy),
-		name: name
-	};
-
-	console.log('validating name: ' + name);
-	
-	Helper.find(Group,query,function(err,mod) {
-		if(err || !mod || mod.length > 0) 
-			respond(false);
-		else
-			respond(true);
-	});
-
-},'name.duplicate');
 
 /*********** Validate Functions **************/
 GroupSchema.path('admins').validate(function (ids,respond) {
