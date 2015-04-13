@@ -40,13 +40,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         
         $scope.isModified = false;
 
+        $scope.$watchCollection(
+            "tempMembers",watchTempMembers
+        );
+
         function create() {
             // Create new Group object
             var group = new Groups($scope.group);
 
             // Redirect after save
             group.$save(function (response) {
-                redirectHome(response._id);
+                redirectHome(group._id);
             });
         }
 
@@ -73,7 +77,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
                 groupId: $stateParams.groupId
             }, function(){
                 angular.copy($scope.group.members,$scope.tempMembers);
-                $scope.isModified = false;
             });
 
         }
@@ -83,8 +86,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
             tempMembers.push($model);
             
             $scope.tempMembers = _.uniq(tempMembers, '_id');
-            
-            _isModified();
         }
 
         function removeMember(index) {
@@ -97,12 +98,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         
         function saveMember(){
             angular.copy($scope.tempMembers, $scope.group.members);
-            $scope.isModified = false;
             update();
         }
 
         function redirectHome(id) {
-            $location.path('groups/' + id + '/members/list');
+            var _id = (id)? id: $stateParams.groupId;
+            $location.path('groups/' + _id + '/members/list');
         }
         
         function _isModified(){
@@ -111,6 +112,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
             });
             
             $scope.isModified =   (_.size($scope.tempMembers) > _.size($scope.group.members)) || (_.size(arr) > 0);
+        }
+
+        function watchTempMembers(newValue, oldValue) {
+            _isModified();
         }
         
         

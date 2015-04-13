@@ -10,7 +10,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-2">
-                    <a class="btn btn-default btn-sm" ss-dialog dialog-ok="redirectHome(group._id)" dialog-enable="false" title="Save" message="Do you want to save? {{group._id}}">
+                    <a class="btn btn-default btn-sm" href="/#!/groups/{{group._id}}/members/list" ss-dialog dialog-enable='isModified' dialog-ok="redirectHome()" dialog-enable="false" title="Save" message="Are you sure you want to continue without saving?">
                         <i class="glyphicon glyphicon-arrow-left"></i> <span class="hidden-xs">Back</span>
                     </a>
                 </div>

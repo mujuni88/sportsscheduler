@@ -7,7 +7,7 @@ function ssDialog(dialogs) {
         scope:{
             ok:'&dialogOk',
             cancel:'&dialogCancel',
-            enable:'@dialogEnable',
+            enable:'=dialogEnable',
             config:'@dialogConfig'
         },
         restrict: 'A',
@@ -16,13 +16,15 @@ function ssDialog(dialogs) {
     return dd;
 
     function postLink(scope, element, attrs) {
-        element.bind('click', function() {
+        element.bind('click', clickFn);
+        function clickFn(e) {
             if(!scope.enable){
                 return;
             }
 
-            launch(scope, attrs); 
-        });
+            e.preventDefault();
+            launch(scope, attrs);
+        }
     }
     
     function launch(scope, attrs){
@@ -34,6 +36,7 @@ function ssDialog(dialogs) {
         
         dlg.result.then(function(btn){
             scope.ok();
+            //scope.$eval(attrs.dialogOk);
         },function(btn){
             if(scope.cancel){
                 scope.cancel();
