@@ -5,8 +5,8 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName)
-    .run(['editableOptions','editableThemes', run])
-    .config(['$locationProvider',config]);
+    .config(['$locationProvider',config])
+    .run(['editableOptions','editableThemes', run]);
 //Then define the init function for starting up the application
 angular.element(document).ready(ready);
 

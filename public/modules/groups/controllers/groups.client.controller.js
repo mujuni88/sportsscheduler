@@ -43,6 +43,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         $scope.$watchCollection(
             "tempMembers",watchTempMembers
         );
+        
+        $scope.isAdmin = isAdmin;
 
         function create() {
             // Create new Group object
@@ -116,6 +118,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
 
         function watchTempMembers(newValue, oldValue) {
             _isModified();
+        }
+        
+        function isAdmin(){
+            var out =  _.some($scope.group.admins, {_id:$scope.authentication.user._id});
+            $scope.$broadcast('isAdmin', out);
+            return out;
         }
         
         
