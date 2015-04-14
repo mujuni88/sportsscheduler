@@ -38,12 +38,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         
         $scope.saveMember = saveMember;
         
-        $scope.isModified = false;
-
-        $scope.$watchCollection(
-            "tempMembers",watchTempMembers
-        );
-        
         $scope.isAdmin = isAdmin;
 
         function create() {
@@ -106,18 +100,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$state', '$s
         function redirectHome(id) {
             var _id = (id)? id: $stateParams.groupId;
             $location.path('groups/' + _id + '/members/list');
-        }
-        
-        function _isModified(){
-            var arr = _.filter($scope.group.members, function(item){
-                return !_.findWhere($scope.tempMembers,{'_id':item._id});
-            });
-            
-            $scope.isModified =   (_.size($scope.tempMembers) > _.size($scope.group.members)) || (_.size(arr) > 0);
-        }
-
-        function watchTempMembers(newValue, oldValue) {
-            _isModified();
         }
         
         function isAdmin(){

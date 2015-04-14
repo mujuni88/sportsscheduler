@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="customTemplate.html">
     <a class="">
-        <span>{{match.model.email}} / {{match.model.username}} </span>
+        <span>{{match.model.username}} / <span class="text-muted"> {{match.model.displayName}}</span> </span>
         <!--<span class="badge"> </span>-->
         <span class="pull-right">&nbsp;<i class="glyphicon glyphicon-plus-sign"></i></span>
     </a>
@@ -10,7 +10,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-2">
-                    <a class="btn btn-default btn-sm" href="/#!/groups/{{group._id}}/members/list" ss-dialog dialog-enable='isModified' dialog-ok="redirectHome()" dialog-enable="false" title="Save" message="Are you sure you want to continue without saving?">
+                    <a class="btn btn-default btn-sm" href="/#!/groups/{{group._id}}/members/list">
                         <i class="glyphicon glyphicon-arrow-left"></i> <span class="hidden-xs">Back</span>
                     </a>
                 </div>
@@ -39,8 +39,10 @@
         </div>
         <ul class="list-groups list-unstyled">
             <li class="list-group-item" data-ng-repeat="member in tempMembers">
-                <span class="" data-ng-bind="member.username"></span>
-                <span class="pull-right btn-link" data-ng-click="removeTempMember($index);">
+                <span class="" data-ng-bind="member.displayName"></span> - 
+                <span class="text-info" data-ng-bind="member.username"></span>
+                <span class="pull-right btn-link"
+                      ss-dialog dialog-ok="removeTempMember($index)" dialog-enable="true" title="Remove Member" message="Are you sure?">
                     <i class="glyphicon glyphicon-remove text-danger"></i>
                 </span>
             </li>
