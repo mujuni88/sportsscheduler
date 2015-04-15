@@ -16,6 +16,18 @@
 	},
 	"api":
 	{
+		"default":
+		{
+			"error":
+			{
+				"castError":
+				{
+					"devMessage": "A value is not the correct data type",
+					"clientMessage": "Please fill in the proper value for the field",
+					"status": 400
+				}
+			}
+		},
 		"sms":
 		{
 			"to":
@@ -295,6 +307,24 @@
 					"clientMessage": "This Group does not exist",
 					"status": 400
 				}
+			},
+			"addedBy":
+			{
+				"groupID":
+				{
+					"invalid":
+					{
+						"devMessage": "The '_id' attribute of the passed in Group object is in an invalid format for the 'addedBy' attribute",
+						"clientMessage": "This Group does not exist",
+						"status": 400
+					},
+					"exist":
+					{
+						"devMessage": "The '_id' attribute of the passed in Group object does not exist in our Database for the 'addedBy' attribute",
+						"clientMessage": "This Group does not exist",
+						"status": 400
+					}
+				}
 			}
 		},
 		"groups":
@@ -407,24 +437,6 @@
 					"clientMessage": "This User does not exist",
 					"status": 400
 				}
-			},
-			"addedBy":
-			{
-				"invalid":
-				{
-					"devMessage": "The '_id' attribute of the passed in User object is in an invalid format for the 'addedBy' attribute",
-					"clientMessage": "This User does not exist",
-					"status": 400
-				}
-			},
-			"removedBy":
-			{
-				"invalid":
-				{
-					"devMessage": "The '_id' attribute of the passed in User object is in an invalid format for the 'removedBy' attribute",
-					"clientMessage": "This User does not exist",
-					"status": 400
-				}	
 			}
 		},
 		"events":

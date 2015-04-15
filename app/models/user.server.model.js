@@ -36,8 +36,12 @@ var validateLocalStrategyPassword = function(password) {
 
 function isValidObjectIDs(ids) {
 
+	console.log('addedByIDS: ' + ids);
 	if(!Helper.isValidObjectIDs(ids))
+	{
+		console.log('failed');
 		return false;
+	}
 
 	return true;
 }
@@ -149,34 +153,29 @@ var UserSchema = new Schema({
 			}
 		]
 	},
-	addedBy: {
-		type: Schema.ObjectId,
-		ref: 'User',
-		validate:
-		[
-			{
-				validator: Helper.isValidObjectIDs,
-				msg: 'addedBy.invalid'
+	addedBy: [
+		{
+			groupID : {
+				type: Schema.ObjectId,
+				ref: 'Group',
+				validate:
+				[
+					{
+						validator: Helper.isValidObjectIDs,
+						msg: 'addedBy.groupID.invalid'
+					}
+				]
+			},
+			userID: {
+				type: Schema.ObjectId,
+				ref: 'User'
+			},
+			date: {
+				type: Date,
+				default: Date.now
 			}
-		]
-	},
-	removedBy: {
-		type: Schema.ObjectId,
-		ref: 'User',
-		validate:
-		[
-			{
-				validator: Helper.isValidObjectIDs,
-				msg: 'removedBy.invalid'
-			}
-		]
-	},
-	addedDate: {
-		type: Date
-	},
-	removedDate: {
-		type: Date
-	},
+		}
+	],
 	salt: {
 		type: String
 	},
@@ -330,6 +329,46 @@ UserSchema.path('joinedGroups').validate(function (ids,respond) {
 	});
 	
 },'joinedGroups.exist');
+
+UserSchema.path('addedBy').schema.path('groupID').validate(function (id,respond) {
+
+	var Group = mongoose.model('Group');
+	var query = {
+		_id: id
+	};
+
+	console.log('validate addedBy.groupID: ' + id);
+	
+	Helper.find(Group,query,function(err,mod) {
+		
+		if(err || !mod || typeof mod.length === 0) 
+		{
+			console.log('FALSE!!!');
+			console.log('groupID mod: ' + mod);
+			respond(false);
+		}
+		else
+			respond(true);
+	});
+},'addedBy.groupID.exist');
+
+UserSchema.path('addedBy').schema.path('userID').validate(function (id,respond) {
+
+	var User = mongoose.model('User');
+	var query = {
+		_id: id
+	};
+
+	console.log('validate addedBy.userID: ' + id);
+	
+	Helper.find(User,query,function(err,mod) {
+
+		if(err || !mod || typeof mod.length === 0) 
+			respond(false);
+		else
+			respond(true);
+	});
+},'addedBy.userID.exist');
 
 /*********** END Validate Functions Middleware **************/
 
