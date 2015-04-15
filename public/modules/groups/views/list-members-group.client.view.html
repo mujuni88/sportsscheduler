@@ -15,7 +15,7 @@
                 <div class="col-xs-3 col-sm-6">
                     <a class="btn btn-primary btn-sm pull-right"
                        href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()">
-                        <i class="glyphicon glyphicon-plus"></i>
+                        <i class="glyphicon glyphicon-edit"></i>
                     </a>
                 </div>
             </div>
@@ -33,11 +33,14 @@
         
 
         <div class="list-groups" data-ng-if="group.members">
-            <div class="list-group-item" data-ng-repeat="member in group.members | filter:search.members">
+            <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:'isAdmin' | filter:search.members">
                 <span class="" data-ng-bind="member.displayName"></span> -
                 <span class="text-info" data-ng-bind="member.username"></span>
-                <span class="pull-right btn-link" ss-dialog dialog-ok="removeMember($index)" dialog-enable="true" title="Remove Member" message="Are you sure?" data-ng-show="isAdmin()">
-                    <i class="glyphicon glyphicon-remove text-danger"></i>
+                <!--<span class="pull-right btn-link" ss-dialog dialog-ok="removeMember($index)" dialog-enable="true" title="Remove Member" message="Are you sure?" data-ng-show="isAdmin()">-->
+                    <!--<i class="glyphicon glyphicon-remove text-danger"></i>-->
+                <!--</span>-->                
+                <span class="label label-info pull-right" ng-show="member.isAdmin">
+                    admin
                 </span>
             </div>
         </div>

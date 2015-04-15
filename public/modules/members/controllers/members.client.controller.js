@@ -1,14 +1,15 @@
 'use strict';
 
-// Groups controller
-angular.module('groups').controller('GroupsController',GroupsController);
+angular.module('members').controller('MembersController', MembersController);
 
-function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, AppAlert, dialogs) {
+function MembersController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, AppAlert, $modalInstance, data){
     var _ = lodash;
     
     $scope.authentication = Authentication;
     $scope.$state = $state;
 
+    $scope.group = data;
+    
     // Create new Group
     $scope.create = create;
 
@@ -41,32 +42,33 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     $scope.saveMember = saveMember;
 
-    // show dialog for adding members
-    $scope.addMember = addMember;
-
-
     $scope.isAdmin = isAdmin;
+    
+    // add members modal functions
+    $scope.cancel = cancel;
+    $scope.save = save;
 
     function create() {
         // Create new Group object
         var group = new Groups($scope.group);
 
         // Redirect after save
-        return group.$save(function (response) {
-            $state.go('viewGroup.listMembers.viewMembers');
+        group.$save(function (response) {
+            redirectHome(group._id);
         });
     }
 
     function remove() {
-        return $scope.group.$remove(function () {
+        $scope.group.$remove(function () {
             $location.path('groups');
         });
     }
 
 
     function update() {
-        return $scope.group.$update(function(response){
+        $scope.group.$update(function(response){
             AppAlert.add('success','Group updated successfully');
+            //redirectHome(response._id);
         });
     }
 
@@ -75,31 +77,25 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function findOne() {
-        return $scope.group = Groups.get({
+        $scope.group = Groups.get({
             groupId: $stateParams.groupId
         }, function(){
-            //$scope.group.members = $scope.group.members.join($scope.group.admins);
-             _.each($scope.group.members, function(item){
-                if(_.include(_.pluck($scope.group.admins, '_id'), item._id)){
-                    item.isAdmin = true;
-                }
-            });
+            angular.copy($scope.group.members,$scope.tempMembers);
         });
-        $scope.tempMembers = [];
+
     }
 
     function onSelect($model) {
-        var tM = _.isEmpty(_.include(_.pluck($scope.tempMembers, '_id'), $model._id));
-        var gM = _.isEmpty(_.include(_.pluck($scope.group.members, '_id'), $model._id));
         debugger;
-        if(tM && gM){
-            $scope.tempMembers.push($model);
-        }
+        var tempMembers = $scope.tempMembers;
+        tempMembers.push($model);
+
+        $scope.tempMembers = _.uniq(tempMembers, '_id');
+        $scope.search.members = '';
     }
 
     function removeMember(index) {
         $scope.group.members.splice(index, 1);
-        update();
     }
 
     function removeTempMember(index) {
@@ -107,33 +103,28 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function saveMember(){
-        $scope.group.members = _.union($scope.group.members, $scope.tempMembers);
-        _.each($scope.group.admins, function(item){
-            delete item.isAdmin;
-        });
-        update().then(function(){
-            $state.go('viewGroup.listMembers.viewMembers');        
-            $scope.tempMembers = [];
+        angular.copy($scope.tempMembers, $scope.group.members);
+        update();
+    }
 
-        });
+    function redirectHome(id) {
+        var _id = (id)? id: $stateParams.groupId;
+        $location.path('groups/' + _id + '/members/list');
     }
 
     function isAdmin(){
-        if(_.isUndefined($scope.group.admins)){
-            return false;
-        }
-        
         var out =  _.some($scope.group.admins, {_id:$scope.authentication.user._id});
         $scope.$broadcast('isAdmin', out);
         return out;
     }
-
-    function addMember(){
-        var opts = {
-            size:'sm'
-        }
-        dialogs.create('/modules/members/views/templ-add-member.client.view.html','MembersController',$scope.group, opts);
+    
+    function cancel(){
+        $modalInstance.dismiss('Canceled');
     }
     
-
+    function save(){
+        update();
+        $modalInstance.close();
+    }
+    
 }
