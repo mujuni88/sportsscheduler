@@ -14,6 +14,7 @@ module.exports = function(app) {
 	app.route('/api/users').get(users.list);
 
 	app.route('/api/users/:userId').put(users.update);
+	app.route('/api/users/joinGroup').post(users.joinGroup);
 
 	app.route('/api/users/:username').delete(users.delete);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);

@@ -12,7 +12,8 @@ var _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	Group = mongoose.model('Group');
 
 /**
  * Update user details
@@ -97,6 +98,59 @@ exports.delete = function(req, res) {
 			});
 		}
 	});
+};
+
+exports.joinGroup = function(req, res) {
+
+	var myResponse = new MyResponse();
+	var userID = (typeof req.body.user !== 'undefined') ? req.body.user._id : '';
+	var groupID = (typeof req.body.group !== 'undefined') ? req.body.group._id : '';
+
+	if(!Helper.isValidObjectID(userID) || !Helper.isValidObjectID(groupID))
+	{
+		myResponse.addMessages(serverJSON.api.users.joinedGroups.invalid);
+		Helper.output(myResponse,res);
+
+		return;
+	}
+
+	var query = {
+		_id : userID
+	};
+
+	Helper.find(User,query,function(err,mod) {
+
+		if(err || mod.length === 0)
+		{
+			console.log('error: ' + err);
+			myResponse.addMessages(serverJSON.api.users.joinedGroups.exist);
+			Helper.output(myResponse,res);
+		}
+		else
+		{
+			mod[0].joinedGroups.push(groupID);
+
+			mod[0].save(function(err) {
+
+				if (err) {
+					console.log('error: ' + err);
+					myResponse.transformMongooseError(User.errPath,String(err));
+					Helper.output(myResponse,res);
+				}
+				else {
+					console.log('saved successfully');
+					Helper.populateModel(User,mod,User.errPath,function(mod) {
+						myResponse.setData(mod);
+						Helper.output(myResponse,res);
+					});
+				}
+			});
+		}
+	});
+
+	
+
+	//res.json(req.body);
 };
 
 exports.list = function(req, res) { User.find().sort('-created').populate(User.objectIDAtts + ' createdGroups.admins').exec(function(err, users) {
