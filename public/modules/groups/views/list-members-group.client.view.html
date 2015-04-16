@@ -24,10 +24,10 @@
 
     </div>
     <div class="panel-body">
-        <div class="alert alert-warning alert-sm text-center" data-ng-show="group.members.length === 0 && isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && isAdmin()">
             No Members yet, why don't you <a href="/#!/groups/{{group._id}}/members/add">add one</a>?
         </div>        
-        <div class="alert alert-warning alert-sm text-center" data-ng-show="group.members.length === 0 && !isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && !isAdmin()">
             No Members in this group
         </div>
         

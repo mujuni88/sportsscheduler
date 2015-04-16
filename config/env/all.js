@@ -19,7 +19,8 @@ module.exports = {
                 'public/lib/animate.css/animate.min.css',
                 'public/lib/angular-fx/src/css/angular-fx.css',
                 'public/lib/angular-xeditable/dist/css/xeditable.css',
-				'public/lib/angular-dialog-service/dist/dialogs.min.css'
+				'public/lib/angular-dialog-service/dist/dialogs.min.css',
+				'public/lib/components-font-awesome/css/font-awesome.min.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
