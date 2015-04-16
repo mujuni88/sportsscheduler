@@ -4,7 +4,6 @@ var MyError = require('./MyError');
 var httpCodesJSON = require('../local_files/http/codes.json');
 var serverJSON = require('../local_files/ui/server.ui.json');
 var errMessage = null;
-var foundObj = null;
 var Helper = require('./Helper');
 
 function MyResponse() {
@@ -72,6 +71,12 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 		else
 			copyOfServerJSON = copyOfServerJSON[match];
 
+		if(typeof copyOfServerJSON === 'undefined')
+		{
+			this.addMessages(serverJSON.api.default.error.castError);
+			return;
+		}
+
 		this.addMessages(copyOfServerJSON.invalid);
 	}
 	else if(err.indexOf('ValidationError') !== -1)
@@ -97,7 +102,7 @@ MyResponse.prototype.transformMongooseError = function(modelPath,err)
 			completePath = modelPath + '.' + errMessage;
 			path = completePath.split('.');
 			message = getMessage(copyOfServerJSON,path);
-			this.addMessages(foundObj);
+			this.addMessages(message);
 		}
 	}
 	else if(err.indexOf('MongoError') !== -1)
