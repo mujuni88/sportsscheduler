@@ -506,7 +506,7 @@
 					},
 					"invalid":
 					{
-						"regex": "^[\\d\\w\\-\\s]{5,30}$",
+						"regex": "^[\\d\\w\\-\\s]{5,}$",
 						"devMessage": "The 'location.address' does not pass the proper validation regex of '^[\\d\\w\\-@]{5,30}$'",
 						"clientMessage": "Please fill in a valid Location Address",
 						"status": 400
