@@ -10,32 +10,71 @@ var mongoose = require('mongoose'),
 	serverJSON = require('../../../../local_files/ui/server.ui.json'),
 	Helper = require('../../../../custom_objects/Helper'),
 	async = require('async'),
+	Group = mongoose.model('Group'),
 	_ = require('lodash');
 
 /**
  * Create a Event
  */
 exports.create = function(req, res) {
-	var event = new EventModel(req.body);
-	//event.user = req.user;
-	console.log('event: ' + event);
-	event.save(function(err) {
-		console.log('in create event save');
-		var myResponse = new MyResponse();
 
-		if (err) {
-			console.log('error: ' + err);
-			myResponse.transformMongooseError(EventModel.errPath,String(err));
+	var groupID = req.params.groupId;
+	var query = {
+		_id : groupID
+	};
+
+	Helper.find(Group,query,function(err,mod) {
+		var group = null;
+		var myResponse = new MyResponse();
+		
+		if(mod.length === 0)
+		{
+			myResponse.addMessages(serverJSON.api.groups._id.invalid);
 			Helper.output(myResponse,res);
+			
+			return;
 		}
-		else {
-			console.log('saved successfully');
-			Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-				myResponse.setData(mod);
+
+		group = mod[0];
+
+		console.log('group: ' + group);
+
+		
+		var event = new EventModel(req.body);
+	
+		//event.user = req.user;
+		event.group = groupID;
+		console.log('event: ' + event);
+
+		event.save(function(err) {
+			
+			if (err) {
+				console.log('error: ' + err);
+				myResponse.transformMongooseError(EventModel.errPath,String(err));
 				Helper.output(myResponse,res);
-			});
-		}
+			}
+			else {
+				group.events.push(event._id);
+				
+				group.save(function(err) {
+
+					if (err) {
+						console.log('error: ' + err);
+						myResponse.transformMongooseError(EventModel.errPath,String(err));
+						Helper.output(myResponse,res);
+					}
+					else {
+						console.log('saved successfully');
+						Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
+							myResponse.setData(mod);
+							Helper.output(myResponse,res);
+						});
+					}
+				});
+			}			
+		});
 	});
+	
 };
 
 /**
