@@ -90,7 +90,7 @@
                     <div class="col-sm-7">
                         <input id="minimumVotes" name="minimumVotes" ng-model="event.minimumVotes" class="form-control"
                                type="number" min="0" tooltip-placement="top" validator="required, positiveIntegers"
-                               valid-method="blur" tooltip="Minimum number of votes before the event is cancelled."
+                               valid-method="blur" tooltip="Minimum number of attendees before the event is cancelled."
                                required/>
                     </div>
                 </div>
@@ -99,8 +99,9 @@
                     <label class="col-sm-3 control-label" for="message">Message <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
-                        <textarea class="form-control" rows="3" id="message" name="message" class="form-control"
-                                  data-ng-model="event.message" placeholder="Message" validator="required"
+                        <div class="pull-right text-primary">{{120 - event.message.length}}</div>
+                        <textarea class="form-control" rows="3" maxlength="120" id="message" name="message" class="form-control"
+                                  data-ng-model="event.message" placeholder="120 character limit" validator="required"
                                   valid-method="blur"></textarea>
                     </div>
                 </div>
