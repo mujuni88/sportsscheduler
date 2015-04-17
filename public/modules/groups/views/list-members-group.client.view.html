@@ -3,7 +3,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-xs-9 col-sm-6">
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <input type="text" class="form-control"
                                placeholder="Search for a member" data-ng-model="search.members"/>
                     <span class="input-group-addon">
@@ -14,8 +14,8 @@
 
                 <div class="col-xs-3 col-sm-6">
                     <a class="btn btn-primary btn-sm pull-right"
-                       href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" popover-placement="top" popover="Edit members" popover-trigger="mouseenter">
-                        <i class="glyphicon glyphicon-edit"></i>
+                       href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add a member">
+                        <i class="glyphicon glyphicon-plus"></i>
                     </a>
                 </div>
             </div>

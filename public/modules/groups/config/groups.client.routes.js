@@ -33,9 +33,13 @@ angular.module('groups').config(['$stateProvider',
                 url: '/events',
                 templateUrl: 'modules/groups/views/view-events-group.client.view.html'
             }).
-            state('editGroup', {
-                url: '/groups/:groupId/edit',
-                templateUrl: 'modules/groups/views/edit-group.client.view.html'
+            state('viewGroup.listEvents.viewEvents', {
+                url: '/list',
+                templateUrl: 'modules/groups/views/list-events-group.client.view.html'
+            }).
+            state('viewGroup.listEvents.addEvents', {
+                url: '/add',
+                templateUrl: 'modules/groups/views/add-events-group.client.view.html'
             });
     }
 ]);

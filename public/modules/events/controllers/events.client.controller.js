@@ -2,8 +2,10 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $stateParams, $location, Authentication, Events) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events) {
     $scope.authentication = Authentication;
+    $scope.state = $state;
+
     $scope.event = $scope.event || {};
     $scope.event = {
         voteEnabled: true,
@@ -102,12 +104,10 @@ function EventsController($scope, $stateParams, $location, Authentication, Event
         // Create new Event object
         var event = new Events($scope.event);
         // Redirect after save
-        event.$save(function(response) {
-            $location.path('events/' + response.data._id);
+        event.$save(function(data) {
+            $location.path('events/' + data._id);
             // Clear form fields
             $scope.name = '';
-        }, function(errorResponse) {
-            $scope.error = errorResponse.clientMessage;
         });
     }
 
@@ -128,8 +128,7 @@ function EventsController($scope, $stateParams, $location, Authentication, Event
 
     function update() {
         if ($scope.timeError || $scope.dateError) return;
-        var event = $scope.event;
-        event.$update(function() {
+        $scope.event.$update(function() {
             console.log("Update " + event);
             if (!event) {
                 $scope.error = "Error with the server";
@@ -142,16 +141,12 @@ function EventsController($scope, $stateParams, $location, Authentication, Event
     }
 
     function find() {
-        var events = Events.query(function() {
-            $scope.events = events;
-        });
+        $scope.events = Events.query();
     };
 
     function findOne() {
-        var event = Events.get({
-            eventId: $stateParams.eventId
-        }, function() {
-            $scope.event = event;
+        $scope.event = Events.get({
+            eventId: $stateParams.groupId
         });
     };
 }
