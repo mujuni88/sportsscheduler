@@ -1,21 +1,41 @@
-.content{
-	margin-top: 50px;
-}
 .undecorated-link:hover {
-	text-decoration: none;
-}
+  text-decoration: none; }
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-	display: none !important;
-}
-.ng-invalid.ng-dirty{
-    border-color:#FA787E;
-}
-.ng-valid.ng-dirty{
-    border-color:#78FA89;
-}
-.bold{
-	font-weight: bold !important;
-}
-.global-error{
-	margin-top:20px;
-}
+  display: none !important; }
+
+.ng-invalid.ng-dirty {
+  border-color: #FA787E; }
+
+.ng-valid.ng-dirty {
+  border-color: #78FA89; }
+
+.bold {
+  font-weight: bold !important; }
+
+.global-error {
+  margin-top: 55px; }
+
+.global-error .alert-dismissable .close, .global-error .alert-dismissible .close {
+  right: 0; }
+
+.alert-sm {
+  padding: 10px;
+  margin-bottom: 5px; }
+
+.spacing-sm-right {
+  margin-right: 10px; }
+
+.spacing-sm-left {
+  margin-left: 10px; }
+
+.pointer {
+  cursor: pointer !important; }
+
+.modal-btn-sm .modal-footer .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px; }
+
+/*# sourceMappingURL=core.css.map */

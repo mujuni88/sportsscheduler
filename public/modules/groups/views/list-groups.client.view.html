@@ -8,12 +8,12 @@
 				Created on
 				<span data-ng-bind="group.created | date:'medium'"></span>
 				by
-				<span data-ng-bind="group.createdBy"></span>
+				<span data-ng-bind="group.createdBy.displayName"></span>
 			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="group.name"></h4>
+			<h4 class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}}</h4>
         </a>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!groups.$resolved || groups.length">
+    <div class="alert alert-info alert-sm text-center" data-ng-hide="!groups.$resolved || groups.length">
     	No Groups yet, why don't you <a href="/#!/groups/create">create one</a>?
     </div>
 </section>

@@ -3,7 +3,7 @@
         <h1 class="text-left">New Event</h1>
 
         <p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> An event can only be created if the
-            start time is 2 hours or more ahead of the creation time.</p>
+            start time is 2 hours or more ahead of the creation time. This is so to allow our algorithms to collect all the votes before deadline.</p>
     </div>
     <div class="col-md-12">
         <form name="eventsForm" class="form-horizontal" novalidate>
@@ -90,7 +90,7 @@
                     <div class="col-sm-7">
                         <input id="minimumVotes" name="minimumVotes" ng-model="event.minimumVotes" class="form-control"
                                type="number" min="0" tooltip-placement="top" validator="required, positiveIntegers"
-                               valid-method="blur" tooltip="Minimum number of votes before the event is cancelled."
+                               valid-method="blur" tooltip="Minimum number of attendees before the event is cancelled."
                                required/>
                     </div>
                 </div>
@@ -99,8 +99,9 @@
                     <label class="col-sm-3 control-label" for="message">Message <span class="has-error">*</span></label>
 
                     <div class="col-sm-7">
-                        <textarea class="form-control" rows="3" id="message" name="message" class="form-control"
-                                  data-ng-model="event.message" placeholder="Message" validator="required"
+                        <div class="pull-right text-primary">{{120 - event.message.length}}</div>
+                        <textarea class="form-control" rows="3" maxlength="120" id="message" name="message" class="form-control"
+                                  data-ng-model="event.message" placeholder="120 character limit" validator="required"
                                   valid-method="blur"></textarea>
                     </div>
                 </div>

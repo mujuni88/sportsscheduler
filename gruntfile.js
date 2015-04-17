@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         localFiles: ['app/local_files/**/*'],
         clientViews: ['public/modules/**/views/**/*.html'],
         clientJS: ['public/js/*.js', 'public/modules/**/*![e2e]*.js'],
-        clientCSS: ['public/modules/**/*.css'],
+        clientCSS: ['public/modules/**/!(bootstrap)*.css'],
         mochaTests: ['app/tests/**/*.js'],
         e2eTests: ['public/modules/*/tests/e2e/*.js']
     };
@@ -138,13 +138,6 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-        ngmin: {
-            production: {
-                files: {
-                    'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
-                }
-            }
-        },
 		concurrent: {
 			default: ['nodemon', 'watch'],
 			travis: ['mochaTest','karma:unit'],
@@ -197,6 +190,16 @@ module.exports = function (grunt) {
                     command: 'webdriver-manager start'
                 }
             }
+        },
+        ngAnnotate: {
+            options: {
+                singleQuotes: true
+            },
+            production: {
+                files: {
+                    'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
+                }
+            }
         }
 	});
 
@@ -231,7 +234,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['jshint','csslint']);
 
     // Build task(s).
-    grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
 
 //	grunt.registerTask('test', ['env:test', 'mochaTest']);
 	grunt.registerTask('travis', ['protractor_webdriver','concurrent:travis','protractor']);

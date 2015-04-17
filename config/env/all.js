@@ -13,13 +13,18 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
-				'public/lib/bootstrap/dist/css/bootstrap.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				//'public/modules/**/css/*.csspublic/lib/bootstrap/dist/css/bootstrap.css',
+				//'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/modules/core/css/bootstrap.css',
                 'public/lib/animate.css/animate.min.css',
-                'public/lib/angular-fx/src/css/angular-fx.css'
+                'public/lib/angular-fx/src/css/angular-fx.css',
+                'public/lib/angular-xeditable/dist/css/xeditable.css',
+				'public/lib/angular-dialog-service/dist/dialogs.min.css',
+				'public/lib/components-font-awesome/css/font-awesome.min.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
+                'public/lib/angular-sanitize/angular-sanitize.min.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-animate/angular-animate.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
@@ -29,11 +34,14 @@ module.exports = {
 				'http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false',
 				'public/lib/ng-google-places-autocomplete/src/ngAutocomplete.js',
 				'public/lib/ng-lodash/build/ng-lodash.min.js',
-				'public/lib/angular-fx/src/js/angular-fx.js'
+				'public/lib/angular-fx/src/js/angular-fx.js',
+                'public/lib/angular-xeditable/dist/js/xeditable.min.js',
+				'public/lib/angular-dialog-service/dist/dialogs.min.js'
             ]
 		},
 		css: [
-			'public/modules/**/css/*.css'
+			'public/modules/**/css/*.css',
+			'public/modules/**/css/!bootstrap*.css'
 		],
 		js: [
 			'public/config.js',

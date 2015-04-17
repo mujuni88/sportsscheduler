@@ -1,0 +1,52 @@
+<script type="text/ng-template" id="customTemplate.html">
+    <a class="">
+        <span>{{match.model.username}} / <span class="text-muted"> {{match.model.displayName}}</span> </span>
+        <!--<span class="badge"> </span>-->
+        <span class="pull-right">&nbsp;<i class="glyphicon glyphicon-plus-sign"></i></span>
+    </a>
+</script>
+<div class="modal-header">
+    <h4 class="modal-title">Add Members</h4>
+</div>
+<div class="modal-body">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <br class="visible-xs"/>
+
+                <div class="input-group">
+                    <input type="text" typeahead-on-select="onSelect(search.members); search.members = '';"
+                           typeahead="member as member.username for member in getMembers($viewValue)"
+                           typeahead-loading="loading" typeahead-template-url="customTemplate.html"
+                           class="form-control"
+                           placeholder="Search" data-ng-model="search.members"/>
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </span>
+                </div>
+                <div data-ng-show="loading"><br/>loading...</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="alert alert-default alert-sm text-center" data-ng-hide="tempMembers.length">
+        <i class="glyphicon glyphicon-exclamation-sign"></i> No members added yet
+    </div>
+    <ul class="list-groups list-unstyled">
+        <li class="list-group-item" data-ng-repeat="member in tempMembers">
+            <span class="" data-ng-bind="member.displayName"></span> -
+            <span class="text-info" data-ng-bind="member.username"></span>
+                <span class="pull-right btn-link"
+                      ss-dialog dialog-ok="removeTempMember($index)" dialog-enable="true" title="Remove Member"
+                      message="Are you sure?">
+                    <i class="glyphicon glyphicon-remove text-danger"></i>
+                </span>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button type="button" ng-click="cancel()" class="btn btn-default btn-sm">Cancel</button>
+    <button type="button" ng-click="save()" class="btn btn-primary btn-sm">Save</button>
+</div>
+
