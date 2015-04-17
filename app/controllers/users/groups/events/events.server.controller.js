@@ -189,6 +189,43 @@ exports.list = function(req, res) { EventModel.find().sort('-created').exec(func
 	});
 };
 
+exports.listEventsForGroup = function(req, res) {
+
+	var myResponse = new MyResponse();
+	var groupID = req.params.groupId;
+	var query = {
+		_id : groupID
+	};
+
+	Helper.find(Group,query,function(err,mod) {
+
+		if (err) {
+			myResponse.transformMongooseError(EventModel.errPath,String(err));
+			Helper.output(myResponse,res);
+		}
+		else if(mod.length === 0 || !mod) {
+			myResponse.addMessages(serverJSON.api.events._id.exist);
+			Helper.output(myResponse,res);
+		}
+		else {
+			
+			var group = mod[0];
+
+			Helper.populateModel(Group,group,Group.errPath,function(mod) {
+
+				var events = group.events;
+
+				Helper.populateModel(EventModel,events,EventModel.errPath,function(mod) {
+					
+					myResponse.setData(mod);
+					Helper.output(myResponse,res);
+				});
+				
+			});
+		}
+	});
+};
+
 /**
  * Event middleware
  */
