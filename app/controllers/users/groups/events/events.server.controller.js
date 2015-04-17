@@ -134,7 +134,7 @@ exports.delete = function(req, res) {
 /**
  * List of Events
  */
-exports.list = function(req, res) { EventModel.find().sort('-created').populate(EventModel.objectIDAtts).exec(function(err, events) {
+exports.list = function(req, res) { EventModel.find().sort('-created').exec(function(err, events) {
 		
 		var myResponse = new MyResponse();
 
