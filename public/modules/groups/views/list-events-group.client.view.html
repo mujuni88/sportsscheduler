@@ -4,41 +4,49 @@
             <div class="form-group">
                 <div class="col-xs-9 col-sm-4">
                     <div class="input-group input-group-sm">
-                            <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day" type="text"
-                                   class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
-                                   is-open="opened" min-date="minDate" max-date="'2015-06-22'"
-                                   datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-                                   ng-required="true" close-text="Close" placeholder="Search by date"/>
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open($event)"><i
-                                    class="fa fa-calendar"></i></button>
-                          </span>
-                        </div>
+                        <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day" type="text"
+                        class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
+                        is-open="opened" min-date="minDate" max-date="'2015-06-22'"
+                        datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                        ng-required="true" close-text="Close" placeholder="Search by date"/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                        class="fa fa-calendar"></i></button>
+                        </span>
+                    </div>
                 </div>
-
                 <div class="col-xs-3 col-sm-8">
                     <a class="btn btn-primary btn-sm pull-right"
-                       href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin()" title="Create an event">
-                        <i class="glyphicon glyphicon-plus"></i>
+                    href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin()" title="Create an event">
+                    <i class="glyphicon glyphicon-plus"></i>
                     </a>
                 </div>
             </div>
         </div>
-
-
     </div>
     <div class="panel-body">
         <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isAdmin()">
             No Events yet, why don't you <a href="/#!/groups/{{group._id}}/events/add">add one</a>?
-        </div>        
+        </div>
         <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isAdmin()">
             No Events in this group
         </div>
-        
+        <div href='/#!/events/{{event._id}}' class="media" data-ng-if="events.length" data-ng-repeat="event in events | filter:event.date">
+            <div class="media-left">
+                <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right" ng-if="!member.isAdmin"></i>
+            </div>
+            <div class="media-body">
+            <div class="row">
+                <div class="col-sm-6">
+                                    <ul class="list-unstyled">
+                    <li><h4 class="media-heading">{{event.name}}</h4></li>
+                    <li><p>Location Name: {{event.location.name}}</p></li>
+                    <li><p>Address: {{event.location.address}}</p></li>
+                    <li><p>{{event.message}}</p></li>
+                </ul>
+                </div>
+            </div>
 
-        <div class="list-groups" data-ng-if="events.length">
-            <div class="list-group-item" data-ng-repeat="event in events | filter:event.name">
-                <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> {{event.name}}</span>
             </div>
         </div>
     </div>
