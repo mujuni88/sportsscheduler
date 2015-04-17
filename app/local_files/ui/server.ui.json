@@ -250,7 +250,7 @@
 					"status": 400
 				}
 			},
-			"password":
+			"plainTextPassword":
 			{
 				"empty":
 				{
@@ -261,8 +261,8 @@
 				"invalid":
 				{
 					"regex": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$",
-					"devMessage": "password does not pass the proper validation regex of '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$'",
-					"clientMessage": "Please fill in a valid Password",
+					"devMessage": "'password does not pass the proper validation regex of '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$'",
+					"clientMessage": "Please fill in a valid password",
 					"status": 400
 				}
 			},

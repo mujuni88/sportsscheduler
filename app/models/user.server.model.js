@@ -118,10 +118,13 @@ var UserSchema = new Schema({
 		trim: true
 	},
 	password: {
+		type: String
+	},
+	plainTextPassword: {
 		type: String,
 		default: '',
-		required: 'password.empty',
-		match: [new RegExp(serverJSON.api.users.password.invalid.regex), 'password.invalid']
+		required: 'plainTextPassword.empty',
+		match: [new RegExp(serverJSON.api.users.plainTextPassword.invalid.regex), 'plainTextPassword.invalid']
 	},
 	createdGroups: {
 		type: [Schema.ObjectId],
