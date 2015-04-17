@@ -10,7 +10,8 @@ module.exports = function(app) {
 		//.post(users.requiresLogin, events.create);
 		
 	app.route('/api/users/groups/:groupId/events')
-		.post(events.create);
+		.post(events.create)
+		.get(events.listEventsForGroup);
 
 	app.route('/api/users/groups/events/:eventId')
 		.get(events.read)
