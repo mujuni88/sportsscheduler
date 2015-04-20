@@ -109,7 +109,7 @@ exports.read = function(req, res) {
 			return;
 		}
 
-		Helper.populateModel(EventModel,mod,EventModel.errPath,function(mod) {
+		Helper.populateModel(EventModel,mod[0],EventModel.errPath,function(mod) {
 			myResponse.setData(mod);
 			Helper.output(myResponse,res);
 		});
