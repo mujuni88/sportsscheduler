@@ -26,7 +26,7 @@ var EventSchema = new Schema({
 	name: {
 		type: String,
 		required: 'name.empty',
-		match: [new RegExp(serverJSON.api.events.name.invalid.regex), 'name.invalid'],
+		//match: [new RegExp(serverJSON.api.events.name.invalid.regex), 'name.invalid'],
 		//validate: [validateNameProperty, serverJSON.api.events.errors._2],
 		trim: true
 	},
@@ -45,7 +45,7 @@ var EventSchema = new Schema({
 		address: {
 			type: String,
 			required: 'location.address.empty',
-			match: [new RegExp(serverJSON.api.events.location.address.invalid.regex), 'location.address.invalid'],
+			//match: [new RegExp(serverJSON.api.events.location.address.invalid.regex), 'location.address.invalid'],
 			trim: true
 		},
 		lat: {
@@ -62,12 +62,12 @@ var EventSchema = new Schema({
 	date:{
 		type: Date,
 		required: 'date.empty',
-		match: [new RegExp(serverJSON.api.events.date.invalid.regex), 'date.invalid'],
+		//match: [new RegExp(serverJSON.api.events.date.invalid.regex), 'date.invalid'],
 	},
 	time:{
 		type: Date,
 		required: 'time.empty',
-		match: [new RegExp(serverJSON.api.events.time.invalid.regex), 'time.invalid'],
+		//match: [new RegExp(serverJSON.api.events.time.invalid.regex), 'time.invalid'],
 	},
 	voteEnabled:{
 		type:Boolean,
