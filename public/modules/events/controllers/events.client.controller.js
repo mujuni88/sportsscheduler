@@ -5,7 +5,6 @@ angular.module('events').controller('EventsController', EventsController);
 function EventsController($scope, $state, $stateParams, $location, Authentication, Events) {
     $scope.authentication = Authentication;
     $scope.state = $state;
-
     $scope.event = $scope.event || {};
     $scope.event = {
         voteEnabled: true,
@@ -21,18 +20,15 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.find = find;
     // Find existing Event
     $scope.findOne = findOne;
-    
     // Google places
     $scope.options = {
         country: 'us'
     };
     $scope.details = "";
-    
     // Datepicker
     $scope.today = getDate;
     $scope.today();
     $scope.clear = clearDate;
-    
     // Disable weekend selection
     $scope.disabled = disableDate;
     $scope.toggleMin = toggleMin;
@@ -45,7 +41,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
     $scope.dateChange = dateChange;
-    
     // Timepicker
     var date = new Date();
     var plusTwoHrs = (date.getHours() + 3);
@@ -54,7 +49,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     var now, hrsDiff, time, HRS = 2,
         HRS_MS = HRS * 60 * 60 * 1000;
     $scope.timeChange = timeChange;
-    
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
 
@@ -101,13 +95,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function create() {
         if ($scope.timeError || $scope.dateError) return;
-        // Create new Event object
-        var event = new Events($scope.event);
-        // Redirect after save
-        event.$save(function(data) {
-            $location.path('events/' + data._id);
-            // Clear form fields
-            $scope.name = '';
+        var event = new Events($scope.event),
+            params = {
+                groupId: $stateParams.groupId
+            };
+        event.group = $stateParams.groupId;
+        event.$save(params, function(data) {
+            $state.go('viewGroup.listEvents.viewEvent',{eventId:data._id});
         });
     }
 
@@ -146,7 +140,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function findOne() {
         $scope.event = Events.get({
-            eventId: $stateParams.groupId
+            groupId: $stateParams.groupId,
+            eventId: $stateParams.eventId
         });
     };
 }
