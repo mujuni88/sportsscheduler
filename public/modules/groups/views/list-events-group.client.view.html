@@ -31,23 +31,33 @@
         <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isAdmin()">
             No Events in this group
         </div>
-        <div href='/#!/events/{{event._id}}' class="media" data-ng-if="events.length" data-ng-repeat="event in events | filter:event.date">
-            <div class="media-left">
+        <div class="list-group">
+            <a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" data-ng-repeat="event in events | filter:event.time" data-ng-class="{'disabled':hasEventExpired(event.time)}">
+            <div class="media-left media-middle">
                 <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right" ng-if="!member.isAdmin"></i>
             </div>
             <div class="media-body">
-            <div class="row">
-                <div class="col-sm-6">
-                                    <ul class="list-unstyled">
-                    <li><h4 class="media-heading">{{event.name}}</h4></li>
-                    <li><p>Location Name: {{event.location.name}}</p></li>
-                    <li><p>Address: {{event.location.address}}</p></li>
-                    <li><p>{{event.message}}</p></li>
-                </ul>
+                <div class="row">
+                    <div class="col-sm-4 vcenter">
+                        <ul class="list-unstyled">
+                            <li><h4 class="media-heading">{{event.name}}</h4></li>
+                            <li><p>Location Name: <span class="text-primary">{{event.location.name}}</span></p></li>
+                            <li><p>Address: <span class="text-primary">{{event.location.address}}</span></p></li>
+                            <li><p>Time: <span class="text-primary">{{event.time | date:'medium'}}</span></p></li>
+
+                        </ul>
+                    </div>
+                    <div class="col-sm-8 vcenter">
+                        <ul class="list-unstyled pull-right">
+<!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
+                            <li><p>Vote Count: <span class="badge">{{event.votes.yes.length}}</span></p></li>
+                            <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li> 
+                            <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-
-            </div>
+            </a>
         </div>
     </div>
 </div>

@@ -51,6 +51,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.timeChange = timeChange;
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
+    $scope.hasEventExpired = hasEventExpired;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -84,6 +85,17 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         hrsDiff = $scope.event.time.getTime() - time;
         $scope.timeError = (hrsDiff < HRS_MS) ? true : false;
     };
+
+    function hasEventExpired(eventTime){
+        var now = Date.now(),
+            eD = Date.parse(eventTime);
+
+            hrsDiff = eD - now;
+
+            debugger;
+            return (hrsDiff < 0) ? true : false;
+
+    }
 
     function watchLocation(newVal, oldVal) {
         if (!newVal) {
@@ -140,8 +152,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function findOne() {
         $scope.event = Events.get({
-            groupId: $stateParams.groupId,
             eventId: $stateParams.eventId
+        }, function(){
+            debugger;
+            console.log($scope.event);
         });
     };
+
 }

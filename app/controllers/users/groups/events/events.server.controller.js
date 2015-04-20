@@ -81,8 +81,12 @@ exports.create = function(req, res) {
  * Show the current Event
  */
 exports.read = function(req, res) {
-	//console.log(req.event);
-	//res.jsonp(req.event);
+	var myResponse = new MyResponse();
+	var id = req.params.eventId;
+
+	 EventModel.findOne({_id: id}, function(err,event) {
+	 	
+	 });
 };
 
 /**

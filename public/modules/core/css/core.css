@@ -38,4 +38,13 @@
   line-height: 1.5;
   border-radius: 3px; }
 
+  @media only screen and (min-width: 769px) {
+  .vcenter {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: -4px;
+  }
+}
+
 /*# sourceMappingURL=core.css.map */
