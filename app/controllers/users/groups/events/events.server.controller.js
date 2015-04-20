@@ -83,6 +83,37 @@ exports.create = function(req, res) {
 exports.read = function(req, res) {
 	//console.log(req.event);
 	//res.jsonp(req.event);
+
+	var myResponse = new MyResponse();
+	var eventID = req.params.eventId;
+
+	if(!Helper.isValidObjectID(eventID))
+	{
+		myResponse.addMessages(serverJSON.api.events._id.invalid);
+		Helper.output(myResponse,res);
+		
+		return;
+	}
+
+	var query = {
+		_id: eventID
+	};
+
+	Helper.find(EventModel,query,function(err,mod) {
+
+		if(err || mod.length === 0)
+		{
+			myResponse.addMessages(serverJSON.api.events._id.exist);
+			Helper.output(myResponse,res);
+
+			return;
+		}
+
+		Helper.populateModel(EventModel,mod,EventModel.errPath,function(mod) {
+			myResponse.setData(mod);
+			Helper.output(myResponse,res);
+		});
+	});
 };
 
 /**
