@@ -5,6 +5,7 @@ angular.module('events').controller('EventsController', EventsController);
 function EventsController($scope, $state, $stateParams, $location, Authentication, Events) {
     $scope.authentication = Authentication;
     $scope.state = $state;
+    $scope.stateParams = $stateParams;
     $scope.event = $scope.event || {};
     $scope.event = {
         voteEnabled: true,
@@ -89,10 +90,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function hasEventExpired(eventTime){
         var now = Date.now(),
             eD = Date.parse(eventTime);
-
             hrsDiff = eD - now;
-
-            debugger;
             return (hrsDiff < 0) ? true : false;
 
     }
@@ -117,19 +115,15 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         });
     }
 
-    function remove(event) {
-        if (event) {
-            event.$remove();
-            for (var i in $scope.events) {
-                if ($scope.events[i] === event) {
-                    $scope.events.splice(i, 1);
-                }
-            }
-        } else {
-            $scope.event.$remove(function() {
-                $location.path('events');
+    function remove() {
+        var params = {
+                eventId:$stateParams.eventId
+            };
+
+        $scope.event = Events.remove(params, function() {
+            debugger;
+                $state.go('viewGroup.listEvents.viewEvents');
             });
-        }
     }
 
     function update() {
@@ -151,10 +145,10 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     };
 
     function findOne() {
+
         $scope.event = Events.get({
             eventId: $stateParams.eventId
         }, function(){
-            debugger;
             console.log($scope.event);
         });
     };

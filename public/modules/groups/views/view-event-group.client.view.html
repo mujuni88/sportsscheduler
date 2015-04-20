@@ -1,21 +1,46 @@
-<section data-ng-controller="EventsController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1 data-ng-bind="event.name"></h1>
-	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == event.user._id">
-		<a class="btn btn-primary" href="/#!/events/{{event._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
-	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="event.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="event.user.displayName"></span>
-		</em>
-	</small>
-</section>
+<div class="panel panel-default animated fadeIn"  data-ng-controller="EventsController" data-ng-init="findOne()">
+    <div class="panel-heading clearfix">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a class="btn btn-primary btn-sm" ng-click="$state.go('viewGroup.listEvents.viewEvents')">
+                    	<i class="glyphicon glyphicon-arrow-left"></i>
+                    </a>
+                    <span class="pull-right">
+	                    <button class="btn btn-primary btn-sm" data-ng-show="isAdmin()" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'>
+	                    	<i class="glyphicon glyphicon-refresh"></i>
+	                    </button>
+	                    <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="bottom" popover="Edit" popover-trigger="mouseenter">
+	                    	<i class="glyphicon glyphicon-edit"></i>
+	                    </a>
+	                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
+	                    	<i class="glyphicon glyphicon-trash"  popover-placement="bottom" popover="Delete" popover-trigger="mouseenter"></i>
+	                    </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="page-header">
+            <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}</h1>
+        </div>
+        <section class="row">
+            <div class="col-sm-4 vcenter">
+                <ul class="list-unstyled">
+                    <li><p>Location Name: <span class="text-primary">{{event.location.name}}</span></p></li>
+                    <li><p>Address: <span class="text-primary">{{event.location.address}}</span></p></li>
+                    <li><p>Time: <span class="text-primary">{{event.time | date:'medium'}}</span></p></li>
+                </ul>
+            </div>
+            <div class="col-sm-8 vcenter">
+                <ul class="list-unstyled pull-right">
+                    <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
+                    <li><p>Vote Count: <span class="badge">{{event.votes.yes.length}}</span></p></li>
+                    <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
+                    <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>

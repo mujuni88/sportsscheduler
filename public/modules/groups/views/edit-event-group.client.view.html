@@ -1,0 +1,119 @@
+<div class="panel panel-default animated fadeIn"  data-ng-controller="EventsController" ng-init="findOne()">
+    <div class="panel-heading clearfix">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}">
+                    <i class="glyphicon glyphicon-arrow-left"></i>
+                    </a>
+                    <a class="btn btn-danger btn-sm pull-right" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
+                    <i class="glyphicon glyphicon-trash"  popover-placement="bottom" popover="Delete" popover-trigger="mouseenter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <section>
+                <p class="alert alert-info alert-sm">
+                <i class="glyphicon glyphicon-info-sign"></i> An event can only be created if the
+                start time is 2 hours or more ahead of the creation time. This is so to allow our algorithms to collect all the votes before deadline.
+                </p>
+                <br>
+                <div class="col-md-12">
+                    <form name="eventsForm" class="form-horizontal" novalidate>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="name">Name <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <input type="text"
+                                    name="name"
+                                    data-ng-model="event.name"
+                                    id="name"
+                                    class="form-control"
+                                    validator="required"
+                                    placeholder="Name"
+                                    valid-method="blur" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="locationName">Location Name <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <input type="text"
+                                    name="locationName"
+                                    data-ng-model="event.location.name"
+                                    id="locationName"
+                                    class="form-control"
+                                    validator="required"
+                                    placeholder="Location"
+                                    valid-method="blur" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="locationAddress">Location Address <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="locationAddress" name="locationAddress" class="form-control"
+                                    data-ng-model="event.location.address" placeholder="Enter a location" ng-autocomplete options="options" details="details" required>
+                                    <div class="has-error" ng-show="eventsForm.locationAddress.$dirty && eventsForm.locationAddress.$error.required">Required!!</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="day">Date <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <p class="input-group">
+                                    <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day" type="text"
+                                    class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
+                                    is-open="opened" min-date="minDate" max-date="'2015-06-22'"
+                                    datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                                    ng-required="true" close-text="Close"/>
+                                    <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                    </p>
+                                    <div class="has-error" ng-show="dateError">Required!!</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Time <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""
+                                    show-meridian=""></timepicker>
+                                    <div class="has-error" ng-show="timeError">Time has to be 2 hours ahead</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Votes</label>
+                                <div class="checkbox col-sm-7">
+                                    <label><input type="checkbox" name="vote" ng-model="event.voteEnabled" value="true" checked>
+                                    Enabled</label>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="event.voteEnabled">
+                                <label class="col-sm-3 control-label" for="minimumVotes">Minimum Votes <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <input id="minimumVotes" name="minimumVotes" ng-model="event.minimumVotes" class="form-control"
+                                    type="number" min="0" tooltip-placement="top" validator="required, positiveIntegers"
+                                    valid-method="blur" tooltip="Minimum number of attendees before the event is cancelled."
+                                    required/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="message">Message <span class="has-error">*</span></label>
+                                <div class="col-sm-7">
+                                    <div class="pull-right text-primary">{{120 - event.message.length}}</div>
+                                    <textarea class="form-control" rows="3" maxlength="120" id="message" name="message" class="form-control"
+                                    data-ng-model="event.message" placeholder="120 character limit" validator="required"
+                                    valid-method="blur"></textarea>
+                                </div>
+                            </div>
+                            <div class="text-center form-group">
+                                <button type="submit" validation-submit="eventsForm" ng-click="update()"
+                                class="btn btn-large btn-primary">Update Event
+                                </button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>

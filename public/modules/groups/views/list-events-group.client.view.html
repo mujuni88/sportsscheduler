@@ -20,6 +20,11 @@
                     href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin()" title="Create an event">
                     <i class="glyphicon glyphicon-plus"></i>
                     </a>
+
+                    <button class="btn btn-primary btn-sm pull-right spacing-sm-right"
+                    href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin() && events.length" popover-placement="top" popover="Refresh events" popover-trigger="mouseenter" data-ng-click='find()'>
+                    <i class="glyphicon glyphicon-refresh"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -34,7 +39,7 @@
         <div class="list-group">
             <a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" data-ng-repeat="event in events | filter:event.time" data-ng-class="{'disabled':hasEventExpired(event.time)}">
             <div class="media-left media-middle">
-                <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right" ng-if="!member.isAdmin"></i>
+                <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>
             </div>
             <div class="media-body">
                 <div class="row">
