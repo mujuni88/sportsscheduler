@@ -5,6 +5,11 @@ angular.module('groups').controller('GroupsController', GroupsController);
 function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl) {
     var _ = lodash;
     $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    if (!$scope.user) {
+        $location.path('/')
+    }
+
     $scope.$state = $state;
     // Create new Group
     $scope.create = create;

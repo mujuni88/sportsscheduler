@@ -8,7 +8,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.user = Authentication.user;
     if (!$scope.user) {
         $location.path('/')
-    };
+    }
     $scope.state = $state;
     $scope.stateParams = $stateParams;
     $scope.event = $scope.event || {};

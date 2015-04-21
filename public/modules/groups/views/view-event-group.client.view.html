@@ -13,7 +13,7 @@
                     <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="top" popover="Edit" popover-trigger="mouseenter" ng-hide="hasEventExpired(event.time)">
                     <i class="glyphicon glyphicon-edit"></i>
                     </a>
-                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
+                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event <span class='text-primary'>{{event.name}}</span>?">
                     <i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter"></i>
                     </a>
                     </span>
@@ -24,8 +24,8 @@
     <div class="panel-body">
         <div class="page-header">
             <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
-            <div class="page-header-btns pull-right">
-            <span>Vote:</span>
+            <div class="page-header-btns pull-right" ng-hide="hasEventExpired(event.time)">
+                <span>Vote:</span>
                 <button class="btn btn-secondary btn-sm" ng-click="voteYes()">Yes</button>
                 <button class="btn btn-default btn-sm" ng-click="voteNo()">No</button>
             </div>
