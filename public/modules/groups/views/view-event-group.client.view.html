@@ -6,15 +6,15 @@
                     <a class="btn btn-primary btn-sm" ng-click="$state.go('viewGroup.listEvents.viewEvents')">
                     	<i class="glyphicon glyphicon-arrow-left"></i>
                     </a>
-                    <span class="pull-right">
-	                    <button class="btn btn-primary btn-sm" data-ng-show="isAdmin()" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'>
+                    <span class="pull-right"  ng-show="isAdmin()">
+	                    <button class="btn btn-primary btn-sm" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'  ng-hide="hasEventExpired(event.time)">
 	                    	<i class="glyphicon glyphicon-refresh"></i>
 	                    </button>
-	                    <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="bottom" popover="Edit" popover-trigger="mouseenter">
+	                    <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="top" popover="Edit" popover-trigger="mouseenter" ng-hide="hasEventExpired(event.time)">
 	                    	<i class="glyphicon glyphicon-edit"></i>
 	                    </a>
 	                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
-	                    	<i class="glyphicon glyphicon-trash"  popover-placement="bottom" popover="Delete" popover-trigger="mouseenter"></i>
+	                    	<i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter"></i>
 	                    </a>
                     </span>
                 </div>

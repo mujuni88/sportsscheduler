@@ -6,8 +6,8 @@
                     <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}">
                     <i class="glyphicon glyphicon-arrow-left"></i>
                     </a>
-                    <a class="btn btn-danger btn-sm pull-right" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
-                    <i class="glyphicon glyphicon-trash"  popover-placement="bottom" popover="Delete" popover-trigger="mouseenter"></i>
+                    <a class="btn btn-danger btn-sm pull-right" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?" ng-show="isAdmin()">
+                    <i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter" title="Delete"></i>
                     </a>
                 </div>
             </div>

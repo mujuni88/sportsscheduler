@@ -47,4 +47,8 @@
   }
 }
 
+.growl-container.growl-fixed.top-center {
+  top: 55px;
+}
+
 /*# sourceMappingURL=core.css.map */

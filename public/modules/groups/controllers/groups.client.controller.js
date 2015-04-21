@@ -2,7 +2,7 @@
 // Groups controller
 angular.module('groups').controller('GroupsController', GroupsController);
 
-function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, AppAlert, dialogs, $q) {
+function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl) {
     var _ = lodash;
     $scope.authentication = Authentication;
     $scope.$state = $state;
@@ -37,20 +37,23 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         // Create new Group object
         var group = new Groups($scope.group);
         // Redirect after save
-        return group.$save(function(response) {
-            $state.go('viewGroup.listMembers.viewMembers');
+        return group.$save(function(data) {
+            $state.go('viewGroup.listMembers.viewMembers',{
+                groupId:data._id
+            });
+            _notifySuccess('Group successfully created');
         });
     }
 
     function remove() {
-        return $scope.group.$remove(function() {
+        return $scope.group.$remove(function(data) {
             $location.path('groups');
         });
     }
 
     function update() {
-        return $scope.group.$update(function(response) {
-            AppAlert.add('success', 'Group updated successfully');
+        return $scope.group.$update(function(data) {
+            _notifySuccess();
         });
     }
 
@@ -275,5 +278,10 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
             }
         }, 1);
         return deferred.promise;
+    }
+
+    function _notifySuccess(text){
+        text = text || 'Group updated successfully';
+        growl.success(text, {title:text});
     }
 }

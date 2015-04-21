@@ -2,7 +2,7 @@
 
 angular.module('members').controller('MembersController', MembersController);
 
-function MembersController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, AppAlert, $modalInstance, data){
+function MembersController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, $modalInstance, data){
     var _ = lodash;
     
     $scope.authentication = Authentication;
@@ -67,7 +67,6 @@ function MembersController($scope, $state, $stateParams, $location, Authenticati
 
     function update() {
         $scope.group.$update(function(response){
-            AppAlert.add('success','Group updated successfully');
             //redirectHome(response._id);
         });
     }

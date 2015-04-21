@@ -10,7 +10,8 @@
 				by
 				<span data-ng-bind="group.createdBy.displayName"></span>
 			</small>
-			<h4 class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}}</h4>
+			<h4 class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length + group.admins.length}}</span></span></h4>
+
         </a>
     </div>
     <div class="alert alert-info alert-sm text-center" data-ng-hide="!groups.$resolved || groups.length">

@@ -17,7 +17,8 @@ var ApplicationConfiguration = (function() {
 		'ngLodash',
 		'720kb.fx',
 		'xeditable',
-		'dialogs.main'
+		'dialogs.main',
+		'angular-growl'
 	];
 
 	// Add a new vertical module

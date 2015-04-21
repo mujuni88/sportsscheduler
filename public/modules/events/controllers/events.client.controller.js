@@ -2,7 +2,7 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl) {
     $scope.authentication = Authentication;
     $scope.state = $state;
     $scope.stateParams = $stateParams;
@@ -87,12 +87,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $scope.timeError = (hrsDiff < HRS_MS) ? true : false;
     };
 
-    function hasEventExpired(eventTime){
+    function hasEventExpired(eventTime) {
         var now = Date.now(),
             eD = Date.parse(eventTime);
-            hrsDiff = eD - now;
-            return (hrsDiff < 0) ? true : false;
-
+        hrsDiff = eD - now;
+        return (hrsDiff < 0) ? true : false;
     }
 
     function watchLocation(newVal, oldVal) {
@@ -111,32 +110,41 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             };
         event.group = $stateParams.groupId;
         event.$save(params, function(data) {
-            $state.go('viewGroup.listEvents.viewEvent',{eventId:data._id});
+            $scope.event = event;
+            $state.go('viewGroup.listEvents.viewEvent', {
+                eventId: $scope.event._id
+            });
+            _notifySuccess('Event created successfully');
+
         });
     }
 
     function remove() {
         var params = {
-                eventId:$stateParams.eventId
-            };
-
-        $scope.event = Events.remove(params, function() {
-            debugger;
-                $state.go('viewGroup.listEvents.viewEvents');
-            });
+            eventId: $stateParams.eventId
+        };
+        var event = Events.remove(params, function() {
+            $scope.event = event;
+            $state.go('viewGroup.listEvents.viewEvents');
+        });
     }
 
     function update() {
-        if ($scope.timeError || $scope.dateError) return;
-        $scope.event.$update(function() {
-            console.log("Update " + event);
-            if (!event) {
-                $scope.error = "Error with the server";
-                return;
-            }
-            $location.path('events/' + event._id);
-        }, function(errorResponse) {
-            $scope.error = errorResponse.clientMessage;
+        if ($scope.timeError || $scope.dateError) {
+            return;
+        };
+        var params = {
+            eventId: $stateParams.eventId
+        };
+
+        $scope.event.group = $stateParams.groupId;
+        var event = Events.update(params,  $scope.event, function(data) {
+            $scope.event = data;
+            $state.go('viewGroup.listEvents.viewEvent', {
+                eventId: $scope.event._id
+            });
+
+            _notifySuccess();
         });
     }
 
@@ -145,12 +153,15 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     };
 
     function findOne() {
-
-        $scope.event = Events.get({
+        var event = Events.get({
             eventId: $stateParams.eventId
-        }, function(){
-            console.log($scope.event);
+        }, function() {
+            $scope.event = event;
         });
     };
 
+    function _notifySuccess(text){
+        text = text || 'Event updated successfully';
+        growl.success(text, {title:text});
+    }
 }
