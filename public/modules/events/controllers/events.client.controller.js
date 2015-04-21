@@ -2,8 +2,13 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
+    var _ = lodash;     
     $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    if (!$scope.user) {
+        $location.path('/')
+    };
     $scope.state = $state;
     $scope.stateParams = $stateParams;
     $scope.event = $scope.event || {};
@@ -53,6 +58,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
     $scope.hasEventExpired = hasEventExpired;
+    $scope.voteYes = voteYes;
+    $scope.voteNo = voteNo;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -115,8 +122,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
                 eventId: $scope.event._id
             });
             _notifySuccess('Event created successfully');
-
         });
+        return event.$promise;
     }
 
     function remove() {
@@ -126,30 +133,31 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         var event = Events.remove(params, function() {
             $scope.event = event;
             $state.go('viewGroup.listEvents.viewEvents');
+            _notifySuccess('Event successfully removed');
         });
+        return event.$promise;
     }
 
     function update() {
         if ($scope.timeError || $scope.dateError) {
-            return;
+            return _getPromise(false, '');
         };
         var params = {
             eventId: $stateParams.eventId
         };
 
         $scope.event.group = $stateParams.groupId;
-        var event = Events.update(params,  $scope.event, function(data) {
+        var event = Events.update(params, $scope.event, function(data) {
             $scope.event = data;
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
             });
-
-            _notifySuccess();
         });
+        return event.$promise;
     }
 
     function find() {
-        $scope.events = Events.query();
+        return $scope.events = Events.query();
     };
 
     function findOne() {
@@ -158,10 +166,87 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         }, function() {
             $scope.event = event;
         });
+        return event.$promise;
     };
 
-    function _notifySuccess(text){
+    function _notifySuccess(text) {
         text = text || 'Event updated successfully';
-        growl.success(text, {title:text});
+        growl.success(text, {
+            title: text
+        });
+    }
+
+    function voteYes() {
+        _addUserToVoteYes($scope.user);
+        update().then(success, failure);
+
+        function success(data){
+            _notifySuccess('Voted successfully');
+        }
+        function failure(data){
+            _deleteUserFromYes($scope.user);
+        }
+
+    }
+    function voteNo(){
+        _addUserToVoteNo($scope.user);
+        update().then(success, failure);
+
+        function success(data){
+            _notifySuccess('Voted successfully');
+        }
+        function failure(data){
+            _deleteUserFromNo($scope.user);
+        }
+    }
+
+    function _addUserToVoteYes(user) {
+        user = user || $scope.user;
+        if (!_hasUserVotedYes(user)) {
+            $scope.event.votes.yes.push(user);
+        }
+    }
+
+    function _addUserToVoteNo(user) {
+        user = user || $scope.user;
+        if (!_hasUserVotedNo(user)) {
+            $scope.event.votes.no.push(user);
+        }
+    }
+
+    function _deleteUserFromYes(user) {
+        user = user || $scope.user;
+        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function(item) {
+            return _.isEqual(item._id, user._id);
+        });
+    }
+
+    function _deleteUserFromNo(user) {
+        user = user || $scope.user;
+        $scope.event.votes.no = _.reject($scope.event.votes.no, function(item) {
+            return _.isEqual(item._id, user._id);
+        });
+    }
+
+    function _getPromise(isSuccess, data) {
+        var deferred = $q.defer();
+        setTimeout(function() {
+            if (isSuccess) {
+                deferred.resolve(data);
+            } else {
+                deferred.reject(data);
+            }
+        }, 1);
+        return deferred.promise;
+    }
+
+    function _hasUserVotedYes(user) {
+        user = user || $scope.user;
+        return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
+    }
+
+    function _hasUserVotedNo(user) {
+        user = user || $scope.user;
+        return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
     }
 }

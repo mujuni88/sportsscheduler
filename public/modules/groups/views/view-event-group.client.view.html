@@ -4,18 +4,18 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <a class="btn btn-primary btn-sm" ng-click="$state.go('viewGroup.listEvents.viewEvents')">
-                    	<i class="glyphicon glyphicon-arrow-left"></i>
+                    <i class="glyphicon glyphicon-arrow-left"></i>
                     </a>
                     <span class="pull-right"  ng-show="isAdmin()">
-	                    <button class="btn btn-primary btn-sm" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'  ng-hide="hasEventExpired(event.time)">
-	                    	<i class="glyphicon glyphicon-refresh"></i>
-	                    </button>
-	                    <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="top" popover="Edit" popover-trigger="mouseenter" ng-hide="hasEventExpired(event.time)">
-	                    	<i class="glyphicon glyphicon-edit"></i>
-	                    </a>
-	                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
-	                    	<i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter"></i>
-	                    </a>
+                    <button class="btn btn-primary btn-sm" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'  ng-hide="hasEventExpired(event.time)">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                    </button>
+                    <a class="btn btn-primary btn-sm" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="top" popover="Edit" popover-trigger="mouseenter" ng-hide="hasEventExpired(event.time)">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?">
+                    <i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter"></i>
+                    </a>
                     </span>
                 </div>
             </div>
@@ -23,7 +23,14 @@
     </div>
     <div class="panel-body">
         <div class="page-header">
-            <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}</h1>
+            <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
+            <div class="page-header-btns pull-right">
+            <span>Vote:</span>
+                <button class="btn btn-primary btn-sm" ng-click="voteYes()">Yes</button>
+                <button class="btn btn-danger btn-sm" ng-click="voteNo()">No</button>
+            </div>
+            </h1>
+
         </div>
         <section class="row">
             <div class="col-sm-4 vcenter">
@@ -40,6 +47,14 @@
                     <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
+            </div>
+            <div class="col-sm-12">
+                <div class="page-header">
+                    <h3>Members Attending ({{event.votes.yes.length}}):</h3>
+                    <ul class="list-unstyled">
+                        <li data-ng-repeat="user in event.votes.yes"><p>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    </ul>
+                </div>
             </div>
         </section>
     </div>

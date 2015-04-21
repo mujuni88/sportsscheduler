@@ -52,9 +52,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function update() {
-        return $scope.group.$update(function(data) {
-            _notifySuccess();
-        });
+        return $scope.group.$update();
     }
 
     function find() {
@@ -102,7 +100,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         if (member.isAdmin) {
             if (!canRemoveAdmin()) {
                 _notifyCannotRemoveAdmin();
-                return getPromise(false, member);
+                return _getPromise(false, member);
             }
 
             _deleteAdminMember(member);
@@ -113,13 +111,12 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
         function success() {
             _addIsAdminAttr();
-            console.log('Member ' + member.username + ' removal success');
+            _notifySuccess('Member ' + member.username + ' removed');
         }
 
         function failure() {
             _addMember(member);
             _addAdmin(member);
-            console.log('Member ' + member.username + ' removal failure');
         }
     }
 
@@ -150,6 +147,8 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
             $state.go('viewGroup.listMembers.viewMembers');
             $scope.tempMembers = [];
             _addIsAdminAttr();
+            _notifySuccess('Member successfully added');
+
         });
     }
 
@@ -174,12 +173,13 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     function makeAdmin(member) {
         // add member to admins array
         if (!_addAdmin(member)) {
-            return getPromise(false, member);
+            return _getPromise(false, member);
         }
         return update().then(success, failure);
         // on succes, add isAdmin & add to member array
         function success() {
             _addIsAdminAttr();
+            _notifySuccess('Admin successfully added');
         }
         // on failure, remove from admins array
         function failure() {
@@ -190,7 +190,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     function removeAdmin(member) {
         if (!canRemoveAdmin()) {
             _notifyCannotRemoveAdmin();
-            return getPromise(false, member);
+            return _getPromise(false, member);
         }
         // remove member from admin array
         _deleteAdminMember(member);
@@ -199,6 +199,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         // on succes, add isAdmin & add to member array
         function success() {
             _addIsAdminAttr();
+             _notifySuccess('Admin successfully removed');
         }
         // on failure, add member back to admins
         function failure() {
@@ -268,7 +269,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return _.include(_.pluck($scope.group.members, '_id'), member._id);
     }
 
-    function getPromise(isSuccess, data) {
+    function _getPromise(isSuccess, data) {
         var deferred = $q.defer();
         setTimeout(function() {
             if (isSuccess) {
@@ -281,7 +282,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function _notifySuccess(text){
-        text = text || 'Group updated successfully';
+        text = text || 'Group successfully updated';
         growl.success(text, {title:text});
     }
 }
