@@ -185,11 +185,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         }
         function failure(data){
             _deleteUserFromYes($scope.user);
+            _addUserToVoteNo($scope.user);
         }
 
     }
     function voteNo(){
         _addUserToVoteNo($scope.user);
+
         update().then(success, failure);
 
         function success(data){
@@ -197,11 +199,17 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         }
         function failure(data){
             _deleteUserFromNo($scope.user);
+            _addUserToVoteYes($scope.user);
         }
     }
 
     function _addUserToVoteYes(user) {
         user = user || $scope.user;
+
+        if(_hasUserVotedNo(user)){
+            _deleteUserFromNo(user);
+        }
+
         if (!_hasUserVotedYes(user)) {
             $scope.event.votes.yes.push(user);
         }
@@ -209,6 +217,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _addUserToVoteNo(user) {
         user = user || $scope.user;
+
+        if(_hasUserVotedYes(user)){
+            _deleteUserFromYes(user);
+        }
+
         if (!_hasUserVotedNo(user)) {
             $scope.event.votes.no.push(user);
         }
