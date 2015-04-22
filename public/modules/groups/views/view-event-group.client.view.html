@@ -35,9 +35,10 @@
         <section class="row">
             <div class="col-sm-4 vcenter">
                 <ul class="list-unstyled">
-                    <li><p>Location Name: <span class="text-primary">{{event.location.name}}</span></p></li>
-                    <li><p>Address: <span class="text-primary">{{event.location.address}}</span></p></li>
-                    <li><p>Time: <span class="text-primary">{{event.time | date:'medium'}}</span></p></li>
+                    <li><span>Location Name:</span> <p class="text-primary">{{event.location.name}}</p></li>
+                    <li><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
+                    <li><span>Time:</span><p class="text-primary">{{event.time | date:'medium'}}</p></li>
+                    <li><span>Created on:</span><p class="text-primary">{{event.created | date:'medium'}}</p></li>
                 </ul>
             </div>
             <div class="col-sm-8 vcenter">
@@ -47,6 +48,10 @@
                     <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
+            </div>
+            <div class="col-sm-12">
+                <span>Message:</span>
+                <p class="text-primary well well-sm">{{event.message}}</p>
             </div>
             <div class="col-sm-12">
                 <div class="page-header">
