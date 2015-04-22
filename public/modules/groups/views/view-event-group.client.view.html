@@ -70,7 +70,7 @@
                     ({{event.votes.yes.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in event.votes.yes"><p>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in event.votes.yes"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 <div class="col-sm-6">
@@ -81,7 +81,7 @@
                     ({{event.votes.no.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in event.votes.no"><p>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in event.votes.no"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 
