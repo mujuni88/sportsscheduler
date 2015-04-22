@@ -54,8 +54,8 @@ var Helper = (function() {
 
             model.find(query, function (err, mod) {
                 
-                console.log('err: ' + err);
-                console.log('mod: ' + mod);
+                //console.log('err: ' + err);
+                //console.log('mod: ' + mod);
                 callback(err,mod);
             });
         },

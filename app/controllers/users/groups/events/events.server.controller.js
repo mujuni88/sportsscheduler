@@ -141,13 +141,52 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			var data = _.merge(event,req.body,Helper.cleanMergeObj);
-			_.extend(event,data);
-			console.log('event: ' + event);
-			event.updated = Date.now();
+			//var data = _.merge(event,req.body,Helper.cleanMergeObj);
+			//_.extend(event,data);
+			//console.log('body: ' + JSON.stringify(req.body,null,4));
+			//var data = _.merge(event.toObject(),req.body);
 
-			event.save(function(err) {
+			
+			//console.log('data: ' + JSON.stringify(data,null,4));
+			// _.extend(event,req.body);
+			// console.log('event: ' + event);
+
+			// event.updated = Date.now();
+			// event.votes.no = [];
+			// event.votes.yes = [];
+			// console.log('no length: ' + req.body.votes.no.length);
+			// for(var i = 0; i < req.body.votes.no.length; ++i)
+			// {
+			// 	event.votes.no.push( mongoose.Types.ObjectId(String(req.body.votes.no[i]._id)));
+			// }
+
+			// console.log('yes length: ' + req.body.votes.yes.length);
+			// for(var j = 0; j < req.body.votes.yes.length; ++j)
+			// {
+			// 	event.votes.yes.push(mongoose.Types.ObjectId(String(req.body.votes.yes[j]._id)));
+			// }
+
+			var yesVotes = [];
+			var noVotes = [];
+
+			console.log(JSON.stringify(req.body.votes,null,4));
+			for(var i = 0; i < req.body.votes.no.length; ++i)
+			{
+				noVotes.push(req.body.votes.no[i]._id);
+			}
+
+			for(var j = 0; j < req.body.votes.yes.length; ++j)
+			{
+				yesVotes.push(req.body.votes.yes[j]._id);
+			}
+
+			req.body.votes.yes = yesVotes;
+			req.body.votes.no = noVotes;
+
+			console.log('votes: ' + JSON.stringify(req.body.votes,null,4));
+			EventModel.findByIdAndUpdate(id,req.body,function(err,event) {
 				console.log('err: ' + err);
+
 				if (err) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
 					Helper.output(myResponse,res);
