@@ -143,6 +143,14 @@ EventSchema.statics.objectIDAtts = [
 	{
 		name: 'group',
 		model: 'Group'
+	},
+	{
+		name: 'votes.yes',
+		model: 'User'
+	},
+	{
+		name: 'votes.no',
+		model: 'User'
 	}
 ];
 
