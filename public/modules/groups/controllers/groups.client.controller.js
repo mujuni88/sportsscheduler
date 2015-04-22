@@ -34,6 +34,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     // show dialog for adding members
     $scope.addMember = addMember;
     $scope.isAdmin = isAdmin;
+    $scope.isOwner = isOwner;
     $scope.makeAdmin = makeAdmin;
     $scope.removeAdmin = removeAdmin;
     $scope.canRemoveAdmin = canRemoveAdmin;
@@ -87,7 +88,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function onSelect($model) {
-        if (!_isMemberInTempMembers($model) && !_isMemberInMembers($model)) {
+        if (!_isUserInTempMembers($model) && !_isUserInMembers($model)) {
             $scope.tempMembers.push($model);
         } else {
             var header = 'Add Members',
@@ -163,16 +164,23 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         };
         dialogs.create('/modules/members/views/templ-add-member.client.view.html', 'MembersController', $scope.group, opts);
     }
+
     // Admin functions
     function isAdmin() {
         if (_.isUndefined($scope.group.admins)) {
             return false;
         }
-        var out = _.some($scope.group.admins, {
-            _id: $scope.authentication.user._id
-        });
-        $scope.$broadcast('isAdmin', out);
-        return out;
+
+        return _isUserInAdmins($scope.authentication.user);
+    }
+
+
+    function isOwner(member){
+        if(member._id !== $scope.group.createdBy._id){
+            return false;
+        }
+
+        return _isUserInAdmins($scope.group.createdBy);
     }
 
     function makeAdmin(member) {
@@ -227,7 +235,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function _addAdmin(member) {
-        if (_isMemberInAdmins(member)) {
+        if (_isUserInAdmins(member)) {
             return false;
         }
         $scope.group.admins.push(member);
@@ -235,7 +243,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function _addMember(member) {
-        if (_isMemberInMembers(member)) {
+        if (_isUserInMembers(member)) {
             return false;
         }
         $scope.group.members.push(member);
@@ -243,7 +251,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function _addTempMember(member) {
-        if (_isMemberInTempMembers(member)) {
+        if (_isUserInTempMembers(member)) {
             return false;
         }
         $scope.tempMembers.push(member);
@@ -262,16 +270,16 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         });
     }
 
-    function _isMemberInTempMembers(member) {
-        return _.include(_.pluck($scope.tempMembers, '_id'), member._id);
+    function _isUserInTempMembers(user) {
+        return _.include(_.pluck($scope.tempMembers, '_id'), user._id);
     }
 
-    function _isMemberInAdmins(member) {
-        return _.includes(_.pluck($scope.group.admins, '_id'), member._id);
+    function _isUserInAdmins(user) {
+        return _.includes(_.pluck($scope.group.admins, '_id'), user._id);
     }
 
-    function _isMemberInMembers(member) {
-        return _.include(_.pluck($scope.group.members, '_id'), member._id);
+    function _isUserInMembers(user) {
+        return _.include(_.pluck($scope.group.members, '_id'), user._id);
     }
 
     function _getPromise(isSuccess, data) {

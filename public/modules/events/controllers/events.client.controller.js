@@ -3,7 +3,7 @@
 angular.module('events').controller('EventsController', EventsController);
 
 function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
-    var _ = lodash;     
+    var _ = lodash;
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     if (!$scope.user) {
@@ -60,6 +60,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
     $scope.voteNo = voteNo;
+    $scope.hasVotedYes = hasVotedYes;
+    $scope.hasVotedNo = hasVotedNo;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -145,7 +147,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         var params = {
             eventId: $stateParams.eventId
         };
-
         $scope.event.group = $stateParams.groupId;
         var event = Events.update(params, $scope.event, function(data) {
             $scope.event = data;
@@ -180,24 +181,25 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         _addUserToVoteYes($scope.user);
         update().then(success, failure);
 
-        function success(data){
+        function success(data) {
             _notifySuccess('Voted successfully');
         }
-        function failure(data){
+
+        function failure(data) {
             _deleteUserFromYes($scope.user);
             _addUserToVoteNo($scope.user);
         }
-
     }
-    function voteNo(){
-        _addUserToVoteNo($scope.user);
 
+    function voteNo() {
+        _addUserToVoteNo($scope.user);
         update().then(success, failure);
 
-        function success(data){
+        function success(data) {
             _notifySuccess('Voted successfully');
         }
-        function failure(data){
+
+        function failure(data) {
             _deleteUserFromNo($scope.user);
             _addUserToVoteYes($scope.user);
         }
@@ -205,11 +207,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _addUserToVoteYes(user) {
         user = user || $scope.user;
-
-        if(_hasUserVotedNo(user)){
+        if (_hasUserVotedNo(user)) {
             _deleteUserFromNo(user);
         }
-
         if (!_hasUserVotedYes(user)) {
             $scope.event.votes.yes.push(user);
         }
@@ -217,11 +217,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _addUserToVoteNo(user) {
         user = user || $scope.user;
-
-        if(_hasUserVotedYes(user)){
+        if (_hasUserVotedYes(user)) {
             _deleteUserFromYes(user);
         }
-
         if (!_hasUserVotedNo(user)) {
             $scope.event.votes.no.push(user);
         }
@@ -251,6 +249,14 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             }
         }, 1);
         return deferred.promise;
+    }
+
+    function hasVotedYes(user) {
+        return _hasUserVotedYes(user);
+    }
+
+    function hasVotedNo(user) {
+        return _hasUserVotedNo(user);
     }
 
     function _hasUserVotedYes(user) {
