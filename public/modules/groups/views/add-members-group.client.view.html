@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="customTemplate.html">
+<script type="text/ng-template" id="addMembers.html">
     <a class="">
         <span>{{match.model.username}} ( {{match.model.displayName}} ) </span>
         <!--<span class="badge"> </span>-->
@@ -20,7 +20,7 @@
                     <div class="input-group">
                         <input type="text" typeahead-on-select="onSelect(search.members); search.members = '';"
                                typeahead="member as member.username for member in getMembers($viewValue)"
-                               typeahead-loading="loading" typeahead-template-url="customTemplate.html"
+                               typeahead-loading="loading" typeahead-template-url="addMembers.html"
                                class="form-control"
                                placeholder="Search for members to add" data-ng-model="search.members"/>
                     <span class="input-group-addon">

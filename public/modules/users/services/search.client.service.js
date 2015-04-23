@@ -5,7 +5,8 @@ angular.module('users').
 
 function Search($http){
 	var service = {
-		getUsers:getUsers
+        getUsers:getUsers,
+		getGroups:getGroups
 	};
     
     return service;
@@ -16,6 +17,11 @@ function Search($http){
                 username: val
             }
         }).then(function(response){
+            return response.data;
+        });
+    }
+    function getGroups(val) {
+        return $http.get('/api/users/groups/', {}).then(function(response){
             return response.data;
         });
     }
