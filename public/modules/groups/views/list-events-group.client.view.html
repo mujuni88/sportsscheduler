@@ -51,7 +51,7 @@
                     <div class="col-sm-8 vcenter">
                         <ul class="list-unstyled pull-right">
                             <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
-                            <li><p>Vote Count: <span class="badge">{{event.votes.yes.length}}</span></p></li>
+                            <li><p>Vote Count: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
                             <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
                             <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                         </ul>
