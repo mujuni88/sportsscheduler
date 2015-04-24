@@ -123,14 +123,15 @@ exports.joinGroup = function(req, res) {
 		if(err || mod.length === 0)
 		{
 			console.log('error: ' + err);
-			myResponse.addMessages(serverJSON.api.users.joinedGroups.exist);
+			myResponse.addMessages(serverJSON.api.users._id.exist);
 			Helper.output(myResponse,res);
 		}
 		else
 		{
-			mod[0].joinedGroups.push(groupID);
+			var user = mod[0];
+			user.joinedGroups.push(groupID);
 
-			mod[0].save(function(err) {
+			user.save(function(err) {
 
 				if (err) {
 					console.log('error: ' + err);
@@ -139,7 +140,7 @@ exports.joinGroup = function(req, res) {
 				}
 				else {
 					console.log('saved successfully');
-					Helper.populateModel(User,mod,User.errPath,function(mod) {
+					Helper.populateModel(User,user,User.errPath,function(mod) {
 						myResponse.setData(mod);
 						Helper.output(myResponse,res);
 					});
