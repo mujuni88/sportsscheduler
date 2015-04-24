@@ -21,7 +21,11 @@ function Search($http){
         });
     }
     function getGroups(val) {
-        return $http.get('/api/users/groups/', {}).then(function(response){
+        return $http.get('/api/users/groups/', {
+            params: {
+                name: val
+            }
+        }).then(function(response){
             return response.data;
         });
     }

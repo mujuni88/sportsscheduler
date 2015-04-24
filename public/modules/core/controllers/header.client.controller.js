@@ -1,7 +1,7 @@
 'use strict';
 angular.module('core').controller('HeaderController', HeaderController);
 
-function HeaderController($scope, $state, Authentication, Menus, Search, Users, dialogs, lodash) {
+function HeaderController($scope, $state, Authentication, Menus, Search, Users, dialogs, lodash, UserService) {
     $scope.authentication = Authentication;
     var user = Authentication.user,
     	_ = lodash;
@@ -24,23 +24,26 @@ function HeaderController($scope, $state, Authentication, Menus, Search, Users, 
         	return;
         }
 
-        addGroupToUser(group).then(function(data){
-        	Authentication.user = data;
-    		$state.go('viewGroup.listMembers.viewMembers',{
-                groupId:group._id
-            });
-        }, function(data){
-
-        });
+        _joinGroupAndUser(group);
     }
 
     function addGroupToUser(group) {
         user.joinedGroups.push(group);
         var ret = Users.save({userId:user._id}, user, function(data){
-        	return data;
+            return data;
         });
 
         return ret.$promise;
+    }
+    function _joinGroupAndUser(group) {
+
+        user.joinedGroups.push(group);
+        return UserService.joinGroupAndUser(user, group).then(function(response){
+            Authentication.user = response.data;
+            $state.go('viewGroup.listMembers.viewMembers',{
+                groupId:group._id
+            });
+        }, function(response){debugger;});
     }
 
     function canUserJoinGroup(group) {
@@ -64,4 +67,6 @@ function HeaderController($scope, $state, Authentication, Menus, Search, Users, 
             };
         dialogs.notify(header, msg, opts);
     }
+
+
 }

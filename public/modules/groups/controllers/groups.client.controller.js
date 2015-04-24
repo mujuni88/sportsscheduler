@@ -38,12 +38,14 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.makeAdmin = makeAdmin;
     $scope.removeAdmin = removeAdmin;
     $scope.canRemoveAdmin = canRemoveAdmin;
+
     // Group Functions
     function create() {
         // Create new Group object
         var group = new Groups($scope.group);
         // Redirect after save
         return group.$save(function(data) {
+            _updateUser(data);
             $state.go('viewGroup.listMembers.viewMembers',{
                 groupId:data._id
             });
@@ -63,6 +65,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function find() {
         $scope.groups = Groups.query();
+        _getUser();
     }
     // Member functions
     function _addIsAdminAttr() {
@@ -85,6 +88,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
             _addIsAdminAttr();
         });
         $scope.tempMembers = [];
+        _getUser();     
     }
 
     function onSelect($model) {
@@ -297,5 +301,14 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     function _notifySuccess(text){
         text = text || 'Group successfully updated';
         growl.success(text, {title:text});
+    }
+
+    function _updateUser(group){
+        $scope.user.createdGroups.push(group);
+        Authentication.user = $scope.user;
+    }
+
+    function _getUser(){
+        $scope.user = Authentication.user;
     }
 }
