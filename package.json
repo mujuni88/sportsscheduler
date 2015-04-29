@@ -13,11 +13,10 @@
     "npm": "1.4.x"
   },
   "scripts": {
-    "prestart": "grunt build",
     "start": "grunt",
     "test": "grunt test",
     "pretest": "node node_modules/protractor/bin/webdriver-manager update",
-    "postinstall": "bower install --config.interactive=false"
+    "postinstall": "bower install --config.interactive=false && && grunt build"
   },
   "dependencies": {
     "express": "~4.7.2",
