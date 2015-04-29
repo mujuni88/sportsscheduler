@@ -16,7 +16,7 @@
     "start": "grunt",
     "test": "grunt test",
     "pretest": "node node_modules/protractor/bin/webdriver-manager update",
-    "postinstall": "bower install && grunt build"
+    "postinstall": "bower install"
   },
   "dependencies": {
     "express": "~4.7.2",
