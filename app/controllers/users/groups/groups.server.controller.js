@@ -47,7 +47,7 @@ exports.create = function(req, res) {
 				}
 				else {
 					console.log('saved successfully');
-					req.user.createdGroup = group;
+					req.user.createdGroups.push(group._id);
 					req.user.save(function(userErr) {
 						Helper.populateModel(Group,group,Group.errPath,function(mod) {
 							myResponse.setData(mod);
