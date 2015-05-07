@@ -10,7 +10,7 @@ var should = require('should'),
 	superagent = require('superagent'),
 	chaiExpect = require('chai').expect,
 	serverJSON = require('../../../../local_files/ui/server.ui.json');
-
+	
 /**
  * Globals
  */
@@ -103,7 +103,9 @@ describe('Group Model Unit Tests:', function() {
 	it('POST: should be able to show an error when try to save without name', function(done) { 
 		superagent.post('http://localhost:3000/api/users/groups')
 	        .send({
-			  name: ''
+			  name: '',
+			  createdBy: userID,
+			  admins: [userID]
 			})
 	        .end(function(e,res){
 	            console.log(e);
@@ -116,7 +118,9 @@ describe('Group Model Unit Tests:', function() {
 	it('POST: should be able to show an error when saving with an invalid group name', function(done) { 
 		superagent.post('http://localhost:3000/api/users/groups')
 	        .send({
-			  name: 'sdfss/d;"fdf@'
+			  name: 'sdfss/d;"fdf@',
+			  createdBy: userID,
+			  admins: [userID]
 			})
 	        .end(function(e,res){
 	            console.log(e);

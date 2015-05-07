@@ -3,11 +3,13 @@
 /*
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
+var _ = require('lodash'),
+	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	serverJSON = require('../local_files/ui/server.ui.json'),
+	serverJSON = require('../../../local_files/ui/server.ui.json'),
 	async = require('async'),
-	Helper = require('../custom_objects/Helper');
+	PrivateFunctions = require('./_privateFunctions'),
+	Helper = require('../../../custom_objects/Helper');
 
 /**
  * Group Schema
@@ -89,6 +91,13 @@ var GroupSchema = new Schema({
 		]
 	}
 });
+
+//functions to run whenever model is outputted to the client
+GroupSchema.statics.functionsArray = [
+	
+
+	PrivateFunctions.isAdmin
+];
 
 GroupSchema.statics.objectIDAtts = [
 	{
@@ -210,8 +219,16 @@ GroupSchema.path('createdBy').validate(function (id,respond) {
 GroupSchema.pre('save', function(next){
   this.members = this.members.map(function(option) { return option._id; });
 
-  //var functionsArray = Helper.
-  //Group.findOne({_id: id}, function(err,group) {
+  	/********** Combine admins and members and also guarantee uniqueness ***********/
+  	var union = _.union(this.members,this.admins);
+  	
+  	var arr = _.uniq(union,false,function(obj) {
+  		return obj.toString();
+  	});
+
+  	console.log('uniq: ' + arr);
+
+  	this.members = arr;
   next();
 });
 

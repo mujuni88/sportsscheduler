@@ -6,8 +6,8 @@
 var _ = require('lodash'),
 	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	serverJSON = require('../local_files/ui/server.ui.json'),
-	Helper = require('../custom_objects/Helper'),
+	serverJSON = require('../../../../local_files/ui/server.ui.json'),
+	Helper = require('../../../../custom_objects/Helper'),
 	async = require('async'),
 	ValidationError = require('mongoose/lib/error/validation'),
 	ValidatorError =  require('mongoose/lib/error/validator');
@@ -134,6 +134,10 @@ var EventSchema = new Schema({
 		ref: 'User'
 	}
 });
+
+EventSchema.statics.functionsArray = [
+	
+];
 
 EventSchema.statics.objectIDAtts = [
 	{

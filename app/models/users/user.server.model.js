@@ -12,9 +12,9 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto'),
-	serverJSON = require('../local_files/ui/server.ui.json'),
+	serverJSON = require('../../local_files/ui/server.ui.json'),
 	async = require('async'),
-	Helper = require('../custom_objects/Helper');
+	Helper = require('../../custom_objects/Helper');
 
 /*
  * A Validation function for local strategy properties
@@ -212,6 +212,10 @@ var UserSchema = new Schema({
   	}
 });
 
+UserSchema.statics.functionsArray = [
+	
+];
+
 UserSchema.statics.objectIDAtts = [
 	{
 		name: 'createdGroups',
@@ -225,7 +229,7 @@ UserSchema.statics.objectIDAtts = [
 
 UserSchema.statics.title = serverJSON.constants.users;
 UserSchema.statics.errPath = 'api.users';
-
+UserSchema.statics.attsToShow = ['_id', 'username', 'email', 'createdGroups', 'joinedGroups', 'displayName'];
 /**
  * Hook a pre save method to hash the password
  */

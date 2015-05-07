@@ -44,7 +44,7 @@ app.route('/api/carriers')
         }
 
         myResponse.setData(carriersArr);
-        Helper.output(myResponse,res);
+        Helper.output(null,null,myResponse,res);
     });
 
 app.route('/api/carriers/countries')
@@ -76,7 +76,7 @@ app.route('/api/carriers/countries')
         }
 
         myResponse.setData(countries);
-        Helper.output(myResponse,res);
+        Helper.output(null,null,myResponse,res);
     });
 
 app.route('/api/carriers/countries/:countryName')
@@ -90,7 +90,7 @@ app.route('/api/carriers/countries/:countryName')
         if(typeof country === 'undefined')
         {
             myResponse.addMessages(serverJSON.api.carriers.countries.invalid);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
 
             return;
         }
@@ -101,7 +101,7 @@ app.route('/api/carriers/countries/:countryName')
         }
 
         myResponse.setData(carrierArr);
-        Helper.output(myResponse,res);
+        Helper.output(null,null,myResponse,res);
 
 	});
 
@@ -116,7 +116,7 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
         if(typeof countryCarriers === 'undefined')
         {
             myResponse.addMessages(serverJSON.api.carriers.carrier.invalid);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
          
             return;
         }
@@ -126,7 +126,7 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
         if(typeof carrierInfo === 'undefined')
         {
             myResponse.addMessages(serverJSON.api.carriers.countries.invalid);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
 
             return;
         }
@@ -134,7 +134,7 @@ app.route('/api/carriers/countries/:countryName/carrier/:carrierName')
         var carrier = formatCarrierInfo(carrierInfo);
 
         myResponse.setData(carrier);
-        Helper.output(myResponse,res);
+        Helper.output(null,null,myResponse,res);
 
 	});
 };

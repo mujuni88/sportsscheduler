@@ -26,15 +26,9 @@ exports.create = function(req, res) {
 		if (err) {
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
 		}
-		else {
-			console.log('saved successfully');
-			Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
-			});
-		}
+
+		Helper.output(EventModel,event,myResponse,res);
 	});
 };
 
@@ -62,12 +56,12 @@ exports.update = function(req, res) {
 		{
 			console.log(err);
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,event,myResponse,res);
 		}
 		else if(!event)
 		{
 			myResponse.addMessages(serverJSON.api.events._id.invalid);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,event,myResponse,res);
 		}
 		else
 		{
@@ -80,13 +74,9 @@ exports.update = function(req, res) {
 				console.log('err: ' + err);
 				if (err) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
-					Helper.output(myResponse,res);
-				} else {
-					Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+				} 
+
+				Helper.output(EventModel,event,myResponse,res);
 			});
 		}
 	});
@@ -106,25 +96,21 @@ exports.delete = function(req, res) {
 		if(err)
 		{
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,event,myResponse,res);
 		}
 		else if(!event)
 		{
 			myResponse.addMessages(serverJSON.api.events._id.invalid);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,event,myResponse,res);
 		}
 		else
 		{
 			event.remove(function(err) {
 				if (err) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
-					Helper.output(myResponse,res);
-				} else {
-					Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+				} 
+
+				Helper.output(EventModel,event,myResponse,res);
 			});
 		}
 
@@ -140,13 +126,9 @@ exports.list = function(req, res) { EventModel.find().sort('-created').populate(
 
 		if (err) {
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
-		} else {
-			Helper.populateModel(EventModel,events,EventModel.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
-			});
-		}
+		} 
+
+		Helper.output(EventModel,events,myResponse,res);
 	});
 };
 
@@ -160,7 +142,7 @@ exports.eventByID = function(req, res, next, id) {
 	if(!mongoose.Types.ObjectId.isValid(id))
 	{
 		myResponse.addMessages(serverJSON.api.events._id.invalid,res);
-		Helper.output(myResponse,res);
+		Helper.output(EventModel,null,myResponse,res);
 		//next();
 		return;
 	}
