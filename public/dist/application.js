@@ -4,13 +4,27 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'mean';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils','validation','validationrule','ngAutocomplete','ngLodash','720kb.fx','xeditable'];
+	var applicationModuleVendorDependencies = [
+		'ngResource', 
+		'ngAnimate',
+        'ngSanitize',
+		'ui.router', 
+		'ui.bootstrap',
+		'ui.utils',
+		'validation',
+		'validationrule',
+		'ngAutocomplete',
+		'ngLodash',
+		'720kb.fx',
+		'xeditable',
+		'dialogs.main',
+		'angular-growl'
+	];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
 		// Create angular module
 		angular.module(moduleName, dependencies || []);
-
 		// Add the module to the AngularJS configuration file
 		angular.module(applicationModuleName).requires.push(moduleName);
 	};
@@ -29,8 +43,8 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName)
-    .run(['editableOptions', run])
-    .config(['$locationProvider',config]);
+    .config(['$locationProvider',config])
+    .run(['editableOptions','editableThemes', run]);
 //Then define the init function for starting up the application
 angular.element(document).ready(ready);
 
@@ -38,7 +52,8 @@ function config($locationProvider) {
     $locationProvider.hashPrefix('!');
 }
 
-function run(editableOptions) {
+function run(editableOptions, editableThemes) {
+    editableThemes.bs3.buttonsClass = 'btn-sm';
     editableOptions.theme = 'bs3';
 }
 function ready() {
@@ -65,6 +80,10 @@ ApplicationConfiguration.registerModule('events');
 
 // Use applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('groups');
+'use strict';
+
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('members');
 'use strict';
 
 // Use applicaion configuration module to register a new module
@@ -208,53 +227,88 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 ]);
 'use strict';
 
+// Core module config
+angular.module('core').config(config);
 
-angular.module('core').controller('AppAlertController', ['$rootScope','lodash', ErrorController]);
-
-function ErrorController($rootScope, _) {
-
-    $rootScope.$on('$stateChangeStart', onRouteChange);
-    $rootScope.$watch('error', watchError);
-    $rootScope.closeAlert = closeAlert;
-
-    function onRouteChange(){
-        if(isErrorUnDef()){return;}
-        $rootScope.errors = [];
-    }
-    
-    function watchError(){
-        if(isErrorUnDef()){return;}
-        $rootScope.errors = $rootScope.error.clientMessage.concat($rootScope.error.devMessage);
-    }
-    
-    function isErrorUnDef(){
-       return _.isUndefined($rootScope.error); 
-    }
-    
-    function closeAlert(index){
-        $rootScope.errors.splice(index, 1);
-    }
+function config(growlProvider){
+	growlProvider.globalPosition('top-center');
+	// growlProvider.globalDisableCloseButton(true);
+	growlProvider.globalTimeToLive({success: 2000, error: 6000, warning: 6000, info: 4000});
 }
 
 'use strict';
+angular.module('core').controller('HeaderController', HeaderController);
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
-	function($scope, Authentication, Menus) {
-		$scope.authentication = Authentication;
-		$scope.isCollapsed = false;
-		$scope.menu = Menus.getMenu('topbar');
-		$scope.title = "SportsScheduler";
+function HeaderController($scope, $state, Authentication, Menus, Search, Users, dialogs, lodash, UserService) {
+    $scope.authentication = Authentication;
+    var user = Authentication.user,
+    	_ = lodash;
+    $scope.isCollapsed = false;
+    $scope.menu = Menus.getMenu('topbar');
+    $scope.title = "SportsScheduler";
+    $scope.getGroups = Search.getGroups;
+    $scope.onSelect = onSelect;
+    $scope.toggleCollapsibleMenu = function() {
+        $scope.isCollapsed = !$scope.isCollapsed;
+    };
+    // Collapsing the menu after navigation
+    $scope.$on('$stateChangeSuccess', function() {
+        $scope.isCollapsed = false;
+    });
 
-		$scope.toggleCollapsibleMenu = function() {
-			$scope.isCollapsed = !$scope.isCollapsed;
-		};
+    function onSelect(group) {
+        if(!canUserJoinGroup(group)){
+        	_notifyUser(group);
+        	return;
+        }
 
-		// Collapsing the menu after navigation
-		$scope.$on('$stateChangeSuccess', function() {
-			$scope.isCollapsed = false;
-		});
-	}
-]);
+        _joinGroupAndUser(group);
+    }
+
+    function addGroupToUser(group) {
+        user.joinedGroups.push(group);
+        var ret = Users.save({userId:user._id}, user, function(data){
+            return data;
+        });
+
+        return ret.$promise;
+    }
+    function _joinGroupAndUser(group) {
+
+        user.joinedGroups.push(group);
+        return UserService.joinGroupAndUser(user, group).then(function(response){
+            Authentication.user = response.data;
+            $state.go('viewGroup.listMembers.viewMembers',{
+                groupId:group._id
+            });
+        }, function(response){debugger;});
+    }
+
+    function canUserJoinGroup(group) {
+        return (!_hasUserJoinedGroup(group) && !(_hasUserCreatedGroup(group)));
+    }
+
+    function _hasUserJoinedGroup(group) {
+        return _.include(_.pluck(user.joinedGroup, '_id'), group._id);
+    }
+
+    function _hasUserCreatedGroup(group) {
+        return _.include(_.pluck(user.createdGroup, '_id'), group._id);
+    }
+
+    function _notifyUser(group) {
+        var header = 'Join Group',
+            msg = 'You have already joined <span class="text-primary">' + group.name + '</span>.',
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+        dialogs.notify(header, msg, opts);
+    }
+
+
+}
+HeaderController.$inject = ['$scope', '$state', 'Authentication', 'Menus', 'Search', 'Users', 'dialogs', 'lodash', 'UserService'];
 
 'use strict';
 
@@ -265,56 +319,74 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		$scope.authentication = Authentication;
 	}
 ]);
-(function () {
-
+(function(){
     "use strict";
-
-    angular.module('core')
-        .factory('AppAlert', AppAlert);
-
-
-    function AppAlert($rootScope, $timeout) {
-        $rootScope.alerts = [];
-        var alertService = {
-            add: add,
-            closeAlert: closeAlert,
-            closeAlertIdx: closeAlertIdx,
-            clear: clear
-        };
-        
-        return alertService;
-
-        function add(type, msg, timeout) {
-            $rootScope.alerts.push({
-                type: type,
-                msg: msg,
-                close: function () {
-                    return alertService.closeAlert(this);
-                }
-            });
-            
-            if(timeout){
-                $timeout(function(){
-                    clear();
-                },5000);
+    /**
+     * A generic confirmation for risky actions.
+     * Usage: Add attributes: ng-really-message="Are you sure"? ng-really-click="takeAction()" function
+     */
+    angular.module('core').directive('ngReallyClick', [function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                element.bind('click', function() {
+                    var message = attrs.ngReallyMessage;
+                    if (message && confirm(message)) {
+                        scope.$apply(attrs.ngReallyClick);
+                    }
+                });
             }
-        }
-        function closeAlert(alert) {
-            return this.closeAlertIdx($rootScope.alerts.indexOf(alert));
-        }
-
-        function closeAlertIdx(index) {
-            return $rootScope.alerts.splice(index, 1);
-        }
-
-        function clear() {
-            $rootScope.alerts = [];
-        }
-        
-    }
-    AppAlert.$inject = ['$rootScope', '$timeout'];
+        };
+    }]);
 }).call(this);
 
+'use strict';
+
+angular.module('core').directive('ssDialog', ssDialog);
+
+function ssDialog(dialogs) {
+    var dd =  {
+        scope:{
+            ok:'&dialogOk',
+            cancel:'&dialogCancel',
+            enable:'=dialogEnable',
+            config:'@dialogConfig'
+        },
+        restrict: 'A',
+        link: postLink
+    };
+    return dd;
+
+    function postLink(scope, element, attrs) {
+        element.bind('click', clickFn);
+        function clickFn(e) {
+            if(!scope.enable){
+                return;
+            }
+
+            e.preventDefault();
+            launch(scope, attrs);
+        }
+    }
+    
+    function launch(scope, attrs){
+        var config = angular.extend({
+                size:'sm'
+            }, scope.config),
+        
+        dlg = dialogs.confirm(attrs.title, attrs.message, config);
+        
+        dlg.result.then(function(btn){
+            scope.ok();
+            //scope.$eval(attrs.dialogOk);
+        },function(btn){
+            if(scope.cancel){
+                scope.cancel();
+            }
+        });
+    }
+}
+ssDialog.$inject = ['dialogs'];
 
 'use strict';
 
@@ -519,165 +591,286 @@ angular.module('events').config(['$stateProvider',
 	}
 ]);
 'use strict';
-
 // Events controller
-angular.module('events').controller('EventsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Events',
-	function($scope, $stateParams, $location, Authentication, Events ) {
-		$scope.authentication = Authentication;
-		$scope.event = $scope.event || {};
-		$scope.event = {
-			voteEnabled:true,
-			minimumVotes:0
-		};
+angular.module('events').controller('EventsController', EventsController);
 
-		// Google places
-		$scope.options = {
-			country: 'us'
-		};
-		$scope.details="";
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
+    var _ = lodash;
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    if (!$scope.user) {
+        $location.path('/')
+    }
+    $scope.state = $state;
+    $scope.stateParams = $stateParams;
+    $scope.event = $scope.event || {};
+    $scope.event = {
+        voteEnabled: true,
+        minimumVotes: 0
+    };
+    // Create new Event
+    $scope.create = create;
+    // Remove existing Event
+    $scope.remove = remove;
+    // Update existing Event
+    $scope.update = update;
+    // Find a list of Events
+    $scope.find = find;
+    // Find existing Event
+    $scope.findOne = findOne;
+    // Google places
+    $scope.options = {
+        country: 'us'
+    };
+    $scope.details = "";
+    // Datepicker
+    $scope.today = getDate;
+    $scope.today();
+    $scope.clear = clearDate;
+    // Disable weekend selection
+    $scope.disabled = disableDate;
+    $scope.toggleMin = toggleMin;
+    $scope.toggleMin();
+    $scope.open = openDate;
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
+    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
+    $scope.dateChange = dateChange;
+    // Timepicker
+    var date = new Date();
+    var plusTwoHrs = (date.getHours() + 3);
+    date.setHours(plusTwoHrs);
+    $scope.event.time = date;
+    var now, hrsDiff, time, HRS = 2,
+        HRS_MS = HRS * 60 * 60 * 1000;
+    $scope.timeChange = timeChange;
+    // watch if places api changes
+    $scope.$watch("details.geometry.location", watchLocation);
+    $scope.hasEventExpired = hasEventExpired;
+    $scope.voteYes = voteYes;
+    $scope.voteNo = voteNo;
+    $scope.hasVotedYes = hasVotedYes;
+    $scope.hasVotedNo = hasVotedNo;
 
+    function getDate() {
+        $scope.event.date = new Date();
+    }
 
-		// Datepicker
-		$scope.today = function() {
-			$scope.event.date = new Date();
-		};
-		$scope.today();
+    function clearDate() {
+        $scope.event.date = null;
+    }
 
-		$scope.clear = function () {
-			$scope.event.date = null;
-		};
+    function disableDate(date, mode) {
+        return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
+    }
 
-		// Disable weekend selection
-		$scope.disabled = function(date, mode) {
-			return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-		};
+    function toggleMin() {
+        $scope.minDate = $scope.minDate ? null : new Date();
+    }
 
-		$scope.toggleMin = function() {
-			$scope.minDate = $scope.minDate ? null : new Date();
-		};
-		$scope.toggleMin();
+    function openDate($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened = true;
+    }
 
-		$scope.open = function($event) {
-			$event.preventDefault();
-			$event.stopPropagation();
+    function dateChange() {
+        $scope.dateError = (!$scope.event.date) ? true : false;
+    }
 
-			$scope.opened = true;
-		};
+    function timeChange() {
+        now = new Date();
+        time = now.getTime();
+        hrsDiff = $scope.event.time.getTime() - time;
+        $scope.timeError = (hrsDiff < HRS_MS) ? true : false;
+    };
 
-		$scope.dateOptions = {
-			formatYear: 'yy',
-			startingDay: 1
-		};
+    function hasEventExpired(eventTime) {
+        var now = Date.now(),
+            eD = Date.parse(eventTime);
+        hrsDiff = eD - now;
+        return (hrsDiff < 0) ? true : false;
+    }
 
-		$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-		$scope.format = $scope.formats[0];
+    function watchLocation(newVal, oldVal) {
+        if (!newVal) {
+            return;
+        }
+        $scope.event.location.lat = newVal.lat();
+        $scope.event.location.lng = newVal.lng();
+    }
 
-		$scope.dateChange = function(){
-			$scope.dateError = (!$scope.event.date) ? true : false;
-		};
+    function create() {
+        if ($scope.timeError || $scope.dateError) return;
+        var event = new Events($scope.event),
+            params = {
+                groupId: $stateParams.groupId
+            };
+        event.group = $stateParams.groupId;
+        event.$save(params, function(data) {
+            $scope.event = event;
+            $state.go('viewGroup.listEvents.viewEvent', {
+                eventId: $scope.event._id
+            });
+            _notifySuccess('Event created successfully');
+        });
+        return event.$promise;
+    }
 
+    function remove() {
+        var params = {
+            eventId: $stateParams.eventId
+        };
+        var event = Events.remove(params, function() {
+            $scope.event = event;
+            $state.go('viewGroup.listEvents.viewEvents');
+            _notifySuccess('Event successfully removed');
+        });
+        return event.$promise;
+    }
 
-		// Timepicker
-		var date = new Date();
-		var plusTwoHrs = (date.getHours() + 2);
-		date.setHours(plusTwoHrs);
+    function update() {
+        if ($scope.timeError || $scope.dateError) {
+            return _getPromise(false, '');
+        };
+        var params = {
+            eventId: $stateParams.eventId
+        };
+        $scope.event.group = $stateParams.groupId;
+        var event = Events.update(params, $scope.event, function(data) {
+            $scope.event = data;
+            $state.go('viewGroup.listEvents.viewEvent', {
+                eventId: $scope.event._id
+            });
+        });
+        return event.$promise;
+    }
 
-		$scope.event.time = date;
+    function find() {
+        return $scope.events = Events.query();
+    };
 
-		var now,hrsDiff, time, HRS = 2,HRS_MS = HRS * 60*60*1000;
-		$scope.timeChange = function(){
-			now = new Date();
-			time = now.getTime();
-			hrsDiff = $scope.event.time.getTime() - time;
+    function findOne() {
+        var event = Events.get({
+            eventId: $stateParams.eventId
+        }, function() {
+            $scope.event = event;
+        });
+        return event.$promise;
+    };
 
-			$scope.timeError = (hrsDiff < HRS_MS)? true: false;
-		};
+    function _notifySuccess(text) {
+        text = text || 'Event updated successfully';
+        growl.success(text, {
+            title: text
+        });
+    }
 
-		// watch if places api changes
-		$scope.$watch("details.geometry.location", function(newVal, oldVal){
-			if(!newVal){return;}
+    function voteYes() {
+        _addUserToVoteYes($scope.user);
+        update().then(success, failure);
 
-			$scope.event.location.lat = newVal.lat();
-			$scope.event.location.lng = newVal.lng();
-		});
+        function success(data) {
+            _notifySuccess('Voted successfully');
+        }
 
-		// Create new Event
-		$scope.create = function() {
-			if($scope.timeError || $scope.dateError) return;
+        function failure(data) {
+            _deleteUserFromYes($scope.user);
+            _addUserToVoteNo($scope.user);
+        }
+    }
 
-			// Create new Event object
-			var event = new Events ($scope.event);
+    function voteNo() {
+        _addUserToVoteNo($scope.user);
+        update().then(success, failure);
 
-			// Redirect after save
-			event.$save(function(response) {
-                $location.path('events/' + response.data._id);
+        function success(data) {
+            _notifySuccess('Voted successfully');
+        }
 
-                // Clear form fields
-				$scope.name = '';
-			}, function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
-			});
-		};
+        function failure(data) {
+            _deleteUserFromNo($scope.user);
+            _addUserToVoteYes($scope.user);
+        }
+    }
 
-		// Remove existing Event
-		$scope.remove = function( event ) {
-			if ( event ) { event.$remove();
+    function _addUserToVoteYes(user) {
+        user = user || $scope.user;
+        if (_hasUserVotedNo(user)) {
+            _deleteUserFromNo(user);
+        }
+        if (!_hasUserVotedYes(user)) {
+            $scope.event.votes.yes.push(user);
+        }
+    }
 
-				for (var i in $scope.events ) {
-					if ($scope.events [i] === event ) {
-						$scope.events.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.event.$remove(function() {
-					$location.path('events');
-				});
-			}
-		};
+    function _addUserToVoteNo(user) {
+        user = user || $scope.user;
+        if (_hasUserVotedYes(user)) {
+            _deleteUserFromYes(user);
+        }
+        if (!_hasUserVotedNo(user)) {
+            $scope.event.votes.no.push(user);
+        }
+    }
 
-		// Update existing Event
-		$scope.update = function() {
-			if($scope.timeError || $scope.dateError) return;
+    function _deleteUserFromYes(user) {
+        user = user || $scope.user;
+        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function(item) {
+            return _.isEqual(item._id, user._id);
+        });
+    }
 
-			var event = $scope.event ;
+    function _deleteUserFromNo(user) {
+        user = user || $scope.user;
+        $scope.event.votes.no = _.reject($scope.event.votes.no, function(item) {
+            return _.isEqual(item._id, user._id);
+        });
+    }
 
-			event.$update(function() {
-				console.log("Update "+event);
-				if(!event){
-					$scope.error = "Error with the server";
-					return;
-				}
-				$location.path('events/' + event._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
-			});
-		};
+    function _getPromise(isSuccess, data) {
+        var deferred = $q.defer();
+        setTimeout(function() {
+            if (isSuccess) {
+                deferred.resolve(data);
+            } else {
+                deferred.reject(data);
+            }
+        }, 1);
+        return deferred.promise;
+    }
 
-		// Find a list of Events
-		$scope.find = function() {
-			var events = Events.query(function(){
-				$scope.events = events;
+    function hasVotedYes(user) {
+        return _hasUserVotedYes(user);
+    }
 
-			});
-		};
+    function hasVotedNo(user) {
+        return _hasUserVotedNo(user);
+    }
 
-		// Find existing Event
-		$scope.findOne = function() {
-			var event = Events.get({
-				eventId: $stateParams.eventId
-			}, function(){
-				$scope.event = event;
-			});
-		};
-	}
-]);
+    function _hasUserVotedYes(user) {
+        user = user || $scope.user;
+        return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
+    }
+
+    function _hasUserVotedNo(user) {
+        user = user || $scope.user;
+        return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
+    }
+}
+EventsController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Events', 'growl', 'lodash'];
 
 'use strict';
 
 //Events service used to communicate Events REST endpoints
 angular.module('events').factory('Events', ['$resource',
 	function($resource) {
-		return $resource('/api/users/groups/events/:eventId', { eventId: '@_id'
+		return $resource('/api/users/groups/:groupId/events/:eventId', {
+			groupId: '@group._id', 
+			eventId: '@_id'
 		}, {
 			update: {
 				method: 'PUT'
@@ -693,14 +886,15 @@ angular.module('events').factory('Events', ['$resource',
 'use strict';
 
 // Configuring the Articles module
-angular.module('groups').run(['Menus',
-	function(Menus) {
-		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Groups', 'groups', 'dropdown', '/groups(/create)?');
-		Menus.addSubMenuItem('topbar', 'groups', 'List Groups', 'groups');
-		Menus.addSubMenuItem('topbar', 'groups', 'New Group', 'groups/create');
-	}
-]);
+angular.module('groups').run(Menus);
+function Menus(Menus) {
+	// Set top bar menu items
+	Menus.addMenuItem('topbar', 'Groups', 'groups', 'dropdown', '/groups(/create)?');
+	Menus.addSubMenuItem('topbar', 'groups', 'List Groups', 'groups');
+	Menus.addSubMenuItem('topbar', 'groups', 'New Group', 'groups/create');
+}
+Menus.$inject = ['Menus'];
+
 'use strict';
 
 //Setting up route
@@ -736,115 +930,422 @@ angular.module('groups').config(['$stateProvider',
                 url: '/events',
                 templateUrl: 'modules/groups/views/view-events-group.client.view.html'
             }).
-            state('editGroup', {
-                url: '/groups/:groupId/edit',
-                templateUrl: 'modules/groups/views/edit-group.client.view.html'
+            state('viewGroup.listEvents.viewEvents', {
+                url: '/list',
+                templateUrl: 'modules/groups/views/list-events-group.client.view.html'
+            }).
+            state('viewGroup.listEvents.addEvents', {
+                url: '/add',
+                templateUrl: 'modules/groups/views/add-events-group.client.view.html'
+            }).
+            state('viewGroup.listEvents.viewEvent', {
+                url: '/:eventId',
+                templateUrl: 'modules/groups/views/view-event-group.client.view.html'
+            }).
+            state('viewGroup.listEvents.editEvent', {
+                url: '/:eventId/edit',
+                templateUrl: 'modules/groups/views/edit-event-group.client.view.html'
             });
     }
 ]);
 
 'use strict';
-
 // Groups controller
-angular.module('groups').controller('GroupsController', ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups', 'Search', 'lodash',
-    function ($scope, $state, $stateParams, $location, Authentication, Groups, Search, _) {
-        $scope.authentication = Authentication;
-        $scope.$state = $state;
+angular.module('groups').controller('GroupsController', GroupsController);
 
-        // Create new Group
-        $scope.create = create;
-
-        // Remove existing Group
-        $scope.remove = remove;
-
-        // Update existing Group
-        $scope.update = update;
-
-        // Find a list of Groups
-        $scope.find = find;
-
-        // Find existing Group
-        $scope.findOne = findOne;
-
-
-        $scope.temp = {
-            members: []
-        };
-
-        // Search for members
-        $scope.getMembers = Search.getUsers;
-
-        // Called when a member is selected
-        $scope.onSelect = onSelect;
-
-        // Save members to their group
-        $scope.saveMembers = saveMembers;
-
-        // Remove member from temporary group
-        $scope.removeMember = removeMember;
-
-        function create() {
-            // Create new Group object
-            var group = new Groups($scope.group);
-
-            // Redirect after save
-            group.$save(function (response) {
-                redirectHome(response._id);
-            });
-        }
-
-        function remove() {
-            $scope.group.$remove(function () {
-                $location.path('groups');
-            });
-        }
-
-
-        function update() {
-            $scope.group.$update(function(response){
-                redirectHome(response._id);
-            });
-        }
-
-        function find() {
-            $scope.groups = Groups.query();
-        }
-
-        function findOne() {
-            $scope.group = Groups.get({
-                groupId: $stateParams.groupId
-            }, function () {
-                $scope.members = $scope.group.members;
-            });
-
-        }
-
-        function onSelect($item, $model, $label) {
-            var tempMembers = $scope.members;
-            tempMembers.push($model);
-            
-            $scope.members = _.uniq(tempMembers, true, 'username');
-            console.log($scope.members);
-        }
-
-        function saveMembers() {
-            var union = _.union($scope.group.members, $scope.members),
-                uniq = _.uniq(union,true, '_id');
-            $scope.group.members = uniq;
-            update();
-        }
-
-        function removeMember(index) {
-            $scope.members.splice(index, 1);
-        }
-
-        function redirectHome(id) {
-            $location.path('groups/' + id + '/members/list');
-        }
-        
-
+function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl) {
+    var _ = lodash;
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    if (!$scope.user) {
+        $location.path('/')
     }
-]);
+
+    $scope.$state = $state;
+    // Create new Group
+    $scope.create = create;
+    // Remove existing Group
+    $scope.remove = remove;
+    // Update existing Group
+    $scope.update = update;
+    // Find a list of Groups
+    $scope.find = find;
+    // Find existing Group
+    $scope.findOne = findOne;
+    $scope.tempMembers = [];
+    // Search for members
+    $scope.getMembers = Search.getUsers;
+    // Called when a member is selected
+    $scope.onSelect = onSelect;
+    // Remove member from group
+    $scope.removeMember = removeMember;
+    // Remove member from temporary group
+    $scope.removeTempMember = removeTempMember;
+    $scope.saveMember = saveMember;
+    // show dialog for adding members
+    $scope.addMember = addMember;
+    $scope.isAdmin = isAdmin;
+    $scope.isOwner = isOwner;
+    $scope.makeAdmin = makeAdmin;
+    $scope.removeAdmin = removeAdmin;
+    $scope.canRemoveAdmin = canRemoveAdmin;
+
+    // Group Functions
+    function create() {
+        // Create new Group object
+        var group = new Groups($scope.group);
+        // Redirect after save
+        return group.$save(function(data) {
+            _updateUser(data);
+            $state.go('viewGroup.listMembers.viewMembers',{
+                groupId:data._id
+            });
+            _notifySuccess('Group successfully created');
+        });
+    }
+
+    function remove() {
+        return $scope.group.$remove(function(data) {
+            $location.path('groups');
+        });
+    }
+
+    function update() {
+        return $scope.group.$update();
+    }
+
+    function find() {
+        $scope.groups = Groups.query();
+        _getUser();
+    }
+    // Member functions
+    function _addIsAdminAttr() {
+        _.each($scope.group.members, function(item) {
+            if (_.include(_.pluck($scope.group.admins, '_id'), item._id)) {
+                if (_.isUndefined(item.isAdmin)) {
+                    item.isAdmin = true;
+                } else {
+                    item.isAdmin = false;
+                }
+            }
+        });
+    }
+
+    function findOne() {
+        return $scope.group = Groups.get({
+            groupId: $stateParams.groupId
+        }, function() {
+            $scope.group.members = _.uniq(_.union($scope.group.members, $scope.group.admins), '_id');
+            _addIsAdminAttr();
+        });
+        $scope.tempMembers = [];
+        _getUser();     
+    }
+
+    function onSelect($model) {
+        if (!_isUserInTempMembers($model) && !_isUserInMembers($model)) {
+            $scope.tempMembers.push($model);
+        } else {
+            var header = 'Add Members',
+                msg = '<span class="text-primary">'+$model.username + '</span> already in the group.',
+                opts = {
+                    size: 'sm',
+                    windowClass: 'modal-btn-sm'
+                };
+            dialogs.notify(header, msg, opts);
+        }
+    }
+
+    function removeMember(index) {
+        var member = _getMember(index);
+        if (member.isAdmin) {
+            if (!canRemoveAdmin()) {
+                _notifyCannotRemoveAdmin();
+                return _getPromise(false, member);
+            }
+
+            _deleteAdminMember(member);
+        }
+
+        _deleteMember(member);
+        return update().then(success, failure);
+
+        function success() {
+            _addIsAdminAttr();
+            _notifySuccess('Member ' + member.username + ' removed');
+        }
+
+        function failure() {
+            _addMember(member);
+            _addAdmin(member);
+        }
+    }
+
+    function _getMember(index) {
+        return $scope.group.members[index];
+    }
+
+    function _removeMember(member) {
+        _deleteMember(member);
+        return update().then(success, failure);
+
+        function success() {
+            _addIsAdminAttr();
+        }
+
+        function failure() {
+            _addMember(member);
+        }
+    }
+
+    function removeTempMember(index) {
+        $scope.tempMembers.splice(index, 1);
+    }
+
+    function saveMember() {
+        $scope.group.members = _.union($scope.group.members, $scope.tempMembers);
+        return update().then(function() {
+            $state.go('viewGroup.listMembers.viewMembers');
+            $scope.tempMembers = [];
+            _addIsAdminAttr();
+            _notifySuccess('Member successfully added');
+
+        });
+    }
+
+    function addMember() {
+        var opts = {
+            size: 'sm'
+        };
+        dialogs.create('/modules/members/views/templ-add-member.client.view.html', 'MembersController', $scope.group, opts);
+    }
+
+    // Admin functions
+    function isAdmin() {
+        if (_.isUndefined($scope.group.admins)) {
+            return false;
+        }
+
+        return _isUserInAdmins($scope.authentication.user);
+    }
+
+
+    function isOwner(member){
+        if(member._id !== $scope.group.createdBy._id){
+            return false;
+        }
+
+        return _isUserInAdmins($scope.group.createdBy);
+    }
+
+    function makeAdmin(member) {
+        // add member to admins array
+        if (!_addAdmin(member)) {
+            return _getPromise(false, member);
+        }
+        return update().then(success, failure);
+        // on succes, add isAdmin & add to member array
+        function success() {
+            _addIsAdminAttr();
+            _notifySuccess('Admin successfully added');
+        }
+        // on failure, remove from admins array
+        function failure() {
+            _.dropRight($scope.group.admins);
+        }
+    }
+
+    function removeAdmin(member) {
+        if (!canRemoveAdmin()) {
+            _notifyCannotRemoveAdmin();
+            return _getPromise(false, member);
+        }
+        // remove member from admin array
+        _deleteAdminMember(member);
+        // update
+        return update().then(success, failure);
+        // on succes, add isAdmin & add to member array
+        function success() {
+            _addIsAdminAttr();
+             _notifySuccess('Admin successfully removed');
+        }
+        // on failure, add member back to admins
+        function failure() {
+            _addAdmin(member);
+        }
+    }
+
+    function canRemoveAdmin() {
+        return _.size($scope.group.admins) > 1;
+    }
+
+    function _notifyCannotRemoveAdmin() {
+        var header = 'Remove Admin',
+            msg = 'Group requires an admin. Assign admin rights to a member in order to remove one',
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+        dialogs.notify(header, msg, opts);
+    }
+
+    function _addAdmin(member) {
+        if (_isUserInAdmins(member)) {
+            return false;
+        }
+        $scope.group.admins.push(member);
+        return true;
+    }
+
+    function _addMember(member) {
+        if (_isUserInMembers(member)) {
+            return false;
+        }
+        $scope.group.members.push(member);
+        return true;
+    }
+
+    function _addTempMember(member) {
+        if (_isUserInTempMembers(member)) {
+            return false;
+        }
+        $scope.tempMembers.push(member);
+        return true;
+    }
+
+    function _deleteAdminMember(member) {
+        $scope.group.admins = _.reject($scope.group.admins, function(item) {
+            return _.isEqual(item._id, member._id);
+        });
+    }
+
+    function _deleteMember(member) {
+        $scope.group.members = _.reject($scope.group.members, function(item) {
+            return _.isEqual(item._id, member._id);
+        });
+    }
+
+    function _isUserInTempMembers(user) {
+        return _.include(_.pluck($scope.tempMembers, '_id'), user._id);
+    }
+
+    function _isUserInAdmins(user) {
+        return _.includes(_.pluck($scope.group.admins, '_id'), user._id);
+    }
+
+    function _isUserInMembers(user) {
+        return _.include(_.pluck($scope.group.members, '_id'), user._id);
+    }
+
+    function _getPromise(isSuccess, data) {
+        var deferred = $q.defer();
+        setTimeout(function() {
+            if (isSuccess) {
+                deferred.resolve(data);
+            } else {
+                deferred.reject(data);
+            }
+        }, 1);
+        return deferred.promise;
+    }
+
+    function _notifySuccess(text){
+        text = text || 'Group successfully updated';
+        growl.success(text, {title:text});
+    }
+
+    function _updateUser(group){
+        $scope.user.createdGroups.push(group);
+        Authentication.user = $scope.user;
+    }
+
+    function _getUser(){
+        $scope.user = Authentication.user;
+    }
+}
+GroupsController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups', 'Search', 'lodash', 'dialogs', '$q', 'growl'];
+
+'use strict';
+angular.module('groups').factory('GroupEvents', GroupEvents);
+
+function GroupEvents($http) {
+    var service = {
+        create: create,
+        get: get,
+        update: update,
+        remove: remove
+    },
+        url = url;
+    return service;
+
+    function create(groupId, data) {
+        var request = $http({
+            method: "post",
+            url: url(groupId),
+            data: data
+        });
+        return (request.then(handleSuccess, handleError));
+    }
+
+    function get(groupId, eventId) {
+        var request = $http({
+            method: "get",
+            url: url(groupId, eventId)
+        });
+        return (request.then(handleSuccess, handleError));
+    }
+
+    function update(groupId, eventId, data) {
+    	var request = $http({
+            method: "put",
+            url: url(groupId, eventId),
+            data:data
+        });
+        return (request.then(handleSuccess, handleError));
+    }
+
+    function remove(groupId, eventId) {
+        var request = $http({
+            method: "delete",
+            url: url(groupId, eventId)
+        });
+        return (request.then(handleSuccess, handleError));
+    }
+
+    function handleError(response) {
+        // The API response from the server should be returned in a
+        // nomralized format. However, if the request was not handled by the
+        // server (or what not handles properly - ex. server error), then we
+        // may have to normalize it on our end, as best we can.
+        
+        debugger;
+        if (!angular.isObject(response.data) || !response.data.message) {
+            return ($q.reject("An unknown error occurred."));
+        }
+        // Otherwise, use expected error message.
+        return ($q.reject(response.data.message));
+    }
+    // I transform the successful response, unwrapping the application data
+    // from the API response payload.
+    function handleSuccess(response) {
+    	debugger;
+        return (response.data);
+    }
+
+    function url(groupId, eventId) {
+        groupId = groupId ? groupId : '';
+        eventId = eventId ? eventId : '';
+        var api = 'api/users/groups/' + groupId + '/events/' + eventId,
+            reg = /\/{2,}|\/+$/g;
+        return api.replace(reg, replacer);
+
+        function replacer(match) {
+            return /\/{2,}/g.test(match) ? '/' : '';
+        }
+    }
+
+}
+GroupEvents.$inject = ['$http'];
 
 'use strict';
 
@@ -859,20 +1360,138 @@ angular.module('groups').factory('Groups', ['$resource',
             query:{method:'GET',isArray:true}
 		});
 	}
-]).
-factory('Search', ['$http', function($http){
-        return {
-            getUsers:function(val) {
-                return $http.get('/api/users/', {
-                    params: {
-                        username: val
-                    }
-                }).then(function(response){
-                    return response.data;
-                });
-            }
-        };
-    }]);
+]);
+
+'use strict';
+
+angular.module('members').controller('MembersController', MembersController);
+
+function MembersController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, $modalInstance, data){
+    var _ = lodash;
+    
+    $scope.authentication = Authentication;
+    $scope.$state = $state;
+
+    $scope.group = data;
+    
+    // Create new Group
+    $scope.create = create;
+
+    // Remove existing Group
+    $scope.remove = remove;
+
+    // Update existing Group
+    $scope.update = update;
+
+    // Find a list of Groups
+    $scope.find = find;
+
+    // Find existing Group
+    $scope.findOne = findOne;
+
+
+    $scope.tempMembers = [];
+
+    // Search for members
+    $scope.getMembers = Search.getUsers;
+
+    // Called when a member is selected
+    $scope.onSelect = onSelect;
+
+    // Remove member from group
+    $scope.removeMember = removeMember;
+
+    // Remove member from temporary group
+    $scope.removeTempMember = removeTempMember;
+
+    $scope.saveMember = saveMember;
+
+    $scope.isAdmin = isAdmin;
+    
+    // add members modal functions
+    $scope.cancel = cancel;
+    $scope.save = save;
+
+    function create() {
+        // Create new Group object
+        var group = new Groups($scope.group);
+
+        // Redirect after save
+        group.$save(function (response) {
+            redirectHome(group._id);
+        });
+    }
+
+    function remove() {
+        $scope.group.$remove(function () {
+            $location.path('groups');
+        });
+    }
+
+
+    function update() {
+        $scope.group.$update(function(response){
+            //redirectHome(response._id);
+        });
+    }
+
+    function find() {
+        $scope.groups = Groups.query();
+    }
+
+    function findOne() {
+        $scope.group = Groups.get({
+            groupId: $stateParams.groupId
+        }, function(){
+            angular.copy($scope.group.members,$scope.tempMembers);
+        });
+
+    }
+
+    function onSelect($model) {
+        debugger;
+        var tempMembers = $scope.tempMembers;
+        tempMembers.push($model);
+
+        $scope.tempMembers = _.uniq(tempMembers, '_id');
+        $scope.search.members = '';
+    }
+
+    function removeMember(index) {
+        $scope.group.members.splice(index, 1);
+    }
+
+    function removeTempMember(index) {
+        $scope.tempMembers.splice(index, 1);
+    }
+
+    function saveMember(){
+        angular.copy($scope.tempMembers, $scope.group.members);
+        update();
+    }
+
+    function redirectHome(id) {
+        var _id = (id)? id: $stateParams.groupId;
+        $location.path('groups/' + _id + '/members/list');
+    }
+
+    function isAdmin(){
+        var out =  _.some($scope.group.admins, {_id:$scope.authentication.user._id});
+        $scope.$broadcast('isAdmin', out);
+        return out;
+    }
+    
+    function cancel(){
+        $modalInstance.dismiss('Canceled');
+    }
+    
+    function save(){
+        update();
+        $modalInstance.close();
+    }
+    
+}
+MembersController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups', 'Search', 'lodash', '$modalInstance', 'data'];
 
 'use strict';
 
@@ -1254,12 +1873,13 @@ angular.module('userform')
 'use strict';
 
 // Config HTTP Error Handling
-angular.module('users').config(['$httpProvider', config]);
+angular.module('users').config(config);
 
 function config($httpProvider) {
     // Set the httpProvider "not authorized" interceptor
     $httpProvider.interceptors.push('HttpProviderInterceptor');
 }
+config.$inject = ['$httpProvider'];
 
 'use strict';
 
@@ -1487,45 +2107,139 @@ angular.module('users').factory('Authentication', [
 ]);
 'use strict';
 
+angular.module('users').factory('Authorization', Authorization);
+
+function Authorization($rootScope, $state, authentication) {
+    var service = {
+        isAuf: function () {
+        }
+    };
+
+    return service;
+}
+Authorization.$inject = ['$rootScope', '$state', 'authentication'];
+
+(function () {
+    'use strict';
+
 // Authentication service for user variables
-angular.module('users').factory('HttpProviderInterceptor', ['$q', '$location', 'Authentication','$rootScope','lodash',
-    function($q, $location, Authentication,$rootScope, _) {
-        return {
-            responseError: function(rejection) {
-                switch (rejection.status) {
-                    case 400:
-                        $rootScope.error = rejection.data;
-                        break;
-                    case 401:
-                        // Deauthenticate the global user
-                        Authentication.user = null;
+    angular.module('users').factory('HttpProviderInterceptor', HttpProviderInterceptor);
 
-                        // Redirect to signin page
-                        $location.path('signin');
-                        break;
-                    case 403:
-                        // Add unauthorized behaviour 
-                        break;
-                }
-
-                return $q.reject(rejection);
-            }
+    function HttpProviderInterceptor($q, $location, Authentication, growl) {
+        var provider =  {
+            responseError: responseError
         };
+        
+        return provider;
+
+        function responseError(rejection) {
+            switch (rejection.status) {
+                case 400:
+                    if(rejection.data){
+                        var data = rejection.data, config = {};
+                        data.clientMessage.forEach(function(msg){
+                            config.title = msg;
+                            growl.warning(msg, config);
+                        });
+                        data.devMessage.forEach(function(msg){
+                            config.title = msg;
+                            growl.warning(msg,config);
+
+                        });
+                    }
+                    break;
+                case 401:
+                    // Deauthenticate the global user
+                    Authentication.user = null;
+
+                    // Redirect to signin page
+                    $location.path('signin');
+                    break;
+                case 403:
+                    // Add unauthorized behaviour 
+                    break;
+            }
+
+            return $q.reject(rejection);
+        }
     }
-]);
+    HttpProviderInterceptor.$inject = ['$q', '$location', 'Authentication', 'growl'];
+}).call(this);
 
 'use strict';
 
+angular.module('users').
+	factory('Search', Search);
+
+function Search($http){
+	var service = {
+        getUsers:getUsers,
+		getGroups:getGroups
+	};
+    
+    return service;
+
+    function getUsers(val) {
+        return $http.get('/api/users/', {
+            params: {
+                username: val
+            }
+        }).then(function(response){
+            return response.data;
+        });
+    }
+    function getGroups(val) {
+        return $http.get('/api/users/groups/', {
+            params: {
+                name: val
+            }
+        }).then(function(response){
+            return response.data;
+        });
+    }
+}
+Search.$inject = ['$http'];
+
+'use strict';
 // Users service used for communicating with the users REST endpoint
-angular.module('users').factory('Users', ['$resource',
-	function($resource) {
-		return $resource('users', {}, {
-			update: {
-				method: 'PUT'
-			}
+angular.module('users').factory('Users', Users);
+
+function Users($resource) {
+    return $resource('/api/users/:userId', {
+        userId: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        },
+        query: {
+            method: 'GET',
+            isArray: true
+        }
+    });
+}
+Users.$inject = ['$resource'];
+
+'use strict';
+
+angular.module('users').factory('UserService', UserService);
+
+function UserService($http){
+	var service = {
+		joinGroupAndUser:joinGroupAndUser
+	},
+	url = '/api/users/joinGroup';
+	return service;
+
+	function joinGroupAndUser(user, group){
+		return $http.post(url,{user:user, group:group})
+		.success(function(data){
+			return data;
 		});
 	}
-]);
+
+}
+UserService.$inject = ['$http'];
+
 'use strict';
 
 angular.module('validationrule', ['validation'])

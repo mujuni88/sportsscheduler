@@ -1,7 +1,7 @@
 'use strict';
 
 // Config HTTP Error Handling
-angular.module('users').config(['$httpProvider', config]);
+angular.module('users').config(config);
 
 function config($httpProvider) {
     // Set the httpProvider "not authorized" interceptor

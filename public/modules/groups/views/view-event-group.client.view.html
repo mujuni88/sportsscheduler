@@ -1,0 +1,91 @@
+<div class="panel panel-default animated fadeIn"  data-ng-controller="EventsController" data-ng-init="findOne()">
+    <div class="panel-heading clearfix">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a class="btn btn-primary btn-sm" ng-click="$state.go('viewGroup.listEvents.viewEvents')">
+                    <i class="glyphicon glyphicon-arrow-left"></i>
+                    </a>
+                    <span class="pull-right"  ng-show="isAdmin()">
+                    <a class="btn btn-primary btn-sm spacing-sm-right" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="top" popover="Edit" popover-trigger="mouseenter" ng-hide="hasEventExpired(event.time)">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event <span class='text-primary'>{{event.name}}</span>?">
+                    <i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter"></i>
+                    </a>
+                    </span>
+                    <button class="btn btn-secondary btn-sm spacing-sm-right pull-right" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'  ng-hide="hasEventExpired(event.time)">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+                                    <div class="text-center">
+                <h2 ng-show="hasVotedYes() && !hasEventExpired(event.time)" class="text-success">You are going</h2>
+                <h2 ng-show="hasVotedYes() && hasEventExpired(event.time)" class="text-success">You went</h2>
+                <h2 ng-show="hasVotedNo() && !hasEventExpired(event.time)" class="text-danger">You are not going</h2>
+                <h2 ng-show="hasVotedNo() && hasEventExpired(event.time)" class="text-danger">You did not go</h2>
+                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && !hasEventExpired(event.time)" class="text-info">You have not voted</h2>
+                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && hasEventExpired(event.time)" class="text-info">You did not vote</h2>
+            </div>
+        <div class="page-header">
+            <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
+
+            <div class="page-header-btns pull-right" ng-hide="hasEventExpired(event.time)">
+                <span>Vote:</span>
+                <button class="btn btn-primary btn-sm" ng-hide="hasVotedYes()" ng-class="{disabled:hasVotedYes()}" ng-click="voteYes()">Going</button>
+                <button class="btn btn-secondary btn-sm" ng-hide="hasVotedNo()" ng-class="{disabled:hasVotedNo()}" ng-click="voteNo()">Not Going</button>
+            </div>
+            </h1>
+        </div>
+        <section class="row">
+            <div class="col-sm-4 vcenter">
+                <ul class="list-unstyled">
+                    <li><span>Location Name:</span> <p class="text-primary">{{event.location.name}}</p></li>
+                    <li><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
+                    <li><span>Time:</span><p class="text-primary">{{event.time | date:'medium'}}</p></li>
+                    <li><span>Created:</span><p class="text-primary">{{event.created | date:'medium'}}</p></li>
+                </ul>
+            </div>
+            <div class="col-sm-8 vcenter">
+                <ul class="list-unstyled pull-right">
+                    <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
+                    <li><p>Vote Count: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
+                    <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
+                    <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
+                </ul>
+            </div>
+            <div class="col-sm-12">
+                <span>Message:</span>
+                <p class="text-primary well well-sm">{{event.message}}</p>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-6">
+                    <div class="page-header">
+                    <h3>  
+                    <span ng-show="!hasEventExpired(event.time)">Going</span>
+                    <span ng-show="hasEventExpired(event.time)">Went</span> 
+                    ({{event.votes.yes.length}}):</h3>
+                </div>
+                <ul class="list-unstyled">
+                    <li data-ng-repeat="user in event.votes.yes"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                </ul>
+                </div>
+                <div class="col-sm-6">
+                    <div class="page-header">
+                    <h3>  
+                    <span ng-show="!hasEventExpired(event.time)">Not Going</span>
+                    <span ng-show="hasEventExpired(event.time)">Didn't Go</span> 
+                    ({{event.votes.no.length}}):</h3>
+                </div>
+                <ul class="list-unstyled">
+                    <li data-ng-repeat="user in event.votes.no"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                </ul>
+                </div>
+                
+            </div>
+        </section>
+    </div>
+</div>
