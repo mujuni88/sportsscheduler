@@ -140,10 +140,9 @@ exports.joinGroup = function(req, res) {
 	//res.json(req.body);
 };
 
-exports.list = function(req, res) { User.find().sort('-created').populate(User.objectIDAtts + ' createdGroups.admins').exec(function(err, users) {
+exports.list = function(req, res) { User.find().sort('-created').exec(function(err, users) {
 		
 		var myResponse = new MyResponse();
-		console.log('list');
 
 		var username = req.query.username;
 		console.log('username: ' + username);
@@ -153,26 +152,30 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 			var regex = ".*"+username+".*";
 			console.log('regex: ' + regex);
 
-			User.find({
-				username: 
+			var query = {
+				username:
 				{
-					$regex: new RegExp(regex,'i')
+					$regex: new RegExp(regex,'i')	
 				}
-			})
-			.select('_id username email createdGroups joinedGroups displayName')
-			.exec(function(err,users) {
-				console.log('err: ' + err);
+			};
+
+			Helper.find(User,query,function(err,mod) {
 
 				if (err) {
 					myResponse.transformMongooseError(User.errPath,String(err));
-				} else {
-					Helper.output(User,users,myResponse,res);
-
-					//myResponse.data = users;
-					//res.jsonp(myResponse);
+					Helper.output(User,null,myResponse,res);
+				}
+				else if(!mod) {
+					myResponse.addMessages(serverJSON.api.events._id.exist);
+					Helper.output(User,null,myResponse,res);
+				}
+				else
+				{
+					Helper.output(User,mod,myResponse,res);
 				}
 			});
 		}
+		//Show all users if none are found in the DB
 		else
 		{
 			if (err) {

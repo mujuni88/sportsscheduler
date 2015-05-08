@@ -242,11 +242,45 @@ exports.list = function(req, res) { EventModel.find().sort('-created').exec(func
 		
 		var myResponse = new MyResponse();
 
-		if (err) {
-			myResponse.transformMongooseError(EventModel.errPath,String(err));
-		} 
+		var eventName = req.query.event_name;
+		console.log('eventName: ' + eventName);
+		if(eventName)
+		{
+			var regex = ".*"+eventName+".*";
+			console.log('regex: ' + regex);
 
-		Helper.output(EventModel,events,myResponse,res);
+			var query = {
+				name: 
+				{
+					$regex: new RegExp(regex,'i')
+				}
+			};
+
+			Helper.find(EventModel,query,function(err,mod) {
+
+				if (err) {
+					myResponse.transformMongooseError(EventModel.errPath,String(err));
+					Helper.output(EventModel,null,myResponse,res);
+				}
+				else if(!mod) {
+					myResponse.addMessages(serverJSON.api.events._id.exist);
+					Helper.output(EventModel,null,myResponse,res);
+				}
+				else
+				{
+					Helper.output(EventModel,mod,myResponse,res);
+				}
+			});
+		}
+		//Show all events if none are found in the DB
+		else
+		{
+			if (err) {
+				myResponse.transformMongooseError(EventModel.errPath,String(err));
+			} 
+
+			Helper.output(EventModel,events,myResponse,res);
+		}
 	});
 };
 

@@ -160,6 +160,7 @@ EventSchema.statics.objectIDAtts = [
 
 EventSchema.statics.title = serverJSON.constants.events;
 EventSchema.statics.errPath = 'api.events';
+EventSchema.statics.attsToShow = ['_id', 'name', 'location', 'date', 'time', 'voteEnabled', 'minimumVotes', 'votes', 'message'];
 
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {

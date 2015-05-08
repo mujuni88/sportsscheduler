@@ -78,10 +78,9 @@ var Helper = (function() {
         },
         find: function(model,query,callback) {
 
-            model.find(query, function (err, mod) {
-                
-                //console.log('err: ' + err);
-                //console.log('mod: ' + mod);
+            model.find(query)
+            .select(Helper.attsArryToAttsString(model.attsToShow))
+            .exec(function(err,mod) {
                 callback(err,mod);
             });
         },
