@@ -25,11 +25,12 @@ exports.update = function(req, res) {
 	var message = null;
 	var myResponse = new MyResponse();
 
-	User.findOne({_id: id})
-	.populate({path: Helper.getAttsString(User.objectIDAtts)})
-	.exec(function (err, user) {
-		if (user) {
+	Helper.find(User,{_id: id},function (err, mod) {
+		
+		if (mod.length > 0) {
 			
+			var user = mod[0];
+
 			// For security measurement we remove the roles from the req.body object
 			delete req.body.roles;
 			
@@ -46,27 +47,21 @@ exports.update = function(req, res) {
 
 				if (err) {
 					myResponse.transformMongooseError(User.errPath,String(err));
-					Helper.output(myResponse,res);
+					Helper.output(User,null,myResponse,res);
 				} else {
 					req.login(user, function(err) {
 						if (err) {
 							console.log('error: ' + err);
 							myResponse.transformMongooseError(User.errPath,String(err));
-							Helper.output(myResponse,res);
 						}
-						else {
-							console.log('saved successfully');
-							Helper.populateModel(User,user,User.errPath,function(mod) {
-								myResponse.setData(mod);
-								Helper.output(myResponse,res);
-							});
-						}
+						
+						Helper.output(User,user,myResponse,res);
 					});
 				}
 			});
 		} else {
 			myResponse.transformMongooseError(User.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(User,null,myResponse,res);
 		}
 	});
 };
@@ -81,22 +76,18 @@ exports.delete = function(req, res) {
 		if (err) {
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(User.errPath,String(err));
-			Helper.output(myResponse,res);
 		}
 		else if(!user)
 		{
 			myResponse.addMessages(serverJSON.api.users._id.invalid);
-			Helper.output(myResponse,res);
 		}
 		else {
 			console.log('deleted successfully');
 			user.remove();
 			req.user = null;
-			Helper.populateModel(User,user,User.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
-			});
 		}
+
+		Helper.output(User,user,myResponse,res);
 	});
 };
 
@@ -109,7 +100,7 @@ exports.joinGroup = function(req, res) {
 	if(!Helper.isValidObjectID(userID) || !Helper.isValidObjectID(groupID))
 	{
 		myResponse.addMessages(serverJSON.api.users.joinedGroups.invalid);
-		Helper.output(myResponse,res);
+		Helper.output(User,null,myResponse,res);
 
 		return;
 	}
@@ -123,28 +114,23 @@ exports.joinGroup = function(req, res) {
 		if(err || mod.length === 0)
 		{
 			console.log('error: ' + err);
-			myResponse.addMessages(serverJSON.api.users._id.exist);
-			Helper.output(myResponse,res);
+			myResponse.addMessages(serverJSON.api.users.joinedGroups.exist);
+			Helper.output(User,null,myResponse,res);
 		}
 		else
 		{
 			var user = mod[0];
 			user.joinedGroups.push(groupID);
-
 			user.save(function(err) {
 
 				if (err) {
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(User.errPath,String(err));
-					Helper.output(myResponse,res);
+					Helper.output(User,null,myResponse,res);
 				}
-				else {
-					console.log('saved successfully');
-					Helper.populateModel(User,user,User.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+				
+				console.log('saved successfully');
+				Helper.output(User,user,myResponse,res);
 			});
 		}
 	});
@@ -179,12 +165,8 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 
 				if (err) {
 					myResponse.transformMongooseError(User.errPath,String(err));
-					Helper.output(myResponse,res);
 				} else {
-					Helper.populateModel(User,users,User.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
+					Helper.output(User,users,myResponse,res);
 
 					//myResponse.data = users;
 					//res.jsonp(myResponse);
@@ -195,15 +177,8 @@ exports.list = function(req, res) { User.find().sort('-created').populate(User.o
 		{
 			if (err) {
 				myResponse.transformMongooseError(User.errPath,String(err));
-				Helper.output(myResponse,res);
-			} else {
-				//myResponse.data = users;
-				//res.jsonp(myResponse);
-				Helper.populateModel(User,users,User.errPath,function(mod) {
-					myResponse.setData(mod);
-					Helper.output(myResponse,res);
-				});
-			}
+			} 
+			Helper.output(User,users,myResponse,res);
 		}
 	});
 };

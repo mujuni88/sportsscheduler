@@ -30,7 +30,7 @@ exports.create = function(req, res) {
 		if(mod.length === 0)
 		{
 			myResponse.addMessages(serverJSON.api.groups._id.invalid);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 			
 			return;
 		}
@@ -51,7 +51,7 @@ exports.create = function(req, res) {
 			if (err) {
 				console.log('error: ' + err);
 				myResponse.transformMongooseError(EventModel.errPath,String(err));
-				Helper.output(myResponse,res);
+				Helper.output(EventModel,null,myResponse,res);
 			}
 			else {
 				group.events.push(event._id);
@@ -60,15 +60,12 @@ exports.create = function(req, res) {
 
 					if (err) {
 						console.log('error: ' + err);
-						myResponse.transformMongooseError(EventModel.errPath,String(err));
-						Helper.output(myResponse,res);
+						myResponse.transformMongooseError(Group.errPath,String(err));
+						Helper.output(Group,null,myResponse,res);
 					}
 					else {
 						console.log('saved successfully');
-						Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-							myResponse.setData(mod);
-							Helper.output(myResponse,res);
-						});
+						Helper.output(EventModel,event,myResponse,res);
 					}
 				});
 			}			
@@ -90,7 +87,7 @@ exports.read = function(req, res) {
 	if(!Helper.isValidObjectID(eventID))
 	{
 		myResponse.addMessages(serverJSON.api.events._id.invalid);
-		Helper.output(myResponse,res);
+		Helper.output(EventModel,event,myResponse,res);
 		
 		return;
 	}
@@ -104,15 +101,13 @@ exports.read = function(req, res) {
 		if(err || mod.length === 0)
 		{
 			myResponse.addMessages(serverJSON.api.events._id.exist);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 
 			return;
 		}
 
-		Helper.populateModel(EventModel,mod[0],EventModel.errPath,function(mod) {
-			myResponse.setData(mod);
-			Helper.output(myResponse,res);
-		});
+		var event = mod[0];
+		Helper.output(EventModel,event,myResponse,res);
 	});
 };
 
@@ -132,12 +127,12 @@ exports.update = function(req, res) {
 		{
 			console.log(err);
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 		}
 		else if(!event)
 		{
 			myResponse.addMessages(serverJSON.api.events._id.invalid);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 		}
 		else
 		{
@@ -166,36 +161,40 @@ exports.update = function(req, res) {
 			// 	event.votes.yes.push(mongoose.Types.ObjectId(String(req.body.votes.yes[j]._id)));
 			// }
 
-			var yesVotes = [];
-			var noVotes = [];
-
-			console.log(JSON.stringify(req.body.votes,null,4));
-			for(var i = 0; i < req.body.votes.no.length; ++i)
+			if(typeof req.body.votes !== 'undefined')
 			{
-				noVotes.push(req.body.votes.no[i]._id);
+				console.log('checking votes');
+				var yesVotes = [];
+				var noVotes = [];
+
+
+				console.log(JSON.stringify(req.body.votes,null,4));
+				for(var i = 0; i < req.body.votes.no.length; ++i)
+				{
+					noVotes.push(req.body.votes.no[i]._id);
+				}
+
+				for(var j = 0; j < req.body.votes.yes.length; ++j)
+				{
+					yesVotes.push(req.body.votes.yes[j]._id);
+				}
+
+				req.body.votes.yes = yesVotes;
+				req.body.votes.no = noVotes;
+
+				console.log('votes: ' + JSON.stringify(req.body.votes,null,4));
 			}
 
-			for(var j = 0; j < req.body.votes.yes.length; ++j)
-			{
-				yesVotes.push(req.body.votes.yes[j]._id);
-			}
-
-			req.body.votes.yes = yesVotes;
-			req.body.votes.no = noVotes;
-
-			console.log('votes: ' + JSON.stringify(req.body.votes,null,4));
-			EventModel.findByIdAndUpdate(id,req.body,function(err,event) {
+			//EventModel.findByIdAndUpdate(id,req.body,function(err,event) {
+			_.extend(event,req.body);
+			event.save(function(err) {
 				console.log('err: ' + err);
 
 				if (err) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
-					Helper.output(myResponse,res);
-				} else {
-					Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+				} 
+
+				Helper.output(EventModel,event,myResponse,res);
 			});
 		}
 	});
@@ -215,25 +214,21 @@ exports.delete = function(req, res) {
 		if(err)
 		{
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 		}
 		else if(!event)
 		{
 			myResponse.addMessages(serverJSON.api.events._id.invalid);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 		}
 		else
 		{
 			event.remove(function(err) {
 				if (err) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
-					Helper.output(myResponse,res);
-				} else {
-					Helper.populateModel(EventModel,event,EventModel.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+				} 
+
+				Helper.output(EventModel,event,myResponse,res);
 			});
 		}
 
@@ -249,13 +244,9 @@ exports.list = function(req, res) { EventModel.find().sort('-created').exec(func
 
 		if (err) {
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
-		} else {
-			Helper.populateModel(EventModel,events,EventModel.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
-			});
-		}
+		} 
+
+		Helper.output(EventModel,events,myResponse,res);
 	});
 };
 
@@ -271,11 +262,11 @@ exports.listEventsForGroup = function(req, res) {
 
 		if (err) {
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 		}
 		else if(mod.length === 0 || !mod) {
 			myResponse.addMessages(serverJSON.api.events._id.exist);
-			Helper.output(myResponse,res);
+			Helper.output(EventModel,null,myResponse,res);
 		}
 		else {
 			
@@ -285,11 +276,7 @@ exports.listEventsForGroup = function(req, res) {
 
 				var events = group.events;
 
-				Helper.populateModel(EventModel,events,EventModel.errPath,function(mod) {
-					
-					myResponse.setData(mod);
-					Helper.output(myResponse,res);
-				});
+				Helper.output(EventModel,events,myResponse,res);
 				
 			});
 		}
@@ -306,7 +293,7 @@ exports.eventByID = function(req, res, next, id) {
 	if(!mongoose.Types.ObjectId.isValid(id))
 	{
 		myResponse.addMessages(serverJSON.api.events._id.invalid,res);
-		Helper.output(myResponse,res);
+		Helper.output(EventModel,null,myResponse,res);
 		//next();
 		return;
 	}

@@ -36,7 +36,7 @@ exports.signup = function(req, res) {
 		if (err) {
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(User.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(User,user,myResponse,res);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
@@ -45,13 +45,8 @@ exports.signup = function(req, res) {
 			req.login(user, function(err) {
 				if (err) {
 					myResponse.transformMongooseError(User.errPath,String(err));
-					Helper.output(myResponse,res);
-				} else {
-					Helper.populateModel(User,user,User.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
 				}
+				Helper.output(User,user,myResponse,res);
 			});
 		}
 	});
@@ -67,11 +62,11 @@ exports.signin = function(req, res, next) {
 
 		if (err) {
 			myResponse.transformMongooseError(User.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(User,user,myResponse,res);
 		}
 		else if(!user) {
 			myResponse.addMessages(serverJSON.api.users._id.login);
-			Helper.output(myResponse,res);
+			Helper.output(User,user,myResponse,res);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
@@ -80,12 +75,8 @@ exports.signin = function(req, res, next) {
 			req.login(user, function(err) {
 				if (err) {
 					myResponse.transformMongooseError(User.errPath,String(err));
-					Helper.output(myResponse,res);
-				} else {
-					myResponse.setData(user);
-					Helper.output(myResponse,res);
-					//res.jsonp(user);
-				}
+				} 
+				Helper.output(User,user,myResponse,res);
 			});
 		}
 	})(req, res, next);
