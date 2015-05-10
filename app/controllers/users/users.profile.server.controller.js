@@ -186,6 +186,31 @@ exports.list = function(req, res) { User.find().sort('-created').exec(function(e
 	});
 };
 
+exports.read = function(req, res) {
+
+	var userID = req.params.userId;
+	var query = {
+		_id : userID
+	};
+
+	Helper.find(User,query, function(err,mod) {
+		
+		var myResponse = new MyResponse();
+		var user = mod[0];
+		
+		if (err) {
+			console.log('error: ' + err);
+			myResponse.transformMongooseError(user.errPath,String(err));
+		}
+		else if(mod.length === 0)
+		{
+			myResponse.addMessages(serverJSON.api.groups._id.exist);
+		}
+		
+		Helper.output(User,user,myResponse,res);
+	});
+};
+
 /**
  * Send User
  */
