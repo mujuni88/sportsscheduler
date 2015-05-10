@@ -164,17 +164,20 @@ exports.update = function(req, res) {
 			if(typeof req.body.votes !== 'undefined')
 			{
 				console.log('checking votes');
+				console.log('new votes: ' + JSON.stringify(req.body.votes,null,4));
+
 				var yesVotes = [];
 				var noVotes = [];
+				var i = 0;
+				var j = 0;
 
-
-				console.log(JSON.stringify(req.body.votes,null,4));
-				for(var i = 0; i < req.body.votes.no.length; ++i)
+				console.log('old votes: ' + JSON.stringify(event.votes,null,4));
+				for(i = 0; i < req.body.votes.no.length; ++i)
 				{
 					noVotes.push(req.body.votes.no[i]._id);
 				}
 
-				for(var j = 0; j < req.body.votes.yes.length; ++j)
+				for(j = 0; j < req.body.votes.yes.length; ++j)
 				{
 					yesVotes.push(req.body.votes.yes[j]._id);
 				}
@@ -182,8 +185,45 @@ exports.update = function(req, res) {
 				req.body.votes.yes = yesVotes;
 				req.body.votes.no = noVotes;
 
-				console.log('votes: ' + JSON.stringify(req.body.votes,null,4));
+				//reset votes arrays to use again
+				yesVotes = [];
+				noVotes = [];
+
+				//get events vote ids
+				for(i = 0; i < event.votes.no.length; ++i)
+				{
+					noVotes.push(event.votes.no[i].toString());
+				}
+
+				for(j = 0; j < event.votes.yes.length; ++j)
+				{
+					yesVotes.push(event.votes.yes[j].toString());
+				}
+
+				//see if user has already voted yes
+				var intersection = _.intersection(req.body.votes.yes,yesVotes);
+
+				if(intersection.length)
+				{
+					console.log('user has voted "Yes" already: ' + intersection);	
+					myResponse.addMessages(serverJSON.api.events.votes.yes.alreadyVoted);
+					Helper.output(EventModel,null,myResponse,res);
+					return;
+				}
+
+				//see if user has already voted yes
+				intersection = _.intersection(req.body.votes.no,noVotes);
+
+				if(intersection.length)
+				{
+					console.log('user has voted "No" already: ' + intersection);	
+					myResponse.addMessages(serverJSON.api.events.votes.no.alreadyVoted);
+					Helper.output(EventModel,null,myResponse,res);
+					return;
+				}
+				
 			}
+
 
 			//EventModel.findByIdAndUpdate(id,req.body,function(err,event) {
 			_.extend(event,req.body);

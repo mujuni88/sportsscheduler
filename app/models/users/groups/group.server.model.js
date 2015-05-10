@@ -118,6 +118,7 @@ GroupSchema.statics.objectIDAtts = [
 ];
 GroupSchema.statics.title = serverJSON.constants.groups;
 GroupSchema.statics.errPath = 'api.groups';
+GroupSchema.statics.attsToShow = ['_id', 'name', 'admins', 'events', 'members', 'createdBy'];
 
 /*********** Validate Functions **************/
 GroupSchema.path('admins').validate(function (ids,respond) {

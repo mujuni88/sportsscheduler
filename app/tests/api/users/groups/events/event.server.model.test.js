@@ -259,7 +259,34 @@ describe('Event Model Unit Tests:', function() {
 	            done();
 	        });
 	    });
-
+	it('PUT: cast a duplicate vote for yes. Should return an error', function(done) {
+		superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)
+		.send({
+			votes: {
+        		yes: [
+        				{
+        					_id: memberID
+        				},
+        				{
+        					_id: admin1ID
+        				}
+        			],
+        		no: [
+        				{
+        					_id: admin2ID
+        				}
+        			]
+        	}
+		})
+		.end(function(e,res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+            chaiExpect(res.statusCode).to.eql(400);
+            console.log('updated eventID: ' + eventID);
+            done();
+        });
+	});
+	
 	it('PUT: updating an event should fail when id does not exist in DB', function(done) {
     	superagent.put('http://localhost:3000/api/users/groups/events/-108309842')
 	        .send({
