@@ -191,11 +191,45 @@ exports.list = function(req, res) { Group.find().sort('-created').exec(function(
 		
 		var myResponse = new MyResponse();
 
-		if (err) {
-			myResponse.transformMongooseError(Group.errPath,String(err));
-		} 
+		var groupName = req.query.group_name;
+		console.log('groupName: ' + groupName);
+		if(groupName)
+		{
+			var regex = ".*"+groupName+".*";
+			console.log('regex: ' + regex);
 
-		Helper.output(Group,groups,myResponse,res);
+			var query = {
+				name: 
+				{
+					$regex: new RegExp(regex,'i')
+				}
+			};
+
+			Helper.find(Group,query,function(err,mod) {
+
+				if (err) {
+					myResponse.transformMongooseError(Group.errPath,String(err));
+					Helper.output(Group,null,myResponse,res);
+				}
+				else if(!mod) {
+					myResponse.addMessages(serverJSON.api.events._id.exist);
+					Helper.output(Group,null,myResponse,res);
+				}
+				else
+				{
+					Helper.output(Group,mod,myResponse,res);
+				}
+			});
+		}
+		//Show all events if none are found in the DB
+		else
+		{
+			if (err) {
+				myResponse.transformMongooseError(Group.errPath,String(err));
+			} 
+
+			Helper.output(Group,groups,myResponse,res);
+		}
 	});
 };
 
