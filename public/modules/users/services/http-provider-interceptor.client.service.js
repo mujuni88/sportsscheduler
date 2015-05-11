@@ -37,6 +37,11 @@
                 case 403:
                     // Add unauthorized behaviour 
                     break;
+                case 500:
+                    var config = {title:'Sorry, We are having internal server issues :('};
+                    growl.warning(config.title, config);
+                    break;
+                
             }
 
             return $q.reject(rejection);
