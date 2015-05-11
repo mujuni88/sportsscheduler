@@ -5,12 +5,33 @@
  */
 var _ = require('lodash'),
 	mongoose = require('mongoose'),
+	MyResponse = require('../../custom_objects/MyResponse'),
+	Helper = require('../../custom_objects/Helper'),
+	serverJSON = require('../../local_files/ui/server.ui.json'),
 	User = mongoose.model('User');
 
 /**
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
+
+	var myResponse = new MyResponse();
+	
+	if(!mongoose.Types.ObjectId.isValid(id))
+	{
+		myResponse.addMessages(serverJSON.api.users._id.invalid);
+		Helper.output(User,null,myResponse,res);
+		return;
+	}
+
+	User.findById(id).populate('user', 'displayName').exec(function(err, user) {
+		
+		
+		req.profile = user ;
+
+		next();
+	});
+	/*
 	User.findOne({
 		_id: id
 	}).exec(function(err, user) {
@@ -19,6 +40,7 @@ exports.userByID = function(req, res, next, id) {
 		req.profile = user;
 		next();
 	});
+*/
 };
 
 /**

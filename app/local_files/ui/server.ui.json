@@ -122,7 +122,7 @@
 			{
 				"invalid":
 				{
-					"devMessage": "The passed in ObjectId is in an invalid format for the Events model",
+					"devMessage": "The passed in ObjectId is in an invalid format for the User model",
 					"clientMessage": "This user does not exist",
 					"status": 400
 				},
@@ -597,8 +597,14 @@
 					},
 					"duplicate":
 					{
-						"devMessage": "The passed in array contains two group objects with the same '_ids' for the User model",
+						"devMessage": "The passed in array contains two user objects with the same '_ids' for the User model",
 						"clientMessage": "This User has been duplicated",
+						"status": 400
+					},
+					"alreadyVoted":
+					{
+						"devMessage": "The passed in array contains a user object that has already voted 'yes' on this event for the User model",
+						"clientMessage": "This User has already voted Yes",
 						"status": 400
 					}
 				},
@@ -618,8 +624,14 @@
 					},
 					"duplicate":
 					{
-						"devMessage": "The passed in array contains two group objects with the same '_ids' for the User model",
+						"devMessage": "The passed in array contains two user objects with the same '_ids' for the User model",
 						"clientMessage": "This User has been duplicated",
+						"status": 400
+					},
+					"alreadyVoted":
+					{
+						"devMessage": "The passed in array contains a user object that has already voted 'no' on this event for the User model",
+						"clientMessage": "This User has already voted No",
 						"status": 400
 					}
 				}

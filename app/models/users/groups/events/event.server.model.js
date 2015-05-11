@@ -6,8 +6,8 @@
 var _ = require('lodash'),
 	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	serverJSON = require('../local_files/ui/server.ui.json'),
-	Helper = require('../custom_objects/Helper'),
+	serverJSON = require('../../../../local_files/ui/server.ui.json'),
+	Helper = require('../../../../custom_objects/Helper'),
 	async = require('async'),
 	ValidationError = require('mongoose/lib/error/validation'),
 	ValidatorError =  require('mongoose/lib/error/validator');
@@ -135,6 +135,10 @@ var EventSchema = new Schema({
 	}
 });
 
+EventSchema.statics.functionsArray = [
+	
+];
+
 EventSchema.statics.objectIDAtts = [
 	{
 		name: 'user',
@@ -156,6 +160,7 @@ EventSchema.statics.objectIDAtts = [
 
 EventSchema.statics.title = serverJSON.constants.events;
 EventSchema.statics.errPath = 'api.events';
+EventSchema.statics.attsToShow = ['_id', 'name', 'location', 'date', 'time', 'voteEnabled', 'minimumVotes', 'votes', 'message'];
 
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {

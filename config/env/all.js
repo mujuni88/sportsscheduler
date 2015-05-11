@@ -20,7 +20,8 @@ module.exports = {
                 'public/lib/angular-fx/src/css/angular-fx.css',
                 'public/lib/angular-xeditable/dist/css/xeditable.css',
 				'public/lib/angular-dialog-service/dist/dialogs.min.css',
-				'public/lib/components-font-awesome/css/font-awesome.min.css'
+				'public/lib/components-font-awesome/css/font-awesome.min.css',
+				'public/lib/angular-growl-v2/build/angular-growl.min.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -36,7 +37,8 @@ module.exports = {
 				'public/lib/ng-lodash/build/ng-lodash.min.js',
 				'public/lib/angular-fx/src/js/angular-fx.js',
                 'public/lib/angular-xeditable/dist/js/xeditable.min.js',
-				'public/lib/angular-dialog-service/dist/dialogs.min.js'
+				'public/lib/angular-dialog-service/dist/dialogs.min.js',
+				'public/lib/angular-growl-v2/build/angular-growl.js'
             ]
 		},
 		css: [

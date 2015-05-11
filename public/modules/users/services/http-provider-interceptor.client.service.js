@@ -4,7 +4,7 @@
 // Authentication service for user variables
     angular.module('users').factory('HttpProviderInterceptor', HttpProviderInterceptor);
 
-    function HttpProviderInterceptor($q, $location, Authentication, AppAlert) {
+    function HttpProviderInterceptor($q, $location, Authentication, growl) {
         var provider =  {
             responseError: responseError
         };
@@ -14,14 +14,16 @@
         function responseError(rejection) {
             switch (rejection.status) {
                 case 400:
-                    var timeout = 6000;
                     if(rejection.data){
-                        var data = rejection.data;
+                        var data = rejection.data, config = {};
                         data.clientMessage.forEach(function(msg){
-                            AppAlert.add('danger',msg, timeout);
+                            config.title = msg;
+                            growl.warning(msg, config);
                         });
                         data.devMessage.forEach(function(msg){
-                            AppAlert.add('danger',msg, timeout);
+                            config.title = msg;
+                            growl.warning(msg,config);
+
                         });
                     }
                     break;

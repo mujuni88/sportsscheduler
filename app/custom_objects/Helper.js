@@ -13,14 +13,46 @@ var Helper = (function() {
         startTask: function(done) {
             done(null, 1, 0);
         },
-        endTask: function(arg1, done) {
+        endTask: function(arg1, arg2, done) {
             done(null, arg1);
         }
     };
 
+    var populate = function populate(model,obj) {
+
+        return function(arg1,arg2,done) {
+
+            var atts = model.objectIDAtts.slice(0);
+
+            //console.log('atts: ' + atts);
+
+            var rec = function(atts) {
+                var options = {
+                    path: atts[0].name,
+                    model: atts[0].model
+                };
+
+                model.populate(obj, options, function (err, obj) {
+                    
+                    atts.splice(0,1);
+                    //console.log('new atts: ' + atts);
+                    if(atts.length === 0)
+                        done(null,obj,1);
+                    else
+                    {
+                        //console.log('populated obj: ' + obj);
+                        rec(atts);
+                    }
+                });    
+            };
+            
+            rec(atts);
+        };
+    };
+
     /*******************END FUNCTIONS*********************/    
     return {
-        getAttsString: function(arr)
+        attsArryToAttsString: function(arr)
         {
             var attsString = '';
 
@@ -40,22 +72,15 @@ var Helper = (function() {
 
             return arr;
         },
-        executeWaterfall: function(arr,respond) {
+        executeWaterfall: function(arr,callback) {
 
-            async.waterfall(arr, 
-                function (error, success) {
-                    if (error)
-                        respond(false); 
-                    else
-                        respond(true);
-            });
+            async.waterfall(arr,callback);
         },
         find: function(model,query,callback) {
 
-            model.find(query, function (err, mod) {
-                
-                //console.log('err: ' + err);
-                //console.log('mod: ' + mod);
+            model.find(query)
+            .select(Helper.attsArryToAttsString(model.attsToShow))
+            .exec(function(err,mod) {
                 callback(err,mod);
             });
         },
@@ -79,8 +104,8 @@ var Helper = (function() {
                 model.find({
                     _id: { $in: ids}}, function (err, models) {
                     
-                    console.log('err: ' + err);
-                    console.log('models: ' + models);
+                    //console.log('err: ' + err);
+                    //console.log('models: ' + models);
 
                     var notFoundModels  = [];
 
@@ -150,9 +175,9 @@ var Helper = (function() {
         cleanMergeObj: function(oldVal,newVal) {
 
             //console.log('oldVal: ' + oldVal);
-            console.log('typeof: ' + typeof newVal._id);
-            console.log('newVal: ' + JSON.stringify(newVal, null, 4));
-            console.log('isArray: ' + Array.isArray(newVal));
+            //console.log('typeof: ' + typeof newVal._id);
+            //console.log('newVal: ' + JSON.stringify(newVal, null, 4));
+            //console.log('isArray: ' + Array.isArray(newVal));
             if(Array.isArray(newVal))
             {
                 if(newVal.length > 0)
@@ -163,7 +188,7 @@ var Helper = (function() {
                         var arr = [];
                         for(var i = 0; i < newVal.length; ++i)
                         {
-                            console.log('id: ' + newVal[i]._id);
+                            //console.log('id: ' + newVal[i]._id);
                             arr.push(newVal[i]._id.toString());
                         }
 
@@ -173,50 +198,71 @@ var Helper = (function() {
             }
             else if(typeof newVal._id === "string")
             {
-                console.log('string: ' + newVal._id);
+                //console.log('string: ' + newVal._id);
                 return newVal._id.toString();
             }
             
             return newVal;
         },
-        populateModel: function(model,obj,errPath,callback) {
+        populateModel: function(model,obj,callback) {
 
-            
-            var atts = model.objectIDAtts.slice(0);
+            return function(arg1,arg2,done) {
 
-            console.log('atts: ' + atts);
+                var atts = model.objectIDAtts.slice(0);
 
-            var rec = function(atts) {
-                var options = {
-                    path: atts[0].name,
-                    model: atts[0].model
+                //console.log('atts: ' + atts);
+
+                var rec = function(atts) {
+                    var options = {
+                        path: atts[0].name,
+                        model: atts[0].model
+                    };
+
+                    model.populate(obj, options, function (err, obj) {
+                        
+                        atts.splice(0,1);
+                        //console.log('new atts: ' + atts);
+                        if(atts.length === 0)
+                            callback(obj);
+                        else
+                        {
+                            //console.log('populated obj: ' + obj);
+                            rec(atts);
+                        }
+                    });
                 };
-
-                model.populate(obj, options, function (err, obj) {
-                    
-                    
-                    atts.splice(0,1);
-                    console.log('new atts: ' + atts);
-                    if(atts.length === 0)
-                        callback(obj);
-                    else
-                    {
-                        console.log('populated obj: ' + obj);
-                        rec(atts);
-                    }
-                });    
+                
+                rec(atts);
             };
-            
-            rec(atts);
         },
-        output: function(myResponse,res) {
+        output: function(model,obj,myResponse,res) {
             
             res.status(myResponse.status);
-            
-            if(typeof myResponse.error === 'undefined')
-                res.json(myResponse.data);
-            else
+
+            //coming from an api that doesn't use models
+            if(model === null)
+            {
+                if(typeof myResponse.error !== 'undefined')
+                    res.json(myResponse.error);
+                else
+                    res.json(myResponse.data);
+                
+                return;
+            }
+
+            if(typeof myResponse.error !== 'undefined')
                 res.json(myResponse.error);
+            else
+            {
+                var functionsArray = model.functionsArray.slice(0);
+                functionsArray.unshift(populate(model,obj));
+                functionsArray = Helper.buildWaterfall(functionsArray);
+                
+                Helper.executeWaterfall(functionsArray,function (error, data) {
+                                    
+                    res.json(data);        
+                });
+            }
         }
     };
 })();

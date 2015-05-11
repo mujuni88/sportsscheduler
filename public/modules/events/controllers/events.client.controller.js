@@ -2,10 +2,15 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
+    var _ = lodash;
     $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    if (!$scope.user) {
+        $location.path('/')
+    }
     $scope.state = $state;
-
+    $scope.stateParams = $stateParams;
     $scope.event = $scope.event || {};
     $scope.event = {
         voteEnabled: true,
@@ -21,18 +26,15 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.find = find;
     // Find existing Event
     $scope.findOne = findOne;
-    
     // Google places
     $scope.options = {
         country: 'us'
     };
     $scope.details = "";
-    
     // Datepicker
     $scope.today = getDate;
     $scope.today();
     $scope.clear = clearDate;
-    
     // Disable weekend selection
     $scope.disabled = disableDate;
     $scope.toggleMin = toggleMin;
@@ -45,7 +47,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
     $scope.dateChange = dateChange;
-    
     // Timepicker
     var date = new Date();
     var plusTwoHrs = (date.getHours() + 3);
@@ -54,9 +55,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     var now, hrsDiff, time, HRS = 2,
         HRS_MS = HRS * 60 * 60 * 1000;
     $scope.timeChange = timeChange;
-    
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
+    $scope.hasEventExpired = hasEventExpired;
+    $scope.voteYes = voteYes;
+    $scope.voteNo = voteNo;
+    $scope.hasVotedYes = hasVotedYes;
+    $scope.hasVotedNo = hasVotedNo;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -91,6 +96,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $scope.timeError = (hrsDiff < HRS_MS) ? true : false;
     };
 
+    function hasEventExpired(eventTime) {
+        var now = Date.now(),
+            eD = Date.parse(eventTime);
+        hrsDiff = eD - now;
+        return (hrsDiff < 0) ? true : false;
+    }
+
     function watchLocation(newVal, oldVal) {
         if (!newVal) {
             return;
@@ -101,52 +113,159 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function create() {
         if ($scope.timeError || $scope.dateError) return;
-        // Create new Event object
-        var event = new Events($scope.event);
-        // Redirect after save
-        event.$save(function(data) {
-            $location.path('events/' + data._id);
-            // Clear form fields
-            $scope.name = '';
+        var event = new Events($scope.event),
+            params = {
+                groupId: $stateParams.groupId
+            };
+        event.group = $stateParams.groupId;
+        event.$save(params, function(data) {
+            $scope.event = event;
+            $state.go('viewGroup.listEvents.viewEvent', {
+                eventId: $scope.event._id
+            });
+            _notifySuccess('Event created successfully');
         });
+        return event.$promise;
     }
 
-    function remove(event) {
-        if (event) {
-            event.$remove();
-            for (var i in $scope.events) {
-                if ($scope.events[i] === event) {
-                    $scope.events.splice(i, 1);
-                }
-            }
-        } else {
-            $scope.event.$remove(function() {
-                $location.path('events');
-            });
-        }
+    function remove() {
+        var params = {
+            eventId: $stateParams.eventId
+        };
+        var event = Events.remove(params, function() {
+            $scope.event = event;
+            $state.go('viewGroup.listEvents.viewEvents');
+            _notifySuccess('Event successfully removed');
+        });
+        return event.$promise;
     }
 
     function update() {
-        if ($scope.timeError || $scope.dateError) return;
-        $scope.event.$update(function() {
-            console.log("Update " + event);
-            if (!event) {
-                $scope.error = "Error with the server";
-                return;
-            }
-            $location.path('events/' + event._id);
-        }, function(errorResponse) {
-            $scope.error = errorResponse.clientMessage;
+        if ($scope.timeError || $scope.dateError) {
+            return _getPromise(false, '');
+        };
+        var params = {
+            eventId: $stateParams.eventId
+        };
+        $scope.event.group = $stateParams.groupId;
+        var event = Events.update(params, $scope.event, function(data) {
+            $scope.event = data;
+            $state.go('viewGroup.listEvents.viewEvent', {
+                eventId: $scope.event._id
+            });
         });
+        return event.$promise;
     }
 
     function find() {
-        $scope.events = Events.query();
+        return $scope.events = Events.query();
     };
 
     function findOne() {
-        $scope.event = Events.get({
-            eventId: $stateParams.groupId
+        var event = Events.get({
+            eventId: $stateParams.eventId
+        }, function() {
+            $scope.event = event;
         });
+        return event.$promise;
     };
+
+    function _notifySuccess(text) {
+        text = text || 'Event updated successfully';
+        growl.success(text, {
+            title: text
+        });
+    }
+
+    function voteYes() {
+        _addUserToVoteYes($scope.user);
+        update().then(success, failure);
+
+        function success(data) {
+            _notifySuccess('Voted successfully');
+        }
+
+        function failure(data) {
+            _deleteUserFromYes($scope.user);
+            _addUserToVoteNo($scope.user);
+        }
+    }
+
+    function voteNo() {
+        _addUserToVoteNo($scope.user);
+        update().then(success, failure);
+
+        function success(data) {
+            _notifySuccess('Voted successfully');
+        }
+
+        function failure(data) {
+            _deleteUserFromNo($scope.user);
+            _addUserToVoteYes($scope.user);
+        }
+    }
+
+    function _addUserToVoteYes(user) {
+        user = user || $scope.user;
+        if (_hasUserVotedNo(user)) {
+            _deleteUserFromNo(user);
+        }
+        if (!_hasUserVotedYes(user)) {
+            $scope.event.votes.yes.push(user);
+        }
+    }
+
+    function _addUserToVoteNo(user) {
+        user = user || $scope.user;
+        if (_hasUserVotedYes(user)) {
+            _deleteUserFromYes(user);
+        }
+        if (!_hasUserVotedNo(user)) {
+            $scope.event.votes.no.push(user);
+        }
+    }
+
+    function _deleteUserFromYes(user) {
+        user = user || $scope.user;
+        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function(item) {
+            return _.isEqual(item._id, user._id);
+        });
+    }
+
+    function _deleteUserFromNo(user) {
+        user = user || $scope.user;
+        $scope.event.votes.no = _.reject($scope.event.votes.no, function(item) {
+            return _.isEqual(item._id, user._id);
+        });
+    }
+
+    function _getPromise(isSuccess, data) {
+        var deferred = $q.defer();
+        setTimeout(function() {
+            if (isSuccess) {
+                deferred.resolve(data);
+            } else {
+                deferred.reject(data);
+            }
+        }, 1);
+        return deferred.promise;
+    }
+
+    function hasVotedYes(user) {
+        return _hasUserVotedYes(user);
+    }
+
+    function hasVotedNo(user) {
+        return _hasUserVotedNo(user);
+    }
+
+    function _hasUserVotedYes(user) {
+        user = user || $scope.user;
+        return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
+    }
+
+    function _hasUserVotedNo(user) {
+        user = user || $scope.user;
+        return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
+    }
 }

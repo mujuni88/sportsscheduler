@@ -40,6 +40,14 @@ angular.module('groups').config(['$stateProvider',
             state('viewGroup.listEvents.addEvents', {
                 url: '/add',
                 templateUrl: 'modules/groups/views/add-events-group.client.view.html'
+            }).
+            state('viewGroup.listEvents.viewEvent', {
+                url: '/:eventId',
+                templateUrl: 'modules/groups/views/view-event-group.client.view.html'
+            }).
+            state('viewGroup.listEvents.editEvent', {
+                url: '/:eventId/edit',
+                templateUrl: 'modules/groups/views/edit-event-group.client.view.html'
             });
     }
 ]);

@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	MyResponse = require('../../../custom_objects/MyResponse'),
 	serverJSON = require('../../../local_files/ui/server.ui.json'),
 	Helper = require('../../../custom_objects/Helper'),
+	util = require('util'),
 	_ = require('lodash');
 
 /**
@@ -18,41 +19,80 @@ var mongoose = require('mongoose'),
 exports.create = function(req, res) {
 	
 	var group = new Group(req.body);
+	console.log('original group: ' + group);
 	var myResponse = new MyResponse();
-	var data = _.merge(group,{admins: req.user,createdBy : req.user},Helper.cleanMergeObj);
-	_.extend(group,data);
+	//var data = _.merge(group,{admins: req.user,createdBy : req.user},Helper.cleanMergeObj);
+	//_.extend(group,data);
 
 	//detect if group with this name has already been created
+	console.log(JSON.stringify(req.body,null,4));
+	
+	var createdByID = null;
+	//running test cases
+	console.log('createdByType: ' + typeof req.body.createdBy);
+	if(typeof req.body.createdBy !== 'undefined')
+	{
+		createdByID = mongoose.Types.ObjectId(req.body.createdBy);
+		req.user = User.findById(req.body.createdBy);
+		console.log('req.user: ' + req.user.username);
+	}
+	else
+		createdByID = req.user;
+
 	var query = {
-		createdBy:  mongoose.Types.ObjectId(group.createdBy),
+		createdBy:  createdByID,
 		name: group.name
 	};
-	
+
 	Helper.find(Group,query,function(err,mod) {
-		if(err || !mod || mod.length > 0) 
+
+		if(err)
 		{
-			console.log('error: ' + err);
+			myResponse.transformMongooseError(Group.errPath,String(err));
+			Helper.output(Group,null,myResponse,res);
+		}
+		else if(!mod)
+		{
+			myResponse.addMessages(serverJSON.api.groups.name.invalid);
+			Helper.output(Group,null,myResponse,res);
+		}
+		else if(mod.length !== 0) 
+		{
 			myResponse.addMessages(serverJSON.api.groups.name.duplicate);
-			Helper.output(myResponse,res);
+			Helper.output(Group,null,myResponse,res);
 		}
 		else
-		{
+		{	
+			group.createdBy = createdByID;
+			
+			//don't run if running test cases
+			if(typeof req.body.createdBy === 'undefined')
+				group.admins.push(createdByID);
+
 			group.save(function(err) {
 				console.log('in save');
 				
 				if (err) {
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
-					Helper.output(myResponse,res);
+					Helper.output(Group,group,myResponse,res);
 				}
 				else {
-					console.log('saved successfully');
+					//don't run this if running test cases
+					if(typeof req.body.createdBy !== 'undefined')
+					{
+						Helper.output(Group,group,myResponse,res);
+						return;
+					}
 					req.user.createdGroups.push(group._id);
 					req.user.save(function(userErr) {
-						Helper.populateModel(Group,group,Group.errPath,function(mod) {
-							myResponse.setData(mod);
-							Helper.output(myResponse,res);
-						});
+						if (userErr) {
+							console.log('userErr: ' + userErr);
+							myResponse.transformMongooseError(User.errPath,String(err));
+							Helper.output(User,null,myResponse,res);
+						}
+						else
+							Helper.output(Group,group,myResponse,res);
 					});
 				}
 			});
@@ -65,23 +105,26 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
 	
-	var id = req.params.groupId;
+	var groupID = req.params.groupId;
+	var query = {
+		_id : groupID
+	};
 
-	Group.findOne({_id: id}, function(err,group) {
+	Helper.find(Group,query, function(err,mod) {
 		
 		var myResponse = new MyResponse();
-
+		var group = mod[0];
+		
 		if (err) {
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(Group.errPath,String(err));
-			Helper.output(myResponse,res);
 		}
-		else {
-			Helper.populateModel(Group,group,Group.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
-			});
+		else if(mod.length === 0)
+		{
+			myResponse.addMessages(serverJSON.api.groups._id.exist);
 		}
+		
+		Helper.output(Group,group,myResponse,res);
 	});
 };
 
@@ -101,12 +144,12 @@ exports.update = function(req, res) {
 		{
 			console.log(err);
 			myResponse.transformMongooseError(Group.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(Group,group,myResponse,res);
 		}
 		else if(!group)
 		{
 			myResponse.addMessages(serverJSON.api.groups._id.invalid);
-			Helper.output(myResponse,res);
+			Helper.output(Group,group,myResponse,res);
 		}
 		else
 		{
@@ -121,15 +164,8 @@ exports.update = function(req, res) {
 				if (err) {
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
-					Helper.output(myResponse,res);
 				}
-				else {
-					console.log('saved successfully');
-					Helper.populateModel(Group,group,Group.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+					Helper.output(Group,group,myResponse,res);
 			});
 		}
 	});
@@ -152,12 +188,13 @@ exports.delete = function(req, res) {
 		{
 			console.log(err);
 			myResponse.transformMongooseError(Group.errPath,String(err));
-			Helper.output(myResponse,res);
+			Helper.output(Group,group,myResponse,res);
 		}
 		else if(!group)
 		{
 			myResponse.addMessages(serverJSON.api.groups._id.invalid);
 			myResponse.setError(res);
+			Helper.output(Group,group,myResponse,res);
 		}
 		else
 		{
@@ -165,15 +202,8 @@ exports.delete = function(req, res) {
 				if (err) {
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
-					Helper.output(myResponse,res);
 				}
-				else {
-					console.log('saved successfully');
-					Helper.populateModel(Group,group,Group.errPath,function(mod) {
-						myResponse.setData(mod);
-						Helper.output(myResponse,res);
-					});
-				}
+				Helper.output(Group,group,myResponse,res);
 			});
 		}
 	});
@@ -186,14 +216,44 @@ exports.list = function(req, res) { Group.find().sort('-created').exec(function(
 		
 		var myResponse = new MyResponse();
 
-		if (err) {
-			myResponse.transformMongooseError(Group.errPath,String(err));
-			Helper.output(myResponse,res);
-		} else {
-			Helper.populateModel(Group,groups,Group.errPath,function(mod) {
-				myResponse.setData(mod);
-				Helper.output(myResponse,res);
+		var groupName = req.query.group_name;
+		console.log('groupName: ' + groupName);
+		if(groupName)
+		{
+			var regex = ".*"+groupName+".*";
+			console.log('regex: ' + regex);
+
+			var query = {
+				name: 
+				{
+					$regex: new RegExp(regex,'i')
+				}
+			};
+
+			Helper.find(Group,query,function(err,mod) {
+
+				if (err) {
+					myResponse.transformMongooseError(Group.errPath,String(err));
+					Helper.output(Group,null,myResponse,res);
+				}
+				else if(!mod) {
+					myResponse.addMessages(serverJSON.api.events._id.exist);
+					Helper.output(Group,null,myResponse,res);
+				}
+				else
+				{
+					Helper.output(Group,mod,myResponse,res);
+				}
 			});
+		}
+		//Show all events if none are found in the DB
+		else
+		{
+			if (err) {
+				myResponse.transformMongooseError(Group.errPath,String(err));
+			} 
+
+			Helper.output(Group,groups,myResponse,res);
 		}
 	});
 };
@@ -208,7 +268,7 @@ exports.groupByID = function(req, res, next, id) {
 	if(!mongoose.Types.ObjectId.isValid(id))
 	{
 		myResponse.addMessages(serverJSON.api.groups._id.invalid);
-		Helper.output(myResponse,res);
+		Helper.output(Group,null,myResponse,res);
 		return;
 	}
 

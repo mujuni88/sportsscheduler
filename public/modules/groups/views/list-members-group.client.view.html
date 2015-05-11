@@ -5,50 +5,51 @@
                 <div class="col-xs-9 col-sm-6">
                     <div class="input-group input-group-sm">
                         <input type="text" class="form-control"
-                               placeholder="Search for a member" data-ng-model="search.members"/>
-                    <span class="input-group-addon">
+                            placeholder="Search for a member" data-ng-model="search.members"/>
+                        <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
-                    </span>
+                        </span>
                     </div>
                 </div>
-
                 <div class="col-xs-3 col-sm-6">
                     <a class="btn btn-primary btn-sm pull-right"
-                       href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add a member">
-                        <i class="glyphicon glyphicon-plus"></i>
+                        href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add members" popover-placement="left" popover="Add members" popover-trigger="mouseenter">
+                    <i class="glyphicon glyphicon-plus"></i>
                     </a>
                 </div>
             </div>
         </div>
-
-
     </div>
     <div class="panel-body">
         <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && isAdmin()">
             No Members yet, why don't you <a href="/#!/groups/{{group._id}}/members/add">add one</a>?
-        </div>        
+        </div>
         <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && !isAdmin()">
             No Members in this group
         </div>
-        
-
         <div class="list-groups" data-ng-if="group.members">
-            <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:'isAdmin' | filter:search.members">
+            <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin'] | filter:search.members">
                 <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
-
-                <span class="spacing-sm-right pointer pull-right" ss-dialog dialog-ok="removeMember($index)" dialog-enable="true"
-                      title="Remove Member" message="Are you sure?" data-ng-show="isAdmin()">
-                <i class="glyphicon glyphicon-remove text-danger"></i>
-                </span>            
-                <span class="spacing-sm-right pointer pull-right" ng-click="makeAdmin(member)" data-ng-show="isAdmin() && !member.isAdmin" popover-placement="top" popover="Make admin" popover-trigger="mouseenter">
-                <i class="glyphicon glyphicon-king text-primary"></i>
-                </span>                    
-                <span class="spacing-sm-right pointer pull-right" ng-click="removeAdmin(member)" data-ng-show="isAdmin() && member.isAdmin" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter">
-                <i class="glyphicon glyphicon-king text-danger"></i>
-                </span>                    
-                <span class="spacing-sm-right badge" ng-show="member.isAdmin">
+                <div class="pull-right">
+                    <span class="spacing-sm-right badge" ng-show="isOwner(member)">
+                    owner
+                    </span>
+                    <span class="spacing-sm-right badge" ng-show="member.isAdmin">
                     admin
-                </span>
+                    </span>
+                    <span class="admin-btns" data-ng-show="isAdmin() && !isOwner(member)">
+                    <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="member.isAdmin">
+                    <i class="glyphicon glyphicon-king text-primary"></i>
+                    </span>
+                    <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="member.isAdmin">
+                    <i class="glyphicon glyphicon-king text-danger"></i>
+                    </span>
+                    <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember($index)" dialog-enable="true"
+                        title="Remove Member" message="Are you sure?">
+                    <i class="glyphicon glyphicon-remove text-danger"></i>
+                    </span>
+                    </span>
+                </div>
             </div>
         </div>
     </div>

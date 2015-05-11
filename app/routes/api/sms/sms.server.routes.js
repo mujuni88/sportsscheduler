@@ -25,14 +25,14 @@ app.route('/api/sms')
     	if(typeof req.body.to === 'undefined')
     	{
             myResponse.addMessages(serverJSON.api.sms.to.empty);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
     		
             return;
     	}
         else if(!regEx.test(req.body.to))
         {
             myResponse.addMessages(serverJSON.api.sms.to.invalid);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
             
             return;
         }
@@ -43,7 +43,7 @@ app.route('/api/sms')
     	if(typeof req.body.subject === 'undefined')
     	{
             myResponse.addMessages(serverJSON.api.sms.subject.empty);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
     		
             return;
     	}
@@ -53,7 +53,7 @@ app.route('/api/sms')
     	if(typeof req.body.text === 'undefined')
     	{
             myResponse.addMessages(serverJSON.api.sms.text.empty);
-            Helper.output(myResponse,res);
+            Helper.output(null,null,myResponse,res);
     		
             return;
     	}
