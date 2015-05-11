@@ -27,11 +27,19 @@ exports.create = function(req, res) {
 	//detect if group with this name has already been created
 	console.log(JSON.stringify(req.body,null,4));
 	
+	var createdByID = null;
+	//running test cases
+	if(typeof req.body.createdBy !== 'undefined')
+		createdByID = mongoose.Types.ObjectId(req.body.createdBy._id);
+	else
+		createdByID = req.user;
+
 	var query = {
-		createdBy:  mongoose.Types.ObjectId(req.body.createdBy._id),
+		createdBy:  req.user,
 		name: group.name
 	};
-	
+		
+	console.log('query: ' + query);
 	Helper.find(Group,query,function(err,mod) {
 
 		console.log('mod length: ' + mod.length);
@@ -48,6 +56,7 @@ exports.create = function(req, res) {
 		}
 		else
 		{	
+			group.createdBy = createdByID;
 			console.log('create group: ' + group);
 			group.save(function(err) {
 				console.log('in save');
