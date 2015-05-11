@@ -29,35 +29,46 @@ exports.create = function(req, res) {
 	
 	var createdByID = null;
 	//running test cases
+	console.log('createdByType: ' + typeof req.body.createdBy);
 	if(typeof req.body.createdBy !== 'undefined')
-		createdByID = mongoose.Types.ObjectId(req.body.createdBy._id);
+	{
+		createdByID = mongoose.Types.ObjectId(req.body.createdBy);
+		req.user = User.findById(req.body.createdBy);
+		console.log('req.user: ' + req.user.username);
+	}
 	else
 		createdByID = req.user;
 
 	var query = {
-		createdBy:  req.user,
+		createdBy:  createdByID,
 		name: group.name
 	};
-		
-	console.log('query: ' + query);
+
 	Helper.find(Group,query,function(err,mod) {
 
-		console.log('mod length: ' + mod.length);
 		if(err)
 		{
 			myResponse.transformMongooseError(Group.errPath,String(err));
 			Helper.output(Group,null,myResponse,res);
 		}
+		else if(!mod)
+		{
+			myResponse.addMessages(serverJSON.api.groups.name.invalid);
+			Helper.output(Group,null,myResponse,res);
+		}
 		else if(mod.length !== 0) 
 		{
-			console.log('error: ' + err);
 			myResponse.addMessages(serverJSON.api.groups.name.duplicate);
 			Helper.output(Group,null,myResponse,res);
 		}
 		else
 		{	
 			group.createdBy = createdByID;
-			console.log('create group: ' + group);
+			
+			//don't run if running test cases
+			if(typeof req.body.createdBy === 'undefined')
+				group.admins.push(createdByID);
+
 			group.save(function(err) {
 				console.log('in save');
 				
@@ -67,15 +78,21 @@ exports.create = function(req, res) {
 					Helper.output(Group,group,myResponse,res);
 				}
 				else {
-					console.log('saved successfully');
-					Helper.output(Group,group,myResponse,res);
-					/*
-					req.user.createdGroup = group;
+					//don't run this if running test cases
+					if(typeof req.body.createdBy !== 'undefined')
+					{
+						Helper.output(Group,group,myResponse,res);
+						return;
+					}
+					req.user.createdGroups.push(group._id);
 					req.user.save(function(userErr) {
-						Helper.populateModel(Group,group,Group.errPath,function(mod) {
-							myResponse.setData(mod);
-							Helper.output(myResponse,res);
-						});
+						if (userErr) {
+							console.log('userErr: ' + userErr);
+							myResponse.transformMongooseError(User.errPath,String(err));
+							Helper.output(User,null,myResponse,res);
+						}
+						else
+							Helper.output(Group,group,myResponse,res);
 					});
 				*/
 				}
