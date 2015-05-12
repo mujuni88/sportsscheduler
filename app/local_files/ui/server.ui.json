@@ -131,6 +131,12 @@
 					"devMessage": "These credentials do not exist in our Database",
 					"clientMessage": "Invalid Credentials",
 					"status": 400
+				},
+				"exist":
+				{	
+					"devMessage": "The passed in ObjectId does not exist in our Database for the User model",
+					"clientMessage": "This User does not exist",
+					"status": 400
 				}
 			},
 			"firstName":
@@ -334,6 +340,12 @@
 				"invalid":
 				{
 					"devMessage": "The passed in ObjectId is in an invalid format for the Groups model",
+					"clientMessage": "This Group does not exist",
+					"status": 400
+				},
+				"exist":
+				{	
+					"devMessage": "The passed in ObjectId does not exist in our Database for the Groups model",
 					"clientMessage": "This Group does not exist",
 					"status": 400
 				}
