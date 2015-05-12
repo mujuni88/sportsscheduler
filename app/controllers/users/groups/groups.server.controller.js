@@ -94,7 +94,6 @@ exports.create = function(req, res) {
 						else
 							Helper.output(Group,group,myResponse,res);
 					});
-				*/
 				}
 			});
 		}
