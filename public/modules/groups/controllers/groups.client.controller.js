@@ -2,10 +2,10 @@
 // Groups controller
 angular.module('groups').controller('GroupsController', GroupsController);
 
-function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl) {
+function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl, Users, UserService) {
     var _ = lodash;
     $scope.authentication = Authentication;
-    $scope.user = Authentication.user;
+    $scope.user = $scope.authentication.user;
     if (!$scope.user) {
         $location.path('/')
     }
@@ -42,6 +42,9 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.isMember = isMember;
     $scope.joinGroup = joinGroup;
 
+    // user functions
+    $scope.getUser = getUser;
+
     // Group Functions
     function create() {
         // Create new Group object
@@ -67,7 +70,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function find() {
         $scope.groups = Groups.query();
-        _getUser();
     }
     // Member functions
     function _addIsAdminAttr() {
@@ -87,7 +89,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
             groupId: $stateParams.groupId
         });
         $scope.tempMembers = [];
-        _getUser();     
     }
 
     function onSelect($model) {
@@ -305,13 +306,14 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         growl.success(text, {title:text});
     }
 
-    function _updateUser(group){
-        $scope.user.createdGroups.push(group);
-        Authentication.user = $scope.user;
-    }
-
-    function _getUser(){
-        $scope.user = Authentication.user;
+    function getUser(){
+        var user = Users.get({
+            userId: $scope.user._id
+        }, function() {
+            Authentication.user = user;
+            $scope.user = user;
+        });
+        return user.$promise;
     }
 
     // Checks whether the logged in user is a member of the group
@@ -320,7 +322,17 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function joinGroup(){
-        _addMember($scope.user);
-        saveMember();
+        _joinGroup($scope.user, $scope.group).then(success, failure);
+        function success(response){
+            debugger;
+            console.log('%c %s','color:#f00',JSON.stringify(response.data));
+            _addMember($scope.user);
+            saveMember();
+        }
+        function failure(){}
+    }
+
+    function _joinGroup(user, group){
+        return UserService.joinGroupAndUser(user, group);
     }
 }
