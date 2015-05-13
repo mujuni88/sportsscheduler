@@ -1,9 +1,9 @@
 {
 	"constants":
 	{
-		"users":"users",
-		"groups":"groups",
-		"events":"events"
+		"users": "User",
+		"groups": "Group",
+		"events": "Event"
 	},
 	"mongo":
 	{

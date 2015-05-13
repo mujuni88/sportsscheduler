@@ -25,11 +25,13 @@ var Helper = (function() {
             var atts = model.objectIDAtts.slice(0);
 
             //console.log('atts: ' + atts);
+            var optionsModel = mongoose.model(atts[0].model);
 
             var rec = function(atts) {
                 var options = {
                     path: atts[0].name,
-                    model: atts[0].model
+                    model: optionsModel.title,
+                    select: Helper.attsArryToAttsString(optionsModel.attsToShow)
                 };
 
                 model.populate(obj, options, function (err, obj) {
@@ -43,7 +45,7 @@ var Helper = (function() {
                         //console.log('populated obj: ' + obj);
                         rec(atts);
                     }
-                });    
+                });
             };
             
             rec(atts);
@@ -204,37 +206,6 @@ var Helper = (function() {
             
             return newVal;
         },
-        populateModel: function(model,obj,callback) {
-
-            return function(arg1,arg2,done) {
-
-                var atts = model.objectIDAtts.slice(0);
-
-                //console.log('atts: ' + atts);
-
-                var rec = function(atts) {
-                    var options = {
-                        path: atts[0].name,
-                        model: atts[0].model
-                    };
-
-                    model.populate(obj, options, function (err, obj) {
-                        
-                        atts.splice(0,1);
-                        //console.log('new atts: ' + atts);
-                        if(atts.length === 0)
-                            callback(obj);
-                        else
-                        {
-                            //console.log('populated obj: ' + obj);
-                            rec(atts);
-                        }
-                    });
-                };
-                
-                rec(atts);
-            };
-        },
         output: function(model,obj,myResponse,res) {
             
             res.status(myResponse.status);
@@ -259,7 +230,6 @@ var Helper = (function() {
                 functionsArray = Helper.buildWaterfall(functionsArray);
                 
                 Helper.executeWaterfall(functionsArray,function (error, data) {
-                                    
                     res.json(data);        
                 });
             }
