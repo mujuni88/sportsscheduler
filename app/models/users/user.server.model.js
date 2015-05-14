@@ -224,10 +224,6 @@ UserSchema.statics.objectIDAtts = [
 	{
 		name: 'joinedGroups',
 		model: 'Group'
-	},
-	{
-		name: 'createdGroups.admins',
-		model: 'Group'
 	}
 ];
 
