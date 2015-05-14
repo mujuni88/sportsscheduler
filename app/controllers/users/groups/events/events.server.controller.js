@@ -346,13 +346,17 @@ exports.listEventsForGroup = function(req, res) {
 			
 			var group = mod[0];
 
+			Helper.output(EventModel,group.events,myResponse,res);			
+
+			/*
 			Helper.populateModel(Group,group,Group.errPath,function(mod) {
 
 				var events = group.events;
 
-				Helper.output(EventModel,events,myResponse,res);
+				
 				
 			});
+*/
 		}
 	});
 };
