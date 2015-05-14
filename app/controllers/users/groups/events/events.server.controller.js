@@ -335,28 +335,38 @@ exports.listEventsForGroup = function(req, res) {
 	Helper.find(Group,query,function(err,mod) {
 
 		if (err) {
-			myResponse.transformMongooseError(EventModel.errPath,String(err));
-			Helper.output(EventModel,null,myResponse,res);
+			myResponse.transformMongooseError(Group.errPath,String(err));
+			Helper.output(Group,null,myResponse,res);
 		}
 		else if(mod.length === 0 || !mod) {
-			myResponse.addMessages(serverJSON.api.events._id.exist);
-			Helper.output(EventModel,null,myResponse,res);
+			myResponse.addMessages(serverJSON.api.group._id.exist);
+			Helper.output(Group,null,myResponse,res);
 		}
 		else {
 			
 			var group = mod[0];
 
-			Helper.output(EventModel,group.events,myResponse,res);			
+			query = {
+				_id: 
+				{ 
+					$in: group.events
+				}
+			};
 
-			/*
-			Helper.populateModel(Group,group,Group.errPath,function(mod) {
+			Helper.find(EventModel,query,function(err,mod) {
 
-				var events = group.events;
+				if(err)
+				{
+					myResponse.transformMongooseError(EventModel.errPath,String(err));
+					Helper.output(EventModel,null,myResponse,res);
+				}
+				else if(mod.length === 0 || !mod) {
+					myResponse.addMessages(serverJSON.api.events._id.exist);
+					Helper.output(EventModel,null,myResponse,res);
+				}
 
-				
-				
+				Helper.output(EventModel,mod,myResponse,res);				
 			});
-*/
 		}
 	});
 };
