@@ -23,7 +23,11 @@
             ngProgress.reset();
         };
         function response (response) {
-            ngProgress.complete();
+            // ngProgress.complete();
+            if(!response.data){
+                growl.warning(config.title, {title:'Sorry, We are having internal server issues :('});
+            }
+            return response;
         }
         function responseError(rejection) {
 

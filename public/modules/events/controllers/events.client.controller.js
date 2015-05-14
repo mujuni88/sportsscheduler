@@ -158,7 +158,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function find() {
-        return $scope.events = Events.query();
+        return $scope.events = Events.query({
+            groupId:$stateParams.groupId
+        });
     };
 
     function findOne() {
