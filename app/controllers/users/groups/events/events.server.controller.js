@@ -364,8 +364,8 @@ exports.listEventsForGroup = function(req, res) {
 					myResponse.addMessages(serverJSON.api.events._id.exist);
 					Helper.output(EventModel,null,myResponse,res);
 				}
-
-				Helper.output(EventModel,mod,myResponse,res);				
+				else
+					Helper.output(EventModel,mod,myResponse,res);				
 			});
 		}
 	});
