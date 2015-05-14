@@ -18,7 +18,8 @@ var ApplicationConfiguration = (function() {
 		'720kb.fx',
 		'xeditable',
 		'dialogs.main',
-		'angular-growl'
+		'angular-growl',
+		'ngProgress'
 	];
 
 	// Add a new vertical module

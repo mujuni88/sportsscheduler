@@ -1,4 +1,4 @@
-<section data-ng-controller="GroupsController">
+<section data-ng-controller="GroupsController" data-ng-init="getUser()">
     <div class="page-header">
         <h1>Created Groups - <small>({{user.createdGroups.length}})</small> </h1>
     </div>
@@ -10,8 +10,6 @@
         <small class="list-group-item-text">
         Created on
         <span data-ng-bind="group.created | date:'medium'"></span>
-        by
-        <span data-ng-bind="group.createdBy.displayName"></span>
         </small>
         <h4 class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length}}</span></span></h4>
         </a>

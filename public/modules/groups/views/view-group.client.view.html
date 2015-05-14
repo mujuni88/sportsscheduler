@@ -24,6 +24,7 @@
                     </a>
                 </div>
             </div>
+                    <button class="btn btn-primary btn-block btn-lg" ng-hide="isMember()" ng-click="joinGroup()"><i class="glyphicon glyphicon-plus"></i> Join Group</button>
             <div class="jumbotron text-center">
                 <h1 editable-text="group.name" e-name="groupName" e-required><i class="fa fa-users text-primary spacing-sm-right"></i>{{group.name}}</h1>
                 <ul class="text-center list-unstyled">
@@ -31,8 +32,7 @@
                     <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']"><h5 class="text-info">{{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
                 </ul>
             </div>
-
-            <br/>
+            <br/> 
         </div>
     </form>
 

@@ -21,7 +21,8 @@ module.exports = {
                 'public/lib/angular-xeditable/dist/css/xeditable.css',
 				'public/lib/angular-dialog-service/dist/dialogs.min.css',
 				'public/lib/components-font-awesome/css/font-awesome.min.css',
-				'public/lib/angular-growl-v2/build/angular-growl.min.css'
+				'public/lib/angular-growl-v2/build/angular-growl.min.css',
+				'public/lib/ngprogress/ngProgress.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -38,7 +39,8 @@ module.exports = {
 				'public/lib/angular-fx/src/js/angular-fx.js',
                 'public/lib/angular-xeditable/dist/js/xeditable.min.js',
 				'public/lib/angular-dialog-service/dist/dialogs.min.js',
-				'public/lib/angular-growl-v2/build/angular-growl.js'
+				'public/lib/angular-growl-v2/build/angular-growl.js',
+				'public/lib/ngprogress/build/ngProgress.min.js'
             ]
 		},
 		css: [
