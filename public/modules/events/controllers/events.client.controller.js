@@ -278,7 +278,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function getUnresponsiveUsers(members) {
-        debugger;
         members = members || $scope.group.members;
         return _(members)
           .rejectList($scope.event.votes.no,'_id')
