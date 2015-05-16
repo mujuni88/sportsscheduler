@@ -4,6 +4,9 @@ angular.module('events').controller('EventsController', EventsController);
 
 function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
     var _ = lodash;
+    _.mixin({
+        rejectList:rejectList
+    });
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     if (!$scope.user) {
@@ -62,6 +65,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.voteNo = voteNo;
     $scope.hasVotedYes = hasVotedYes;
     $scope.hasVotedNo = hasVotedNo;
+    $scope.group = $scope.$parent.group;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -112,6 +116,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function create() {
+        debugger;
         if ($scope.timeError || $scope.dateError) return;
         var event = new Events($scope.event),
             params = {
@@ -159,7 +164,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function find() {
         return $scope.events = Events.query({
-            groupId:$stateParams.groupId
+            groupId: $stateParams.groupId
         });
     };
 
@@ -168,6 +173,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             eventId: $stateParams.eventId
         }, function() {
             $scope.event = event;
+            $scope.votesUnr = getUnresponsiveUsers();   
         });
         return event.$promise;
     };
@@ -269,5 +275,23 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function _hasUserVotedNo(user) {
         user = user || $scope.user;
         return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
+    }
+
+    function getUnresponsiveUsers(members) {
+        debugger;
+        members = members || $scope.group.members;
+        return _(members)
+          .rejectList($scope.event.votes.no,'_id')
+          .rejectList($scope.event.votes.yes,'_id')
+          .value();
+    }
+
+    function rejectList(list, rej, key) {
+        rej.forEach(function(item) {
+            list = _(list).reject(function(it) {
+                return item[key] === it[key];
+            }).value();
+        });
+        return list;
     }
 }

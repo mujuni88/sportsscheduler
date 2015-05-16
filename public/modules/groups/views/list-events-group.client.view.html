@@ -34,7 +34,7 @@
             No Events in this group
         </div>
         <div class="list-group">
-            <a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" data-ng-repeat="event in events | orderBy:search.event | filter:search.event" data-ng-class="{'disabled':hasEventExpired(event.time)}">
+            <a href='/#!/groups/{{group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" data-ng-repeat="event in events | orderBy:search.event | filter:search.event" data-ng-class="{'disabled':hasEventExpired(event.time)}">
             <div class="media-left media-middle">
                 <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>
             </div>
