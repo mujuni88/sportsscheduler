@@ -269,11 +269,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _hasUserVotedYes(user) {
         user = user || $scope.user;
+        if(_.isUndefined($scope.event.votes)) {return false;}
         return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
     }
 
     function _hasUserVotedNo(user) {
         user = user || $scope.user;
+                if(_.isUndefined($scope.event.votes)) {return false;}
         return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
     }
 
