@@ -284,6 +284,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function getUnresponsiveUsers(members) {
         members = members || $scope.group.members;
+        console.log(members);
         return _(members)
           .rejectList($scope.event.votes.no,'_id')
           .rejectList($scope.event.votes.yes,'_id')

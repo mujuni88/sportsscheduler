@@ -18,11 +18,14 @@
                     <br class="visible-xs"/>
 
                     <div class="input-group">
-                        <input type="text" typeahead-on-select="onSelect(search.members); search.members = '';"
-                               typeahead="member as member.username for member in getMembers($viewValue)"
-                               typeahead-loading="loading" typeahead-template-url="addMembers.html"
-                               class="form-control"
-                               placeholder="Search for members to add" data-ng-model="search.members"/>
+                        <input type="text" 
+                            typeahead-on-select="onSelect(search.members); search.members = '';"        
+                            typeahead="member as member.username for member in getMembers($viewValue)"
+                            typeahead-loading="loading" 
+                            typeahead-template-url="addMembers.html"
+                            typeahead-wait-ms="250"
+                            class="form-control"
+                            placeholder="Search for members to add" data-ng-model="search.members"/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>

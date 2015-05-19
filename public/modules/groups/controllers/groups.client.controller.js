@@ -324,8 +324,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     function joinGroup(){
         _joinGroup($scope.user, $scope.group).then(success, failure);
         function success(response){
-            debugger;
-            console.log('%c %s','color:#f00',JSON.stringify(response.data));
             _addMember($scope.user);
             saveMember();
         }
