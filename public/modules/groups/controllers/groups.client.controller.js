@@ -44,6 +44,12 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     // user functions
     $scope.getUser = getUser;
+    $scope.canRevokeAdminRights = canRevokeAdminRights;
+    $scope.canMakeAdmin = canMakeAdmin;
+    $scope.canRemoveMember = canRemoveMember;
+    $scope.canRmMember = canRmMember;
+    $scope.canRmvMember = canRmvMember;
+    $scope._isAdmin = _isAdmin;
 
     // Group Functions
     function create() {
@@ -332,5 +338,29 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _joinGroup(user, group){
         return UserService.joinGroupAndUser(user, group);
+    }
+
+    function canRevokeAdminRights(member){
+        return ( member.isAdmin && _isOwner() && !isOwner(member) );
+    }
+
+    function canMakeAdmin(member){
+        return member.isAdmin;
+    }
+
+    function canRemoveMember(member){
+        return ( !isOwner(member) && member._id === user._id && !_isOwner() );
+    }
+
+    function canRmMember(member){
+        return ( !isOwner(member) && _isOwner() );
+    }
+
+    function canRmvMember(member){
+        return ( !isOwner(member) && !member.isAdmin && !_isOwner() );
+    }
+
+    function _isAdmin(member){
+        return ( member.isAdmin && !isOwner(member) );
     }
 }

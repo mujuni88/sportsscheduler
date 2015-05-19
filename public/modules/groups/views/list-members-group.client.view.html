@@ -34,27 +34,27 @@
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
                     owner
                     </span>
-                    <span class="spacing-sm-right badge" ng-show="member.isAdmin && !isOwner(member)">
+                    <span class="spacing-sm-right badge" ng-show="_isAdmin(member)">
                     admin
                     </span>
                     <span class="admin-btns" data-ng-show="isAdmin()">
-                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="member.isAdmin">
+                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="canMakeAdmin(member)">
                         <i class="glyphicon glyphicon-king text-primary"></i>
                         </span>
-                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="member.isAdmin && _isOwner() && !isOwner(member)">
+                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="canRevokeAdminRights(member)">
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
-                        title="Remove Member" message="Are you sure?" data-ng-show="!isOwner(member) && member._id === user._id && !_isOwner()">
+                        title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">
                         <i class="glyphicon glyphicon-remove text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
-                        title="Remove Member" message="Are you sure?" data-ng-show="!isOwner(member) && _isOwner()">
+                        title="Remove Member" message="Are you sure?" data-ng-show="canRmMember(member)">
                         <i class="glyphicon glyphicon-remove text-danger"></i>
                         </span>
                     </span>
                                             <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
-                        title="Remove Member" message="Are you sure?" data-ng-show="!isOwner(member) && !member.isAdmin && !_isOwner()">
+                        title="Remove Member" message="Are you sure?" data-ng-show="canRmvMember(member)">
                         <i class="glyphicon glyphicon-remove text-danger"></i>
                         </span>
                 </div>
