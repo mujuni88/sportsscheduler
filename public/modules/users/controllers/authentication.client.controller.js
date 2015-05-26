@@ -21,8 +21,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 				// And redirect to the index page
 				$location.path('/');
-			}).error(function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
 			});
 		};
 
@@ -33,8 +31,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 				// And redirect to the index page
 				$location.path('/');
-			}).error(function(errorResponse) {
-                $scope.error = errorResponse.clientMessage;
 			});
 		};
 

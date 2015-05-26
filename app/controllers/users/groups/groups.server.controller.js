@@ -245,7 +245,7 @@ exports.list = function(req, res) { Group.find().sort('-created').exec(function(
 		
 		var myResponse = new MyResponse();
 
-		var groupName = req.query.group_name;
+		var groupName = req.query.name;
 		console.log('groupName: ' + groupName);
 		if(groupName)
 		{

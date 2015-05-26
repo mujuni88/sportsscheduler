@@ -6,12 +6,31 @@
 
     function HttpProviderInterceptor($q, $location, Authentication, growl) {
         var provider =  {
-            responseError: responseError
+            // 'request': request,
+            // 'requestError': requestError,
+            // 'response': response,
+            'responseError': responseError
         };
         
         return provider;
 
+        function request(config){
+            ngProgress.reset();
+            ngProgress.start();
+
+        }
+        function requestError(rejection) {
+            ngProgress.reset();
+        };
+        function response (response) {
+            // ngProgress.complete();
+            if(!response.data){
+                growl.warning(config.title, {title:'Sorry, We are having internal server issues :('});
+            }
+            return response;
+        }
         function responseError(rejection) {
+
             switch (rejection.status) {
                 case 400:
                     if(rejection.data){

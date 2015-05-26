@@ -62,7 +62,7 @@
                 <p class="text-primary well well-sm">{{event.message}}</p>
             </div>
             <div class="col-sm-12">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="page-header">
                     <h3>  
                     <span ng-show="!hasEventExpired(event.time)">Going</span>
@@ -73,7 +73,7 @@
                     <li data-ng-repeat="user in event.votes.yes"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="page-header">
                     <h3>  
                     <span ng-show="!hasEventExpired(event.time)">Not Going</span>
@@ -82,6 +82,16 @@
                 </div>
                 <ul class="list-unstyled">
                     <li data-ng-repeat="user in event.votes.no"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                </ul>
+                </div>
+                <div class="col-sm-4">
+                    <div class="page-header">
+                    <h3>  
+                    <span>Didn't Respond</span> 
+                    ({{votesUnr.length}}):</h3>
+                </div>
+                <ul class="list-unstyled">
+                    <li data-ng-repeat="user in votesUnr"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 

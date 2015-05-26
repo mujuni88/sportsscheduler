@@ -106,11 +106,11 @@ GroupSchema.statics.objectIDAtts = [
 	},
 	{
 		name: 'events',
-		model: 'Event',
+		model: 'Event'
 	},
 	{
 		name: 'members',
-		model: 'User',
+		model: 'User'
 	},
 	{	name: 'createdBy',
 		model: 'User'

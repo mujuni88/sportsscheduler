@@ -2,10 +2,10 @@
 // Groups controller
 angular.module('groups').controller('GroupsController', GroupsController);
 
-function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl) {
+function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl, Users, UserService) {
     var _ = lodash;
     $scope.authentication = Authentication;
-    $scope.user = Authentication.user;
+    $scope.user = $scope.authentication.user;
     if (!$scope.user) {
         $location.path('/')
     }
@@ -35,9 +35,15 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.addMember = addMember;
     $scope.isAdmin = isAdmin;
     $scope.isOwner = isOwner;
+    $scope._isOwner = _isOwner;
     $scope.makeAdmin = makeAdmin;
     $scope.removeAdmin = removeAdmin;
     $scope.canRemoveAdmin = canRemoveAdmin;
+    $scope.isMember = isMember;
+    $scope.joinGroup = joinGroup;
+
+    // user functions
+    $scope.getUser = getUser;
 
     // Group Functions
     function create() {
@@ -45,7 +51,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         var group = new Groups($scope.group);
         // Redirect after save
         return group.$save(function(data) {
-            _updateUser(data);
             $state.go('viewGroup.listMembers.viewMembers',{
                 groupId:data._id
             });
@@ -65,7 +70,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function find() {
         $scope.groups = Groups.query();
-        _getUser();
     }
     // Member functions
     function _addIsAdminAttr() {
@@ -83,12 +87,8 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     function findOne() {
         return $scope.group = Groups.get({
             groupId: $stateParams.groupId
-        }, function() {
-            $scope.group.members = _.uniq(_.union($scope.group.members, $scope.group.admins), '_id');
-            _addIsAdminAttr();
         });
         $scope.tempMembers = [];
-        _getUser();     
     }
 
     function onSelect($model) {
@@ -105,11 +105,11 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         }
     }
 
-    function removeMember(index) {
-        var member = _getMember(index);
+    function removeMember(member) {
+        // var member = _getMember(index);
         if (member.isAdmin) {
             if (!canRemoveAdmin()) {
-                _notifyCannotRemoveAdmin();
+                _notifyCannotRemoveOwner();
                 return _getPromise(false, member);
             }
 
@@ -120,7 +120,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
 
         function success() {
-            _addIsAdminAttr();
             _notifySuccess('Member ' + member.username + ' removed');
         }
 
@@ -139,7 +138,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
 
         function success() {
-            _addIsAdminAttr();
         }
 
         function failure() {
@@ -156,7 +154,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(function() {
             $state.go('viewGroup.listMembers.viewMembers');
             $scope.tempMembers = [];
-            _addIsAdminAttr();
             _notifySuccess('Member successfully added');
 
         });
@@ -187,6 +184,14 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return _isUserInAdmins($scope.group.createdBy);
     }
 
+    function _isOwner(){
+        if(_.isUndefined($scope.group.createdBy)){
+            return false;
+        }
+
+        return $scope.group.createdBy._id === $scope.authentication.user._id;
+    }
+
     function makeAdmin(member) {
         // add member to admins array
         if (!_addAdmin(member)) {
@@ -195,7 +200,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
         // on succes, add isAdmin & add to member array
         function success() {
-            _addIsAdminAttr();
             _notifySuccess('Admin successfully added');
         }
         // on failure, remove from admins array
@@ -205,8 +209,8 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function removeAdmin(member) {
-        if (!canRemoveAdmin()) {
-            _notifyCannotRemoveAdmin();
+        if (isOwner(member)) {
+            _notifyCannotRemoveOwner();
             return _getPromise(false, member);
         }
         // remove member from admin array
@@ -215,7 +219,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
         // on succes, add isAdmin & add to member array
         function success() {
-            _addIsAdminAttr();
              _notifySuccess('Admin successfully removed');
         }
         // on failure, add member back to admins
@@ -228,9 +231,9 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return _.size($scope.group.admins) > 1;
     }
 
-    function _notifyCannotRemoveAdmin() {
-        var header = 'Remove Admin',
-            msg = 'Group requires an admin. Assign admin rights to a member in order to remove one',
+    function _notifyCannotRemoveOwner() {
+        var header = 'Remove Owner',
+            msg = 'Can not remove the owner',
             opts = {
                 size: 'sm',
                 windowClass: 'modal-btn-sm'
@@ -303,12 +306,33 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         growl.success(text, {title:text});
     }
 
-    function _updateUser(group){
-        $scope.user.createdGroups.push(group);
-        Authentication.user = $scope.user;
+    function getUser(){
+        var user = Users.get({
+            userId: $scope.user._id
+        }, function() {
+            Authentication.user = user;
+            $scope.user = user;
+        });
+        return user.$promise;
     }
 
-    function _getUser(){
-        $scope.user = Authentication.user;
+    // Checks whether the logged in user is a member of the group
+    function isMember(){
+        return _isUserInMembers($scope.user);
+    }
+
+    function joinGroup(){
+        _joinGroup($scope.user, $scope.group).then(success, failure);
+        function success(response){
+            debugger;
+            console.log('%c %s','color:#f00',JSON.stringify(response.data));
+            _addMember($scope.user);
+            saveMember();
+        }
+        function failure(){}
+    }
+
+    function _joinGroup(user, group){
+        return UserService.joinGroupAndUser(user, group);
     }
 }
