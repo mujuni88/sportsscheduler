@@ -78,6 +78,51 @@ var Helper = (function() {
 
             async.waterfall(arr,callback);
         },
+        save: function(model,obj) {
+
+            return function(arg1,arg2,done) {
+
+                obj.save(function(err) {
+
+                    var myResponse = new MyResponse();
+
+                    if (err) {
+                        console.log('error: ' + err);
+                        myResponse.transformMongooseError(model.errPath,String(err));
+                    }
+
+                    done(myResponse,obj,1);
+
+                });
+            }; 
+        },
+        update: function(model,query,data) {
+            
+            return function(arg1,arg2,done) {
+                model.update(query,
+                {
+                    $set: data
+                },
+                {
+                    runValidators: true
+                },
+                function(err) {
+                    if (err) {
+                        console.log('error: ' + err);
+                        done(err,1,1);
+                    }
+                    else {
+                        console.log('final query: ' + JSON.stringify(query,null,1));
+                        console.log('final data: ' + JSON.stringify(query,null,1));
+
+                        Helper.find(model,query,function(err,mod) {
+                            var obj = mod[0];
+                            done(null,obj,1);
+                        });
+                    }
+                });
+            };
+        },
         find: function(model,query,callback) {
 
             model.find(query)
@@ -205,6 +250,35 @@ var Helper = (function() {
             }
             
             return newVal;
+        },
+        populate: function(model, obj, callback) {
+            var atts = model.objectIDAtts.slice(0);
+
+            //console.log('atts: ' + atts);
+            var optionsModel = mongoose.model(atts[0].model);
+
+            var rec = function(atts) {
+                var options = {
+                    path: atts[0].name,
+                    model: optionsModel.title,
+                    select: Helper.attsArryToAttsString(optionsModel.attsToShow)
+                };
+
+                model.populate(obj, options, function (err, obj) {
+                    
+                    atts.splice(0,1);
+                    //console.log('new atts: ' + atts);
+                    if(atts.length === 0)
+                        callback(err,obj);
+                    else
+                    {
+                        //console.log('populated obj: ' + obj);
+                        rec(atts);
+                    }
+                });
+            };
+            
+            rec(atts);
         },
         output: function(model,obj,myResponse,res) {
             

@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	MyResponse = require('../../../custom_objects/MyResponse'),
 	serverJSON = require('../../../local_files/ui/server.ui.json'),
 	Helper = require('../../../custom_objects/Helper'),
+	PrivateFunctions = require('./_privateFunctions'),
 	util = require('util'),
 	_ = require('lodash');
 
@@ -135,6 +136,7 @@ exports.update = function(req, res) {
 	
 	var myResponse = new MyResponse();
 	var id = req.params.groupId;
+	var i = 0;
 
 	Group.findOne({_id: id}, function(err,group) {
 		
@@ -153,19 +155,46 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			var data = _.merge(group,req.body,Helper.cleanMergeObj);
-			_.extend(group,data);
+			var oldMembers = group.members;
 
-			group.updated = Date.now();
+			console.log('before save: ' + group);
 
-			group.save(function(err) {
+			Group.update(
+			{
+				_id : id
+			},
+			{
+				'$set':req.body
+			},
+			{
+				runValidators: true
+			},
+			function(err) {
+
 				console.log('in save');
-
+				console.log('after save: ' + group);
+				
 				if (err) {
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
+					Helper.output(Group,null,myResponse,res);
 				}
-					Helper.output(Group,group,myResponse,res);
+				else
+				{
+					var functionsArray = [];
+					functionsArray.push(PrivateFunctions.update.joinedGroups(req,group));
+					functionsArray = Helper.buildWaterfall(functionsArray);
+
+					Helper.executeWaterfall(functionsArray,function (err, group) {
+						if (err) {
+							console.log('error: ' + err);
+							myResponse.transformMongooseError(Group.errPath,String(err));
+							Helper.output(Group,group,myResponse,res);
+						}
+						else
+	                		Helper.output(Group,group,myResponse,res);
+	                });
+				}
 			});
 		}
 	});
