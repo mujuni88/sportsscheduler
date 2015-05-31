@@ -2,7 +2,7 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope) {
     var _ = lodash;
     _.mixin({
         rejectList:rejectList
@@ -60,6 +60,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.timeChange = timeChange;
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
+    $scope.$on('voted', function(data) { debugger; getUnresponsiveUsers();});    
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
     $scope.voteNo = voteNo;
@@ -190,6 +191,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         update().then(success, failure);
 
         function success(data) {
+            $rootScope.$broadcast('voted', data);
             _notifySuccess('Voted successfully');
         }
 
@@ -204,6 +206,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         update().then(success, failure);
 
         function success(data) {
+            $rootScope.$broadcast('voted', data);
             _notifySuccess('Voted successfully');
         }
 
@@ -269,16 +272,19 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _hasUserVotedYes(user) {
         user = user || $scope.user;
+        if(_.isUndefined($scope.event.votes)) {return false;}
         return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
     }
 
     function _hasUserVotedNo(user) {
         user = user || $scope.user;
+                if(_.isUndefined($scope.event.votes)) {return false;}
         return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
     }
 
     function getUnresponsiveUsers(members) {
         members = members || $scope.group.members;
+        console.log(members);
         return _(members)
           .rejectList($scope.event.votes.no,'_id')
           .rejectList($scope.event.votes.yes,'_id')

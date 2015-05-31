@@ -64,10 +64,13 @@
         <div class="navbar-form navbar-right" role="search" data-ng-show="authentication.user">
             <div class="form-group">
             <div class="input-group">
-                        <input type="text" typeahead-on-select="onSelect(search.groups); search.groups = '';"
-                               typeahead="group as group._id for group in getGroups($viewValue)" typeahead-template-url="addGroup.html"
-                               class="form-control"
-                               placeholder="Search for a group" data-ng-model="search.groups"/>
+                        <input type="text" 
+                            typeahead-on-select="onSelect(search.groups); search.groups = '';"
+                            typeahead="group as group._id for group in getGroups($viewValue)" 
+                            typeahead-template-url="addGroup.html"
+                            typeahead-wait-ms="250"
+                            class="form-control"
+                            placeholder="Search for a group" data-ng-model="search.groups"/>
 <!--                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span> -->

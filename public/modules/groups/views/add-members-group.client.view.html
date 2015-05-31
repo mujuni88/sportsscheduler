@@ -18,11 +18,14 @@
                     <br class="visible-xs"/>
 
                     <div class="input-group">
-                        <input type="text" typeahead-on-select="onSelect(search.members); search.members = '';"
-                               typeahead="member as member.username for member in getMembers($viewValue)"
-                               typeahead-loading="loading" typeahead-template-url="addMembers.html"
-                               class="form-control"
-                               placeholder="Search for members to add" data-ng-model="search.members"/>
+                        <input type="text" 
+                            typeahead-on-select="onSelect(search.members); search.members = '';"        
+                            typeahead="member as member.username for member in getMembers($viewValue)"
+                            typeahead-loading="loading" 
+                            typeahead-template-url="addMembers.html"
+                            typeahead-wait-ms="250"
+                            class="form-control"
+                            placeholder="Search for members to add" data-ng-model="search.members"/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>
@@ -59,21 +62,29 @@
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
                     owner
                     </span>
-                    <span class="spacing-sm-right badge" ng-show="member.isAdmin">
+                    <span class="spacing-sm-right badge" ng-show="_isAdmin(member)">
                     admin
                     </span>
-                    <span class="admin-btns" data-ng-show="isAdmin() && !isOwner(member)">
-                    <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="member.isAdmin">
-                    <i class="glyphicon glyphicon-king text-primary"></i>
+                    <span class="admin-btns" data-ng-show="isAdmin()">
+                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="canMakeAdmin(member)">
+                        <i class="glyphicon glyphicon-king text-primary"></i>
+                        </span>
+                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="canRevokeAdminRights(member)">
+                        <i class="glyphicon glyphicon-king text-danger"></i>
+                        </span>
+                        <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
+                        title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">
+                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                        </span>
+                        <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
+                        title="Remove Member" message="Are you sure?" data-ng-show="canRmMember(member)">
+                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                        </span>
                     </span>
-                    <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="member.isAdmin">
-                    <i class="glyphicon glyphicon-king text-danger"></i>
-                    </span>
-                    <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember($index)" dialog-enable="true"
-                        title="Remove Member" message="Are you sure?">
-                    <i class="glyphicon glyphicon-remove text-danger"></i>
-                    </span>
-                    </span>
+                                            <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
+                        title="Remove Member" message="Are you sure?" data-ng-show="canRmvMember(member)">
+                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                        </span>
                 </div>
             </li>
         </ul>
