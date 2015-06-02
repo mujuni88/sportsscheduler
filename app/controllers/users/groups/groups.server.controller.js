@@ -159,6 +159,29 @@ exports.update = function(req, res) {
 
 			console.log('before save: ' + group);
 
+			var admins = req.body.admins;
+			var members = req.body.members;
+
+			req.body.admins = [];
+			req.body.members = [];
+
+			if(typeof admins !== 'undefined')
+			{
+				for(i = 0; i < admins.length; ++i) {
+					req.body.admins.push(admins[i]._id.toString());
+				}
+			}
+
+			if(typeof members !== 'undefined')
+			{
+				for(i = 0; i < members.length; ++i) {
+					req.body.members.push(members[i]._id.toString());
+				}
+			}
+
+			if(typeof req.body.createdBy !== 'undefined')
+				req.body.createdBy = req.body.createdBy._id.toString();
+
 			Group.update(
 			{
 				_id : id
