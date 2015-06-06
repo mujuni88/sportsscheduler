@@ -146,31 +146,6 @@ GroupSchema.path('admins').validate(function (ids,respond) {
 	
 },'admins.exist');
 
-GroupSchema.path('events').validate(function (ids,respond) {
-
-	if(ids.length === 0)
-		respond(true);
-
-	var Event = mongoose.model('Event');
-	var query = {
-    	_id: 
-    	{
-    		$in: ids
-    	}
-    };
-
-	console.log('validate events: ' + ids);
-	
-	Helper.find(Event,query,function(err,mods) {
-
-		if(err || !mods || ids.length !== mods.length) 
-			respond(false);
-		else
-			respond(true);
-	});
-	
-},'events.exist');
-
 GroupSchema.path('members').validate(function (ids,respond) {
 
 	if(ids.length === 0)
