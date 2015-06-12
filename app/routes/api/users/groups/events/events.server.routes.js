@@ -5,6 +5,9 @@ module.exports = function(app) {
 	var events = require('../../../../../../app/controllers/users/groups/events/events');
 
 	// Events Routes
+	app.route('/api/users/groups/events/cron')
+		.post(events.cron);
+
 	app.route('/api/users/groups/events')
 		.get(events.list);
 		//.post(users.requiresLogin, events.create);

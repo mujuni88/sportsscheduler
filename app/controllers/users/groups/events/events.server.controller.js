@@ -11,11 +11,54 @@ var mongoose = require('mongoose'),
 	Helper = require('../../../../custom_objects/Helper'),
 	async = require('async'),
 	Group = mongoose.model('Group'),
+	CronJob = require('cron').CronJob,
+	Cron = require('../../../../custom_objects/Cron'),
+	PrivateFunctions = require('./_privateFunctions'),
 	_ = require('lodash');
 
 /**
  * Create a Event
  */
+
+function cron () {
+	console.log('cron');
+	new CronJob('* * * * * *', function() {
+		console.log('You will see this message every second');
+	}, 
+	null, 
+	true, 
+	'America/Los_Angeles');
+}
+
+exports.cron = function(req, res) {
+
+	//var eventID = req.params.eventId;
+	
+	var time = require('time');
+
+	var convertedTime = new time.Date(req.body.time);
+	convertedTime.setTimezone('America/Chicago');
+
+	var settings = {
+  		cronTime: new Date(convertedTime),
+  		onTick: function() {
+    		console.log('You will see this message every second');
+  		},
+  		start: true,
+  		timeZone: 'America/Chicago'
+	};
+
+	var job = new CronJob(settings);
+
+	var cron = {
+		key: req.body.time,
+		settings: settings
+	};
+
+	Cron.addJob(cron.key,job);
+	res.json(convertedTime);
+};
+
 exports.create = function(req, res) {
 
 	var groupID = req.params.groupId;
@@ -44,6 +87,7 @@ exports.create = function(req, res) {
 	
 		//event.user = req.user;
 		event.group = groupID;
+
 		console.log('event: ' + event);
 
 		event.save(function(err) {
@@ -54,20 +98,23 @@ exports.create = function(req, res) {
 				Helper.output(EventModel,null,myResponse,res);
 			}
 			else {
-				group.events.push(event._id);
-				
-				group.save(function(err) {
 
+				var functionsArray = [];
+				functionsArray.push(PrivateFunctions.create.addEventToGroup(group,event._id));
+				functionsArray.push(PrivateFunctions.create.createGatherVotesCron(event));
+				functionsArray = Helper.buildWaterfall(functionsArray);
+
+				Helper.executeWaterfall(functionsArray,function (err, obj) {
 					if (err) {
 						console.log('error: ' + err);
-						myResponse.transformMongooseError(Group.errPath,String(err));
-						Helper.output(Group,null,myResponse,res);
+						myResponse.transformMongooseError(err.model.errPath,String(err));
+						Helper.output(err.model,obj,myResponse,res);
 					}
-					else {
-						console.log('saved successfully');
-						Helper.output(EventModel,event,myResponse,res);
-					}
-				});
+					else
+                		Helper.output(EventModel,event,myResponse,res);
+                });
+
+				
 			}			
 		});
 	});
@@ -118,6 +165,9 @@ exports.update = function(req, res) {
 	
 	var myResponse = new MyResponse();
 	var id = req.params.eventId;
+	var query = {
+		_id : id
+	};
 
 	EventModel.findOne({_id: id}, function(err,event) {
 		
@@ -161,6 +211,7 @@ exports.update = function(req, res) {
 			// 	event.votes.yes.push(mongoose.Types.ObjectId(String(req.body.votes.yes[j]._id)));
 			// }
 
+			/*
 			if(typeof req.body.votes !== 'undefined')
 			{
 				console.log('checking votes');
@@ -174,12 +225,12 @@ exports.update = function(req, res) {
 				console.log('old votes: ' + JSON.stringify(event.votes,null,4));
 				for(i = 0; i < req.body.votes.no.length; ++i)
 				{
-					noVotes.push(req.body.votes.no[i]._id);
+					noVotes.push(req.body.votes.no[i]._id.toString());
 				}
 
 				for(j = 0; j < req.body.votes.yes.length; ++j)
 				{
-					yesVotes.push(req.body.votes.yes[j]._id);
+					yesVotes.push(req.body.votes.yes[j]._id.toString());
 				}
 
 				req.body.votes.yes = yesVotes;
@@ -201,8 +252,8 @@ exports.update = function(req, res) {
 				}
 
 				//see if user has already voted yes
-				var intersection = _.intersection(req.body.votes.yes,yesVotes);
-
+				var intersection = _.difference(req.body.votes.yes,yesVotes);
+				console.log('intersection: ' + intersection);
 				if(intersection.length)
 				{
 					console.log('user has voted "Yes" already: ' + intersection);	
@@ -223,18 +274,100 @@ exports.update = function(req, res) {
 				}
 				
 			}
+			*/
 
+			if(typeof req.body.votes !== 'undefined')
+			{
+				console.log('begin votes: ' + JSON.stringify(req.body.votes,null,1));
+				var yesVotes = req.body.votes.yes;
+				var noVotes = req.body.votes.no;
+				var oldYesVotes = [];
+				var oldNoVotes = [];
+				var i = 0;
+
+				req.body.votes.yes = [];
+				req.body.votes.no = [];
+
+				for(i = 0; i < yesVotes.length; ++i)
+					req.body.votes.yes.push(yesVotes[i]._id.toString());
+
+				for(i = 0; i < noVotes.length; ++i)
+					req.body.votes.no.push(noVotes[i]._id.toString());
+
+				for(i = 0; i < event.votes.yes.length; ++i)
+					oldYesVotes.push(event.votes.yes[i].toString());
+
+				for(i = 0; i < event.votes.no.length; ++i)
+					oldNoVotes.push(event.votes.no[i].toString());
+
+				//check to see if user has already voted
+				var intersection = _.intersection(req.body.votes.yes,req.body.votes.no);
+
+				if(intersection.length)
+				{
+					myResponse.addMessages(serverJSON.api.events.votes.yes.duplicate);
+					Helper.output(EventModel,null,myResponse,res);
+					return;
+				}
+
+				console.log('oldYesVotes: ' + oldYesVotes);
+				console.log('oldNoVotes: ' + oldNoVotes);
+				//check if user has already votes yes
+				intersection = _.intersection(req.body.votes.yes,oldYesVotes);
+				console.log('yes intersection: ' + intersection);
+				if(intersection.length)
+				{
+					myResponse.addMessages(serverJSON.api.events.votes.yes.duplicate);
+					Helper.output(EventModel,null,myResponse,res);
+					return;
+				}
+
+				//check if user has already votes no
+				intersection = _.intersection(req.body.votes.no,oldNoVotes);
+				console.log('no intersection: ' + intersection);
+				if(intersection.length)
+				{
+					myResponse.addMessages(serverJSON.api.events.votes.no.duplicate);
+					Helper.output(EventModel,null,myResponse,res);
+					return;
+				}
+
+				console.log('votes: ' + JSON.stringify(req.body.votes,null,1));
+			}
 
 			//EventModel.findByIdAndUpdate(id,req.body,function(err,event) {
-			_.extend(event,req.body);
-			event.save(function(err) {
+			EventModel.update(
+			{
+				_id : id
+			},
+			{
+				'$set':req.body
+			},
+			{
+				runValidators: true
+			},
+			function(err) {
 				console.log('err: ' + err);
 
 				if (err) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
-				} 
+					Helper.output(EventModel,null,myResponse,res);
+				}
+				else
+				{
+					Helper.find(EventModel,query,function(err,mod) {
 
-				Helper.output(EventModel,event,myResponse,res);
+						var event = mod[0];
+
+						if (err) {
+							myResponse.transformMongooseError(EventModel.errPath,String(err));
+							Helper.output(EventModel,null,myResponse,res);
+						}
+						else
+							Helper.output(EventModel,event,myResponse,res);
+					});
+				}
+				
 			});
 		}
 	});
@@ -320,6 +453,8 @@ exports.list = function(req, res) { EventModel.find().sort('-created').exec(func
 			} 
 
 			Helper.output(EventModel,events,myResponse,res);
+
+			cron();
 		}
 	});
 };

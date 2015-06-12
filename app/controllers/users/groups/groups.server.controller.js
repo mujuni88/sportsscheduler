@@ -85,16 +85,23 @@ exports.create = function(req, res) {
 						Helper.output(Group,group,myResponse,res);
 						return;
 					}
-					req.user.createdGroups.push(group._id);
-					req.user.save(function(userErr) {
-						if (userErr) {
-							console.log('userErr: ' + userErr);
-							myResponse.transformMongooseError(User.errPath,String(err));
-							Helper.output(User,null,myResponse,res);
+
+					var functionsArray = [];
+					functionsArray.push(PrivateFunctions.create.createdGroups(req,group));
+					functionsArray = Helper.buildWaterfall(functionsArray);
+
+					Helper.executeWaterfall(functionsArray,function (err, group) {
+
+						if (err) {
+							console.log('error: ' + err);
+							myResponse.transformMongooseError(err.model.errPath,String(err.err));
+							Helper.output(err.model,null,myResponse,res);
 						}
 						else
-							Helper.output(Group,group,myResponse,res);
+	                		Helper.output(Group,group,myResponse,res);
 					});
+
+					
 				}
 			});
 		}
@@ -155,15 +162,15 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			var oldMembers = group.members;
-
 			console.log('before save: ' + group);
 
 			var admins = req.body.admins;
 			var members = req.body.members;
+			var events = req.body.events;
 
 			req.body.admins = [];
 			req.body.members = [];
+			req.body.events = [];
 
 			if(typeof admins !== 'undefined')
 			{
@@ -182,6 +189,13 @@ exports.update = function(req, res) {
 			if(typeof req.body.createdBy !== 'undefined')
 				req.body.createdBy = req.body.createdBy._id.toString();
 
+			if(typeof events !== 'undefined')
+			{
+				for(i = 0; i < events.length; ++i) {
+					req.body.events.push(events[i]._id.toString());
+				}
+			}	
+
 			Group.update(
 			{
 				_id : id
@@ -195,7 +209,6 @@ exports.update = function(req, res) {
 			function(err) {
 
 				console.log('in save');
-				console.log('after save: ' + group);
 				
 				if (err) {
 					console.log('error: ' + err);
@@ -211,8 +224,8 @@ exports.update = function(req, res) {
 					Helper.executeWaterfall(functionsArray,function (err, group) {
 						if (err) {
 							console.log('error: ' + err);
-							myResponse.transformMongooseError(Group.errPath,String(err));
-							Helper.output(Group,group,myResponse,res);
+							myResponse.transformMongooseError(err.model.errPath,String(err.err));
+							Helper.output(err.model,null,myResponse,res);
 						}
 						else
 	                		Helper.output(Group,group,myResponse,res);

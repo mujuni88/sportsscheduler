@@ -9,6 +9,30 @@ var mongoose = require('mongoose'),
 var PrivateFunctions = (function() {
 
 	return {
+		create:
+		{
+			createdGroups: function(req,group)
+			{
+				return function(arg1,arg2,done) {
+
+					req.user.createdGroups.push(group._id);
+					req.user.save(function(err) {
+						if (err) {
+							err = {
+								model: User,
+								err: err
+							};
+							console.log('error: ' + err);
+							done(err,null,arg2);
+						}
+						else {
+							
+							done(null,group,arg2);
+						}
+					});
+				};
+			}
+		},
 		update: 
 		{
 			joinedGroups: function(req,group)
@@ -30,6 +54,21 @@ var PrivateFunctions = (function() {
 						oldMembersIDsHash[oldMembers[i].toString()] = 1;
 					}
 
+					var members = req.body.members;
+					req.body.members = [];
+
+					for(i = 0; i < members.length; ++i) {
+						req.body.members.push(members[i].toString());
+					}
+
+					for(i = 0; i < req.body.members.length; ++i)
+						console.log('req members type: ' + typeof req.body.members[i]);
+
+					for(i = 0; i < oldMembersIDs.length; ++i)
+						console.log('oldMembersIDs type: ' + typeof oldMembersIDs[i]);
+
+
+					console.log('oldMembersIDs: ' + oldMembersIDs);
 					var removedUsers = _.difference(oldMembersIDs,req.body.members);
 					console.log('removedUsers: ' + removedUsers);
 
@@ -108,8 +147,12 @@ var PrivateFunctions = (function() {
 							Helper.executeWaterfall(saveArray,function(err,data) {
 
 								if (err) {
+									err = {
+										model: User,
+										err: err
+									};
 									console.log('error: ' + err);
-									done(err,null,1);
+									done(err,null,arg2);
 								}
 								else {
 									query = {
@@ -119,8 +162,12 @@ var PrivateFunctions = (function() {
 									Helper.find(Group,query,function(err,mod) {
 
 										if (err) {
+											err = {
+												model: Group,
+												err: err
+											};
 											console.log('error: ' + err);
-											done(err,null,1);
+											done(err,null,arg2);
 										}
 										else {
 											group = mod[0];

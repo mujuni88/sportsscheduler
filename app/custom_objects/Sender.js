@@ -10,10 +10,12 @@ function Sender() {
     
     // create reusable transporter object using SMTP transport
     //pass: '}_sB*p4:Y]A4ESr'
+    /*
     console.log('clientID: ' + configJSON.nodemailer.xoauth2.clientID);
     console.log('clientSecret: ' + configJSON.nodemailer.xoauth2.clientSecret);
     console.log('refreshToken: ' + configJSON.nodemailer.xoauth2.refreshToken);
     console.log('accessToken: ' + configJSON.nodemailer.xoauth2.accessToken);
+    */
  	this.transporter = nodemailer.createTransport('SMTP',{
 	    service: 'Gmail',
 	    auth: {

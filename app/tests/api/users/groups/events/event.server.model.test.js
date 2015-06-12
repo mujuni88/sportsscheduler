@@ -161,11 +161,11 @@ describe('Event Model Unit Tests:', function() {
 			  	location: {
 			    	address: 'address'
 			  	},
-			  	date: '2014-11-19T19:33:00.243Z',
+			  	date: '2014-06-11T15:33:00.244Z',
 				message: 'w',
 				minVotes: 0,
 				minimumVotes: 5,
-				time: '2014-11-19T21:33:00.244Z',
+				time: '2015-06-12T15:17:30.244Z',
 				voteEnabled: true
 			})
 	        .end(function(e,res){
@@ -186,11 +186,10 @@ describe('Event Model Unit Tests:', function() {
 			  	location: {
 			    	address: 'address2'
 			  	},
-			  	date: '2014-11-19T19:33:00.243Z',
+			  	date: '2014-06-11T15:33:00.244Z',
 				message: 'w',
 				minVotes: 0,
 				minimumVotes: 5,
-				time: '2014-11-19T21:33:00.244Z',
 				voteEnabled: true
 			})
 	        .end(function(e,res){
@@ -253,6 +252,7 @@ describe('Event Model Unit Tests:', function() {
 			})
 	        .end(function(e,res){
 	            console.log(e);
+	            console.log(res.statusCode);
 	            chaiExpect(e).to.eql(null);
 	            chaiExpect(res.statusCode).to.eql(400);
 	            console.log('updated eventID: ' + eventID);
@@ -294,11 +294,10 @@ describe('Event Model Unit Tests:', function() {
 			  	location: {
 			    	address: 'add'
 			  	},
-			  	date: '2014-11-19T19:33:00.243Z',
+			  	date: '2014-06-11T15:33:00.244Z',
 				message: 'w',
 				minVotes: 0,
 				minimumVotes: 5,
-				time: '2014-11-19T21:33:00.244Z',
 				voteEnabled: true
 			})
 	        .end(function(e,res){

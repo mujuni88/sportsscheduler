@@ -287,56 +287,6 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 
 /*********** Validate Functions Middleware **************/
 
-UserSchema.path('createdGroups').validate(function (ids,respond) {
-
-	if(ids.length === 0)
-		respond(true);
-
-	var Group = mongoose.model('Group');
-	var query = {
-                	_id: 
-                	{
-                		$in: ids
-                	}
-                };
-
-	console.log('validate created groups: ' + ids);
-
-	Helper.find(Group,query,function(err,mods) {
-
-		if(err || !mods || ids.length !== mods.length) 
-			respond(false);
-		else
-			respond(true);
-	});
-	
- },'createdGroups.exist');
-
-UserSchema.path('joinedGroups').validate(function (ids,respond) {
-
-	if(ids.length === 0)
-		respond(true);
-	
-	var Group = mongoose.model('Group');
-	var query = {
-                	_id: 
-                	{
-                		$in: ids
-                	}
-                };
-
-	console.log('validate joined groups: ' + ids);
-	
-	Helper.find(Group,query,function(err,mods) {
-
-		if(err || !mods || ids.length !== mods.length) 
-			respond(false);
-		else
-			respond(true);
-	});
-	
-},'joinedGroups.exist');
-
 UserSchema.path('addedBy').schema.path('groupID').validate(function (id,respond) {
 
 	var Group = mongoose.model('Group');
