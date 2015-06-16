@@ -193,12 +193,11 @@ GroupSchema.path('createdBy').validate(function (id,respond) {
 /*********** END Validate Functions **************/
 
 GroupSchema.pre('save', function(next){
-  this.members = this.members.map(function(option) { return option._id; });
 
   	/********** Combine admins and members and also guarantee uniqueness ***********/
-  	var union = _.union(this.members,this.admins);
+  	var combinedArray = this.members.concat(this.admins);
   	
-  	var arr = _.uniq(union,false,function(obj) {
+  	var arr = _.uniq(combinedArray,false,function(obj) {
   		return obj.toString();
   	});
 
