@@ -10,7 +10,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     if (!$scope.user) {
-        $location.path('/')
+        $location.path('/');
     }
     $scope.state = $state;
     $scope.stateParams = $stateParams;
@@ -60,7 +60,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.timeChange = timeChange;
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
-    $scope.$on('voted', function(data) { debugger; getUnresponsiveUsers();});    
+    $scope.$on('voted', watchVotes);    
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
     $scope.voteNo = voteNo;
@@ -114,6 +114,10 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         }
         $scope.event.location.lat = newVal.lat();
         $scope.event.location.lng = newVal.lng();
+    }
+
+    function watchVotes(data) {
+        $scope.votesUnr = getUnresponsiveUsers();
     }
 
     function create() {
@@ -281,6 +285,14 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
                 if(_.isUndefined($scope.event.votes)) {return false;}
         return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
     }
+    function rejectList(list, rej, key) {
+        rej.forEach(function(item) {
+            list = _(list).reject(function(it) {
+                return item[key] === it[key];
+            }).value();
+        });
+        return list;
+    }
 
     function getUnresponsiveUsers(members) {
         members = members || $scope.group.members;
@@ -291,12 +303,4 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
           .value();
     }
 
-    function rejectList(list, rej, key) {
-        rej.forEach(function(item) {
-            list = _(list).reject(function(it) {
-                return item[key] === it[key];
-            }).value();
-        });
-        return list;
-    }
 }
