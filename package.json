@@ -52,7 +52,8 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "superagent": "~0.17.0",
-    "swig": "~1.4.1"
+    "swig": "~1.4.1",
+    "time": "^0.11.3"
   },
   "devDependencies": {
     "grunt-concurrent": "~0.5.0",
