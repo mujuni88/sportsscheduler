@@ -104,7 +104,7 @@ var PrivateFunctions = (function() {
 										{
 											var user = users[j];
 											console.log('username%s/email%s: ', user.username,user.email);
-											Sender.sendSMS(user.email, 'Event', 'Votes Are In!\n' + event.votes.yes.length + 'people voted YES \n' + event.votes.no.length + 'people voted NO \n', callback(user));
+											Sender.sendSMS(user.email, 'Event', 'Votes Are In!\n' + event.votes.yes.length + ' people voted YES \n' + event.votes.no.length + ' people voted NO \n', callback(user));
 										}
 									});
 								});

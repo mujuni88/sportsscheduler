@@ -143,7 +143,8 @@ module.exports = function (grunt) {
 			travis: ['mochaTest','karma:unit'],
 			debug: ['nodemon', 'watch', 'node-inspector'],
 			options: {
-				logConcurrentOutput: true
+				logConcurrentOutput: true,
+				limit: 5
 			}
 		},
 		env: {
