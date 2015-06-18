@@ -209,6 +209,16 @@ var UserSchema = new Schema({
 	},
   	resetPasswordExpires: {
   		type: Date
+  	},
+  	preferences: {
+  		receiveTexts: {
+  			type: Boolean,
+  			default: false
+  		},
+  		receiveEmails: {
+  			type: Boolean,
+  			default: true
+  		}
   	}
 });
 
@@ -229,7 +239,7 @@ UserSchema.statics.objectIDAtts = [
 
 UserSchema.statics.title = serverJSON.constants.users;
 UserSchema.statics.errPath = 'api.users';
-UserSchema.statics.attsToShow = ['_id', 'username', 'email', 'createdGroups', 'joinedGroups', 'displayName'];
+UserSchema.statics.attsToShow = ['_id', 'username', 'email', 'createdGroups', 'joinedGroups', 'displayName','preferences'];
 /**
  * Hook a pre save method to hash the password
  */

@@ -123,6 +123,13 @@ var Helper = (function() {
                 });
             };
         },
+        findWithAllAtts: function(model,query,callback) {
+
+            model.find(query)
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },
         find: function(model,query,callback) {
 
             model.find(query)
