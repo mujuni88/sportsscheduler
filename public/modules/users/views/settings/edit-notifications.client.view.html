@@ -1,0 +1,17 @@
+<section class="row" data-ng-controller="SettingsController">
+	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+		<form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
+			<fieldset>
+				<div class="checkbox text-left">
+					<label><input type="checkbox" id="receiveEmail" name="receiveEmail" data-ng-model="user.preferences.receiveEmails">Receive Email</label>
+				</div>	<div class="checkbox text-left">
+					<label><input type="checkbox" id="receiveText" name="receiveText" data-ng-model="user.preferences.receiveTexts">Receive Text</label>
+				</div>
+				<br/>
+				<div class="text-left">
+					<button type="submit" class="btn btn-large btn-primary btn-block">Save</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</section>

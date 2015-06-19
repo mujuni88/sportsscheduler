@@ -11,8 +11,9 @@ function UserService($http){
 
 	function joinGroupAndUser(user, group){
 		return $http.post(url,{user:user, group:group})
-		.success(function(data){
-			return data;
+		.then(function(response){
+			debugger;
+			return response.data;
 		});
 	}
 

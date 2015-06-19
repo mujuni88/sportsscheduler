@@ -121,7 +121,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function create() {
-        debugger;
         if ($scope.timeError || $scope.dateError) return;
         var event = new Events($scope.event),
             params = {
@@ -192,31 +191,41 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function voteYes() {
         _addUserToVoteYes($scope.user);
-        update().then(success, failure);
+        update().then(success, failure).finally(final);
 
         function success(data) {
-            $rootScope.$broadcast('voted', data);
             _notifySuccess('Voted successfully');
         }
 
         function failure(data) {
             _deleteUserFromYes($scope.user);
+
+            // only add to yes, if they were previously there
             _addUserToVoteNo($scope.user);
+        }
+        
+        function final(data){
+            $rootScope.$broadcast('voted', data);
         }
     }
 
     function voteNo() {
         _addUserToVoteNo($scope.user);
-        update().then(success, failure);
+        update().then(success, failure).finally(final);
 
         function success(data) {
-            $rootScope.$broadcast('voted', data);
             _notifySuccess('Voted successfully');
         }
 
         function failure(data) {
             _deleteUserFromNo($scope.user);
+            
+            // only add to yes, if they were previously there
             _addUserToVoteYes($scope.user);
+        }
+
+        function final(data){
+            $rootScope.$broadcast('voted', data);
         }
     }
 
@@ -296,7 +305,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function getUnresponsiveUsers(members) {
         members = members || $scope.group.members;
-        console.log(members);
         return _(members)
           .rejectList($scope.event.votes.no,'_id')
           .rejectList($scope.event.votes.yes,'_id')

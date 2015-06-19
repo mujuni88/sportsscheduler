@@ -51,7 +51,6 @@ function GroupEvents($http) {
         // server (or what not handles properly - ex. server error), then we
         // may have to normalize it on our end, as best we can.
         
-        debugger;
         if (!angular.isObject(response.data) || !response.data.message) {
             return ($q.reject("An unknown error occurred."));
         }
@@ -61,7 +60,6 @@ function GroupEvents($http) {
     // I transform the successful response, unwrapping the application data
     // from the API response payload.
     function handleSuccess(response) {
-    	debugger;
         return (response.data);
     }
 

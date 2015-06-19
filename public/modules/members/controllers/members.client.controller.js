@@ -85,7 +85,6 @@ function MembersController($scope, $state, $stateParams, $location, Authenticati
     }
 
     function onSelect($model) {
-        debugger;
         var tempMembers = $scope.tempMembers;
         tempMembers.push($model);
 
