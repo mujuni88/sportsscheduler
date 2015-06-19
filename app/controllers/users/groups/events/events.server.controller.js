@@ -186,151 +186,25 @@ exports.update = function(req, res) {
 		}
 		else
 		{
-			//var data = _.merge(event,req.body,Helper.cleanMergeObj);
-			//_.extend(event,data);
-			//console.log('body: ' + JSON.stringify(req.body,null,4));
-			//var data = _.merge(event.toObject(),req.body);
-
-			
-			//console.log('data: ' + JSON.stringify(data,null,4));
-			// _.extend(event,req.body);
-			// console.log('event: ' + event);
-
-			// event.updated = Date.now();
-			// event.votes.no = [];
-			// event.votes.yes = [];
-			// console.log('no length: ' + req.body.votes.no.length);
-			// for(var i = 0; i < req.body.votes.no.length; ++i)
-			// {
-			// 	event.votes.no.push( mongoose.Types.ObjectId(String(req.body.votes.no[i]._id)));
-			// }
-
-			// console.log('yes length: ' + req.body.votes.yes.length);
-			// for(var j = 0; j < req.body.votes.yes.length; ++j)
-			// {
-			// 	event.votes.yes.push(mongoose.Types.ObjectId(String(req.body.votes.yes[j]._id)));
-			// }
-
-			/*
-			if(typeof req.body.votes !== 'undefined')
-			{
-				console.log('checking votes');
-				console.log('new votes: ' + JSON.stringify(req.body.votes,null,4));
-
-				var yesVotes = [];
-				var noVotes = [];
-				var i = 0;
-				var j = 0;
-
-				console.log('old votes: ' + JSON.stringify(event.votes,null,4));
-				for(i = 0; i < req.body.votes.no.length; ++i)
-				{
-					noVotes.push(req.body.votes.no[i]._id.toString());
-				}
-
-				for(j = 0; j < req.body.votes.yes.length; ++j)
-				{
-					yesVotes.push(req.body.votes.yes[j]._id.toString());
-				}
-
-				req.body.votes.yes = yesVotes;
-				req.body.votes.no = noVotes;
-
-				//reset votes arrays to use again
-				yesVotes = [];
-				noVotes = [];
-
-				//get events vote ids
-				for(i = 0; i < event.votes.no.length; ++i)
-				{
-					noVotes.push(event.votes.no[i].toString());
-				}
-
-				for(j = 0; j < event.votes.yes.length; ++j)
-				{
-					yesVotes.push(event.votes.yes[j].toString());
-				}
-
-				//see if user has already voted yes
-				var intersection = _.difference(req.body.votes.yes,yesVotes);
-				console.log('intersection: ' + intersection);
-				if(intersection.length)
-				{
-					console.log('user has voted "Yes" already: ' + intersection);	
-					myResponse.addMessages(serverJSON.api.events.votes.yes.alreadyVoted);
-					Helper.output(EventModel,null,myResponse,res);
-					return;
-				}
-
-				//see if user has already voted yes
-				intersection = _.intersection(req.body.votes.no,noVotes);
-
-				if(intersection.length)
-				{
-					console.log('user has voted "No" already: ' + intersection);	
-					myResponse.addMessages(serverJSON.api.events.votes.no.alreadyVoted);
-					Helper.output(EventModel,null,myResponse,res);
-					return;
-				}
-				
-			}
-			*/
-
 			if(typeof req.body.votes !== 'undefined')
 			{
 				console.log('begin votes: ' + JSON.stringify(req.body.votes,null,1));
 				var yesVotes = req.body.votes.yes;
 				var noVotes = req.body.votes.no;
-				var oldYesVotes = [];
-				var oldNoVotes = [];
+
 				var i = 0;
 
 				req.body.votes.yes = [];
 				req.body.votes.no = [];
 
 				for(i = 0; i < yesVotes.length; ++i)
-					req.body.votes.yes.push(yesVotes[i]._id.toString());
+					req.body.votes.yes.push(yesVotes[i]._id);
 
 				for(i = 0; i < noVotes.length; ++i)
-					req.body.votes.no.push(noVotes[i]._id.toString());
+					req.body.votes.no.push(noVotes[i]._id);
 
-				for(i = 0; i < event.votes.yes.length; ++i)
-					oldYesVotes.push(event.votes.yes[i].toString());
-
-				for(i = 0; i < event.votes.no.length; ++i)
-					oldNoVotes.push(event.votes.no[i].toString());
-
-				//check to see if user has already voted
-				var intersection = _.intersection(req.body.votes.yes,req.body.votes.no);
-
-				if(intersection.length)
-				{
-					myResponse.addMessages(serverJSON.api.events.votes.yes.duplicate);
-					Helper.output(EventModel,null,myResponse,res);
-					return;
-				}
-
-				console.log('oldYesVotes: ' + oldYesVotes);
-				console.log('oldNoVotes: ' + oldNoVotes);
-				//check if user has already votes yes
-				intersection = _.intersection(req.body.votes.yes,oldYesVotes);
-				console.log('yes intersection: ' + intersection);
-				if(intersection.length)
-				{
-					myResponse.addMessages(serverJSON.api.events.votes.yes.duplicate);
-					Helper.output(EventModel,null,myResponse,res);
-					return;
-				}
-
-				//check if user has already votes no
-				intersection = _.intersection(req.body.votes.no,oldNoVotes);
-				console.log('no intersection: ' + intersection);
-				if(intersection.length)
-				{
-					myResponse.addMessages(serverJSON.api.events.votes.no.duplicate);
-					Helper.output(EventModel,null,myResponse,res);
-					return;
-				}
+				req.body.votes.yes = _.uniq(req.body.votes.yes);
+				req.body.votes.no = _.uniq(req.body.votes.no);
 
 				console.log('votes: ' + JSON.stringify(req.body.votes,null,1));
 			}

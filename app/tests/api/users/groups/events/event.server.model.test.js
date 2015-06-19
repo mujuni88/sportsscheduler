@@ -123,36 +123,7 @@ describe('Event Model Unit Tests:', function() {
 			done();
 		});
 	});
-		/*
-		superagent.post('http://localhost:3000/api/users')
-			.send({
-				carrier: '@sms.alltelwireless.com',
-				email: 'treyqg15@gmail.com',
-				firstName: 'Trey',
-				lastName: 'Gaines',
-				password: 'Password1',
-				phoneNumber: '6018801788',
-				username: username
-			})
-			.end(function(e,res){
-				
-				userID = res.body._id;
-				console.log('userID: ' + userID);
-				superagent.post('http://localhost:3000/api/users/groups')
-			        .send({
-			        	name: 'Event Model Unit Test Group2',
-						admins: [userID,'550c9956e123ac57c99521f9'],
-						createdBy: '550c9956e123ac57c99521f9',
-						members: ['550c9956e123ac57c99521f9']
-					})
-			        .end(function(e,res){
-			   			console.log(res.body);
-			            groupID = res.body._id;
-			            console.log('created Group ID: ' + groupID);
-			            done();
-	        		});
-			});
-		*/
+		
 
 	it('POST: check if creation of event works when req has the required parameters', function(done) {
     	superagent.post('http://localhost:3000/api/users/groups/'+groupID+'/events')
@@ -231,6 +202,7 @@ describe('Event Model Unit Tests:', function() {
 	        });
 	    });
 
+	/*
 	it('PUT: cast a vote for yes and no. Should return an error', function(done) {
     	superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)
 	        .send({
@@ -286,6 +258,7 @@ describe('Event Model Unit Tests:', function() {
             done();
         });
 	});
+	*/
 	
 	it('PUT: updating an event should fail when id does not exist in DB', function(done) {
     	superagent.put('http://localhost:3000/api/users/groups/events/-108309842')
