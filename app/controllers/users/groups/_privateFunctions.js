@@ -58,7 +58,9 @@ var PrivateFunctions = (function() {
 					req.body.members = [];
 
 					for(i = 0; i < members.length; ++i) {
-						req.body.members.push(members[i].toString());
+						var membersID = members[i].toString();
+						if(membersID !== group.createdBy.toString())
+							req.body.members.push(membersID);
 					}
 
 					for(i = 0; i < req.body.members.length; ++i)
