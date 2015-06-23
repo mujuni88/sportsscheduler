@@ -1,20 +1,23 @@
-<section class="row" data-ng-controller="SettingsController">
-	<div class="col-sm-12">
-		<h3 class="text-center">User Settings</h3>
-		<ul class="nav nav-tabs">
-			<li role="presentation" data-ng-class="{ active: $state.includes('settings.profile') }"><a
-					ui-sref=".profile"> Profile</a></li>
-			<li role="presentation" data-ng-class="{ active: $state.includes('settings.accounts') }"><a
-					ui-sref=".accounts"> Accounts</a></li>
-			<li role="presentation" data-ng-show="authentication.user.provider === 'local'" data-ng-class="{ active: $state.includes('settings.password') }"><a
-					ui-sref=".password"> Password</a></li>
-			<li role="presentation" data-ng-class="{ active: $state.includes('settings.notifications') }"><a
-					ui-sref=".notifications"> Notifications</a></li>
-		</ul>
-		<br/>
+<section data-ng-controller="SettingsController" class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="text-center">User Settings</h3>
+            <ul class="nav nav-tabs">
+                <li role="presentation" data-ng-class="{ active: $state.includes('settings.profile') }"><a
+                        ui-sref=".profile"> Profile</a></li>
+                <li role="presentation" data-ng-class="{ active: $state.includes('settings.accounts') }"><a
+                        ui-sref=".accounts"> Accounts</a></li>
+                <li role="presentation" data-ng-show="authentication.user.provider === 'local'"
+                    data-ng-class="{ active: $state.includes('settings.password') }"><a
+                        ui-sref=".password"> Password</a></li>
+                <li role="presentation" data-ng-class="{ active: $state.includes('settings.notifications') }"><a
+                        ui-sref=".notifications"> Notifications</a></li>
+            </ul>
+            <br/>
 
-		<div class="tab-content">
-			<div ui-view></div>
-		</div>
-	</div>
+            <div class="tab-content">
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
 </section>

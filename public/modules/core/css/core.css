@@ -38,17 +38,40 @@
   line-height: 1.5;
   border-radius: 3px; }
 
-  @media only screen and (min-width: 769px) {
+@media only screen and (min-width: 769px) {
   .vcenter {
     float: none;
     display: inline-block;
     vertical-align: middle;
-    margin-right: -4px;
-  }
-}
+    margin-right: -4px; } }
+.banner {
+  border-bottom: none;
+  margin-top: -4px;
+  position: relative; }
+  .banner h1 {
+    font-size: 50px;
+    line-height: 1;
+    letter-spacing: -1px; }
+    @media only screen and (max-width: 768px) {
+      .banner h1 {
+        font-size: 28px;
+        text-align: center; } }
 
-.growl-container.growl-fixed.top-center {
-  top: 55px;
-}
+.hero-unit {
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); }
+
+@media only screen and (max-width: 768px) {
+  .row > [class^=col] {
+    margin-bottom: 20px; } }
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  line-height: 1;
+  width: 100%; }
 
 /*# sourceMappingURL=core.css.map */
