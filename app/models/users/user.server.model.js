@@ -239,7 +239,7 @@ UserSchema.statics.objectIDAtts = [
 
 UserSchema.statics.title = serverJSON.constants.users;
 UserSchema.statics.errPath = 'api.users';
-UserSchema.statics.attsToShow = ['_id', 'username', 'email', 'createdGroups', 'joinedGroups', 'displayName','preferences'];
+UserSchema.statics.attsToShow = ['_id', 'displayName', 'provider', 'firstName', 'lastName', 'username', 'preferences', 'created', 'updated', 'roles', 'addedBy', 'joinedGroups', 'createdGroups', 'phoneNumber', 'carrier', 'email'];
 /**
  * Hook a pre save method to hash the password
  */
