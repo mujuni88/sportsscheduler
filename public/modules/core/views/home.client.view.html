@@ -1,31 +1,32 @@
 <section data-ng-controller="HomeController">
 	<header class="banner row">
 		<carousel interval="5000">
-			<!--<slide class="slide first">-->
-				<!--<div class="bg"></div>-->
-				<!--<div class="container">-->
-					<!--<div class="hero-unit">-->
-						<!--<h1 class="animated fadeInDown">Sports Scheduler.</h1>-->
-						<!--<p class="lead animated fadeInDown">The central place for pick up games scheduling</p><span class="animated fadeInDown"><i class="fa fa-soccer-ball-o fa-3x"></i></span>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</slide>-->
-			<!--<slide class="slide second">-->
-				<!--<div class="bg"></div>-->
-				<!--<div class="container">-->
-					<!--<div class="hero-unit">-->
-						<!--<h1 class="animated fadeInLeft">Sports Scheduler.</h1>-->
-						<!--<p class="lead animated fadeInLeft">The central place for pick up games scheduling</p><span class="animated fadeInUp"><i class="fa fa-globe fa-3x"></i></span>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</slide>-->
-			<slide ng-repeat="slide in slides" active="slide.active">
-				<img ng-src="{{slide.image}}" style="margin:auto;">
-				<div class="carousel-caption">
-					<h4>Slide {{$index}}</h4>
-					<p>{{slide.text}}</p>
+			<slide class="slide first">
+				<div class="bg"></div>
+				<div class="container">
+					<div class="hero-unit">
+						<h1 class="animated fadeInDown">Sports Scheduler.</h1>
+						<p class="lead animated fadeInDown">The central place for pick up games scheduling</p><span class="animated fadeInDown"><i class="fa fa-soccer-ball-o fa-3x"></i></span>
+					</div>
 				</div>
 			</slide>
+			<slide class="slide second">
+				<div class="bg"></div>
+				<div class="container">
+					<div class="hero-unit">
+						<h1 class="animated fadeInLeft">Sports Scheduler.</h1>
+						<p class="lead animated fadeInLeft">The central place for pick up games scheduling</p><span class="animated fadeInUp"><i class="fa fa-globe fa-3x"></i></span>
+					</div>
+				</div>
+			</slide>
+			<!--<slide ng-repeat="slide in slides" active="slide.active">-->
+                <!--<div class="bg"></div>-->
+				<!--&lt;!&ndash;<img ng-src="{{slide.image}}" style="margin:auto;">&ndash;&gt;-->
+				<!--<div class="carousel-caption">-->
+					<!--<h4>Slide {{$index}}</h4>-->
+					<!--<p>{{slide.text}}</p>-->
+				<!--</div>-->
+			<!--</slide>-->
 		</carousel>
 	</header>
 	<section class="section">
