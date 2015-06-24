@@ -10,7 +10,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     if (!$scope.user) {
-        $location.path('/')
+        $location.path('/');
     }
     $scope.state = $state;
     $scope.stateParams = $stateParams;
@@ -60,7 +60,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.timeChange = timeChange;
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
-    $scope.$on('voted', function(data) { debugger; getUnresponsiveUsers();});    
+    $scope.$on('voted', watchVotes);    
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
     $scope.voteNo = voteNo;
@@ -116,8 +116,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $scope.event.location.lng = newVal.lng();
     }
 
+    function watchVotes(data) {
+        $scope.votesUnr = getUnresponsiveUsers();
+    }
+
     function create() {
-        debugger;
         if ($scope.timeError || $scope.dateError) return;
         var event = new Events($scope.event),
             params = {
@@ -188,31 +191,41 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function voteYes() {
         _addUserToVoteYes($scope.user);
-        update().then(success, failure);
+        update().then(success, failure).finally(final);
 
         function success(data) {
-            $rootScope.$broadcast('voted', data);
             _notifySuccess('Voted successfully');
         }
 
         function failure(data) {
             _deleteUserFromYes($scope.user);
+
+            // only add to yes, if they were previously there
             _addUserToVoteNo($scope.user);
+        }
+        
+        function final(data){
+            $rootScope.$broadcast('voted', data);
         }
     }
 
     function voteNo() {
         _addUserToVoteNo($scope.user);
-        update().then(success, failure);
+        update().then(success, failure).finally(final);
 
         function success(data) {
-            $rootScope.$broadcast('voted', data);
             _notifySuccess('Voted successfully');
         }
 
         function failure(data) {
             _deleteUserFromNo($scope.user);
+            
+            // only add to yes, if they were previously there
             _addUserToVoteYes($scope.user);
+        }
+
+        function final(data){
+            $rootScope.$broadcast('voted', data);
         }
     }
 
@@ -281,16 +294,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
                 if(_.isUndefined($scope.event.votes)) {return false;}
         return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
     }
-
-    function getUnresponsiveUsers(members) {
-        members = members || $scope.group.members;
-        console.log(members);
-        return _(members)
-          .rejectList($scope.event.votes.no,'_id')
-          .rejectList($scope.event.votes.yes,'_id')
-          .value();
-    }
-
     function rejectList(list, rej, key) {
         rej.forEach(function(item) {
             list = _(list).reject(function(it) {
@@ -299,4 +302,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         });
         return list;
     }
+
+    function getUnresponsiveUsers(members) {
+        members = members || $scope.group.members;
+        return _(members)
+          .rejectList($scope.event.votes.no,'_id')
+          .rejectList($scope.event.votes.yes,'_id')
+          .value();
+    }
+
 }

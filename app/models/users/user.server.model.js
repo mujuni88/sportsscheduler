@@ -209,6 +209,16 @@ var UserSchema = new Schema({
 	},
   	resetPasswordExpires: {
   		type: Date
+  	},
+  	preferences: {
+  		receiveTexts: {
+  			type: Boolean,
+  			default: false
+  		},
+  		receiveEmails: {
+  			type: Boolean,
+  			default: true
+  		}
   	}
 });
 
@@ -229,7 +239,7 @@ UserSchema.statics.objectIDAtts = [
 
 UserSchema.statics.title = serverJSON.constants.users;
 UserSchema.statics.errPath = 'api.users';
-UserSchema.statics.attsToShow = ['_id', 'username', 'email', 'createdGroups', 'joinedGroups', 'displayName'];
+UserSchema.statics.attsToShow = ['_id', 'username', 'email', 'createdGroups', 'joinedGroups', 'displayName','preferences'];
 /**
  * Hook a pre save method to hash the password
  */
@@ -286,56 +296,6 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 };
 
 /*********** Validate Functions Middleware **************/
-
-UserSchema.path('createdGroups').validate(function (ids,respond) {
-
-	if(ids.length === 0)
-		respond(true);
-
-	var Group = mongoose.model('Group');
-	var query = {
-                	_id: 
-                	{
-                		$in: ids
-                	}
-                };
-
-	console.log('validate created groups: ' + ids);
-
-	Helper.find(Group,query,function(err,mods) {
-
-		if(err || !mods || ids.length !== mods.length) 
-			respond(false);
-		else
-			respond(true);
-	});
-	
- },'createdGroups.exist');
-
-UserSchema.path('joinedGroups').validate(function (ids,respond) {
-
-	if(ids.length === 0)
-		respond(true);
-	
-	var Group = mongoose.model('Group');
-	var query = {
-                	_id: 
-                	{
-                		$in: ids
-                	}
-                };
-
-	console.log('validate joined groups: ' + ids);
-	
-	Helper.find(Group,query,function(err,mods) {
-
-		if(err || !mods || ids.length !== mods.length) 
-			respond(false);
-		else
-			respond(true);
-	});
-	
-},'joinedGroups.exist');
 
 UserSchema.path('addedBy').schema.path('groupID').validate(function (id,respond) {
 

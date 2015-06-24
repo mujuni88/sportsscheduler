@@ -132,7 +132,16 @@ var EventSchema = new Schema({
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
-	}
+	},
+	cron: 
+	[
+		{
+			key: String,
+			settings: {
+
+			}		
+		}
+	]
 });
 
 EventSchema.statics.functionsArray = [

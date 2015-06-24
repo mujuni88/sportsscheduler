@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('users').controller('SettingsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-	function($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('SettingsController', ['$scope', '$http','$state', '$location', 'Users', 'Authentication','growl','$window',
+	function($scope, $http, $state, $location, Users, Authentication, growl, $window) {
 		$scope.user = Authentication.user;
+        $scope.authentication = Authentication;
+        $scope.$state = $state;
 
 		// If user is not signed in then redirect back home
 		if (!$scope.user) $location.path('/');
@@ -33,8 +35,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				// If successful show success message and clear form
 				$scope.success = true;
 				$scope.user = Authentication.user = response;
-			}).error(function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
+                _notifySuccess();
 			});
 		};
 
@@ -47,8 +48,8 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				user.$update(function(response) {
 					$scope.success = true;
 					Authentication.user = response;
-				}, function(errorResponse) {
-					$scope.error = errorResponse.clientMessage;
+                    _notifySuccess();
+                    
 				});
 			} else {
 				$scope.submitted = true;
@@ -63,9 +64,14 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				// If successful show success message and clear form
 				$scope.success = true;
 				$scope.passwordDetails = null;
-			}).error(function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
+                _notifySuccess();
+                $window.location = '/auth/signout';
 			});
 		};
+
+        function _notifySuccess(text){
+            text = text || 'Settings Saved Successfully';
+            growl.success(text, {title:text});
+        }
 	}
 ]);

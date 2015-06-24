@@ -328,12 +328,13 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function joinGroup(){
-        _joinGroup($scope.user, $scope.group).then(success, failure);
-        function success(response){
-            _addMember($scope.user);
-            saveMember();
-        }
-        function failure(){}
+        _addMember($scope.user);
+        update().then(function() {
+            $state.go('viewGroup.listMembers.viewMembers');
+            _notifySuccess('You are now a member');
+        }, function(){
+            _removeMember($scope.user);
+        });
     }
 
     function _joinGroup(user, group){

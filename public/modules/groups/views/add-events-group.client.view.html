@@ -16,7 +16,7 @@
     <div class="panel-body">
         <section>
                 <p class="alert alert-info alert-sm">
-                <i class="glyphicon glyphicon-info-sign"></i> An event can only be created if the
+                <i class="glyphicon glyphicon-info-sign hidden"></i> An event can only be created if the
                 start time is 2 hours or more ahead of the creation time. This is so to allow our algorithms to collect all the votes before deadline.
                 </p>
                 <br>  
@@ -75,9 +75,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Time <span class="has-error">*</span></label>
+                            <label class="col-sm-3 control-label">Time <span class="has-error hidden">*</span></label>
                             <div class="col-sm-7">
-                                <timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""
+                                <!--<timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""-->
+                                <!--show-meridian=""></timepicker>-->
+                                <timepicker ng-model="event.time" hour-step="" minute-step=""
                                 show-meridian=""></timepicker>
                                 <div class="has-error" ng-show="timeError">Time has to be 2 hours ahead</div>
                             </div>
