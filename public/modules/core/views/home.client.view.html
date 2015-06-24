@@ -1,20 +1,64 @@
 <section data-ng-controller="HomeController">
-	<div class="jumbotron text-center">
-		<div class="row">
-			<div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12" ngfx-rotate-in="3 > 2", ngfx-speed="medium">
-				<img alt="SportsScheduler" class="img-responsive text-center" src="modules/core/img/brand/logo.gif" />
-			</div>
+	<header class="banner row">
+		<carousel interval="5000">
+			<slide class="slide first">
+				<div class="bg"></div>
+				<div class="container">
+					<div class="hero-unit">
+						<h1 class="animated fadeInDown">Sports Scheduler.</h1>
+						<p class="lead animated fadeInDown">The central place for pick up games scheduling</p><span class="animated fadeInDown"><i class="fa fa-soccer-ball-o fa-3x"></i></span>
+					</div>
+				</div>
+			</slide>
+			<slide class="slide second">
+				<div class="bg"></div>
+				<div class="container">
+					<div class="hero-unit">
+						<h1 class="animated fadeInLeft">Sports Scheduler.</h1>
+						<p class="lead animated fadeInLeft">The central place for pick up games scheduling</p><span class="animated fadeInUp"><i class="fa fa-globe fa-3x"></i></span>
+					</div>
+				</div>
+			</slide>
+			<!--<slide ng-repeat="slide in slides" active="slide.active">-->
+                <!--<div class="bg"></div>-->
+				<!--&lt;!&ndash;<img ng-src="{{slide.image}}" style="margin:auto;">&ndash;&gt;-->
+				<!--<div class="carousel-caption">-->
+					<!--<h4>Slide {{$index}}</h4>-->
+					<!--<p>{{slide.text}}</p>-->
+				<!--</div>-->
+			<!--</slide>-->
+		</carousel>
+	</header>
+	<section class="section">
+		<div class="container">
+            <div class="row">
+                <div class="col-sm-3 text-center">
+                    <span><i class="fa fa-group fa-3x"></i></span>
+                    <h4>Groups</h4>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus distinctio exercitationem molestias nisi odio placeat quas quia reprehenderit rerum sequi! Architecto fugiat provident veritatis? Illum natus possimus quibusdam rerum sint.</p>
+                </div>
+                <div class="col-sm-3 text-center">
+                    <span><i class="fa fa-user fa-3x"></i></span>
+                    <h4>Members</h4>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad assumenda blanditiis consequuntur cupiditate eveniet exercitationem fugiat, hic minus praesentium provident quo sunt tempora vitae voluptate voluptatem! Eveniet fugiat sunt veniam!</p>
+                </div>
+                <div class="col-sm-3 text-center">
+                    <span><i class="fa fa-calendar-o fa-3x"></i></span>
+                    <h4>Events</h4>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor dolore dolorem doloribus earum enim hic incidunt, itaque laudantium magnam nobis officia pariatur, porro quae quasi quibusdam quo repellendus sit voluptates?</p>
+                </div>
+                <div class="col-sm-3 text-center">
+                    <span><i class="fa fa-check-square-o fa-3x"></i></span>
+                    <h4>Votes</h4>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis cumque debitis delectus doloremque ducimus error exercitationem facere fuga ipsa laboriosam molestias neque nobis, nulla optio perspiciatis provident quibusdam, vel voluptatibus!</p>
+                </div>
+            </div>
 		</div>
-		<br>
-		<div class="row">
-			<p class="lead">
-				The best place to find pick up games in your area.   
-			</p>
-		</div>
-		<div class="row">
-			<p>
-				<a class="btn btn-primary btn-lg" href="/#!/signup" target="">Join Today</a>
-			</p>
-		</div>
-	</div>
+	</section>
+    <br/>
+    <br/>
 </section>
