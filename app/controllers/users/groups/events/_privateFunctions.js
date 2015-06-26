@@ -10,7 +10,8 @@ var mongoose = require('mongoose'),
 	Cron = require('../../../../custom_objects/Cron'),
 	_ = require('lodash'),
 	async = require('async'),
-	time = require('time');
+	time = require('time'),
+	dateFormat = require('dateFormat');
 
 var PrivateFunctions = (function() {
 	
@@ -214,16 +215,20 @@ var PrivateFunctions = (function() {
 									console.log('user: ' + JSON.stringify(user,null,4));
 									var eventURL = 'http://'+req.headers.host+'/#!/groups/'+event.group.id+'/events/'+event.id;
 									var settingsURL = 'http://'+req.headers.host+'/#!/settings/me/notifications';
+									var eventEndDate = new Date(event.time);
+									eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS at h:MM TT');
+
+									
 									if(user.preferences.receiveTexts)
 									{
 										var recipient = user.phoneNumber + user.carrier;
-										Sender.sendSMS(recipient, 'Event\n', 'Event has started!\nTo vote go to\n' + eventURL + '\n\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
+										Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nVote at: ' + eventURL + '\nVoting Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
 									}
 
 									if(user.preferences.receiveEmails)
 									{	
 										console.log('username%s/email%s: ', user.username,user.email);
-										Sender.sendSMS(user.email, 'Event\n', 'Event has started!\nTo vote go to\n' + eventURL + '\n\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
+										Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nTo vote go to\n' + eventURL + '\n\nVoting Ends at: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
 									}
 								}
 							});
