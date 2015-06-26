@@ -121,7 +121,7 @@ var PrivateFunctions = (function() {
 							_id: event._id
 						};
 
-						getEvent(event,function(event) {
+						getEvent(event,function(err,event) {
 
 							console.log('event: ' + JSON.stringify(event,null,4));
 							var group = event.group;
@@ -190,72 +190,49 @@ var PrivateFunctions = (function() {
 					done(null,arg1,arg2);
 				};
 			},
-			eventStartCron: function(req,event) {
+			eventStartNotifications: function(req,event) {
 
 				return function(arg1,arg2,done) {
 
-					var notifyUsersOfEventStart = function() {
+					var query = {
+						_id: event._id
+					};
 
-						console.log('firing "event voting has started" cron for eventID: ' + event._id);
+					getEvent(event,function(err,event) {
 
-						var query = {
-							_id: event._id
-						};
+						query = createEventMembersQuery(event);
 
-						getEvent(event,function(err,event) {
+						Helper.findWithAllAtts(User,query,function(err,users) {
 
-							query = createEventMembersQuery(event);
+							for(var i = 0; i < users.length; ++i)
+							{
+								var user = users[i];
+								
+								console.log('user: ' + JSON.stringify(user,null,4));
+								var eventURL = 'http://'+req.headers.host+'/#!/groups/'+event.group.id+'/events/'+event.id;
+								var settingsURL = 'http://'+req.headers.host+'/#!/settings/me/notifications';
+								var eventEndDate = new Date(event.time);
+								eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS at h:MM TT');
 
-							Helper.findWithAllAtts(User,query,function(err,users) {
-
-								for(var i = 0; i < users.length; ++i)
+								
+								if(user.preferences.receiveTexts)
 								{
-									var user = users[i];
-									
-									console.log('user: ' + JSON.stringify(user,null,4));
-									var eventURL = 'http://'+req.headers.host+'/#!/groups/'+event.group.id+'/events/'+event.id;
-									var settingsURL = 'http://'+req.headers.host+'/#!/settings/me/notifications';
-									var eventEndDate = new Date(event.time);
-									eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS at h:MM TT');
-
-									
-									if(user.preferences.receiveTexts)
-									{
-										var recipient = user.phoneNumber + user.carrier;
-										Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nVote at: ' + eventURL + '\nVoting Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
-									}
-
-									if(user.preferences.receiveEmails)
-									{	
-										console.log('username%s/email%s: ', user.username,user.email);
-										Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nTo vote go to\n' + eventURL + '\n\nVoting Ends at: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
-									}
+									var recipient = user.phoneNumber + user.carrier;
+									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nVote at: ' + eventURL + '\nVoting Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
 								}
-							});
+
+								if(user.preferences.receiveEmails)
+								{	
+									console.log('username%s/email%s: ', user.username,user.email);
+									Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nTo vote go to\n' + eventURL + '\n\nVoting Ends at: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
+								}
+							}
+
+							done(null,arg1,arg2);
 						});
-					};
+					});
 
-					var convertedDate = new time.Date(event.date);
-					convertedDate.setTimezone('UTC');
-					convertedDate = new Date(convertedDate);
-					convertedDate.setSeconds(convertedDate.getSeconds() + 10);
-
-					var settings = {
-				  		cronTime: new Date(convertedDate),
-				  		onTick: notifyUsersOfEventStart,
-				  		start: true
-					};
-
-					var job = new CronJob(settings);
-
-					var cron = {
-						key: event._id,
-						settings: settings
-					};
-
-					Cron.addJob(cron.key,job);
-
-					done(null,arg1,arg2);
+					
 				};
 			}
 		}
