@@ -22,15 +22,15 @@
     </div>
     <div class="panel-body">
         <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && isAdmin()">
-            No Members yet, why don't you <a href="/#!/groups/{{group._id}}/members/add">add one</a>?
+            No Members yet, <a href="/#!/groups/{{group._id}}/members/add">add one</a>.
         </div>
         <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && !isAdmin()">
-            No Members in this group
+            No Members yet
         </div>
         <div class="list-groups" data-ng-if="group.members">
             <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin'] | filter:search.members">
-                <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
-                <div class="pull-right">
+                <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i>{{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
+                <div id="members" class="pull-right float-none-xs">
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
                     owner
                     </span>

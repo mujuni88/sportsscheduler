@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,WAAW;EACT,UAAU,EAAC,IAAI;;AAEjB,UAAU;EACR,aAAa,EAAC,CAAC;;AAGf,kBAAW;EACZ,aAAa,EAAC,CAAC",
+"mappings": "AAAA,WAAW;EACT,UAAU,EAAC,IAAI;;AAEjB,UAAU;EACR,aAAa,EAAC,CAAC;EACf,gBAAgB,EAAE,OAAO",
 "sources": ["groups.scss"],
 "names": [],
 "file": "groups.css"
