@@ -101,7 +101,7 @@ exports.create = function(req, res) {
 
 				var functionsArray = [];
 				functionsArray.push(PrivateFunctions.create.addEventToGroup(group,event._id));
-				functionsArray.push(PrivateFunctions.create.eventStartCron(req,event));
+				functionsArray.push(PrivateFunctions.create.eventStartNotifications(req,event));
 				functionsArray.push(PrivateFunctions.create.createGatherVotesCron(event));
 				functionsArray = Helper.buildWaterfall(functionsArray);
 
