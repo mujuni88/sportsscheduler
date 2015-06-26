@@ -32,8 +32,8 @@
             </div>
         <div class="page-header">
             <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
-
-            <div class="page-header-btns pull-right" ng-hide="hasEventExpired(event.time)">
+            <div class="page-header-btns pull-right float-none-xs" ng-hide="hasEventExpired(event.time)">
+                <br class="visible-xs"/>
                 <span>Vote:</span>
                 <button class="btn btn-primary btn-sm" ng-hide="hasVotedYes()" ng-class="{disabled:hasVotedYes()}" ng-click="voteYes()">Going</button>
                 <button class="btn btn-secondary btn-sm" ng-hide="hasVotedNo()" ng-class="{disabled:hasVotedNo()}" ng-click="voteNo()">Not Going</button>
