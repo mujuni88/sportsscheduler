@@ -65,11 +65,11 @@
                     <span class="spacing-sm-right badge" ng-show="_isAdmin(member)">
                     admin
                     </span>
-                    <span class="admin-btns" data-ng-show="isAdmin()">
-                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="canMakeAdmin(member)">
+                    <span class="admin-btns hidden" data-ng-show="isAdmin()">
+                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)">
                         <i class="glyphicon glyphicon-king text-primary"></i>
                         </span>
-                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="canRevokeAdminRights(member)">
+                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)">
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"

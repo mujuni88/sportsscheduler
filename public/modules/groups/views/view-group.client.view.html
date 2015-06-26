@@ -6,36 +6,34 @@
 
                     <div class="pull-right float-none-xs">
                         <a class="btn btn-primary btn-sm" ng-click="editableForm.$show()" ng-show="!editableForm.$visible"
-                           popover-placement="bottom" popover="Edit" popover-trigger="mouseenter">
-                            <i class="glyphicon glyphicon-edit"></i>
+                           title="Edit group">
+                            <i class="fa fa-edit"></i>
                             <!--<span class="hidden-xs"> Edit Group</span>-->
                         </a>
                 <span ng-show="editableForm.$visible">
                 <button type="submit" class="btn btn-primary btn-sm" ng-disabled="editableForm.$waiting">
                     Save
                 </button>
-                <button type="button" class="btn btn-default btn-sm" ng-disabled="editableForm.$waiting"
-                        ng-click="editableForm.$cancel()">
+                <button type="button" class="btn btn-default btn-sm" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">
                     Cancel
                 </button>
                 </span>
                         <a class="btn btn-danger btn-sm" ng-show="!editableForm.$visible"
-                           ss-dialog dialog-ok="remove()" dialog-enable="true" title="Deleting group"
+                           ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete group"
                            message="Are you sure you want to delete {{group.name}}?">
-                            <i class="glyphicon glyphicon-trash" popover-placement="bottom" popover="Delete"
-                               popover-trigger="mouseenter"></i>
+                            <i class="fa fa-trash"></i>
                             <!--<span class="hidden-xs"> Delete Group</span>-->
                         </a>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-block btn-lg" ng-hide="isMember()" ng-click="joinGroup()"><i
-                        class="glyphicon glyphicon-plus"></i> Join Group
+                <button class="ng-cloak btn btn-primary btn-block btn-lg" ng-hide="isMember()" ng-click="joinGroup()"><i
+                        class="fa fa-plus"></i> Join Group
                 </button>
                 <div class="jumbotron text-center">
                     <h2 editable-text="group.name" e-name="groupName" e-required><i
                             class="fa fa-users text-primary spacing-sm-right"></i>{{group.name}}</h2>
                     <ul class="text-center list-unstyled">
-                        <li><h4><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h4></li>
+                        <li><h4><i class="fa fa-king text-primary"></i> Admins:</h4></li>
                         <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']"><h5 class="text-info">
                             {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
                     </ul>
@@ -49,10 +47,10 @@
 
                 <ul class="nav nav-tabs">
                     <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listMembers') }"><a
-                            ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members</a>
+                            ui-sref=".listMembers.viewMembers"><i class="fa fa-user text-primary"></i> Members</a>
                     </li>
                     <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listEvents') }"><a
-                            ui-sref=".listEvents.viewEvents"><i class="glyphicon glyphicon-calendar text-primary"></i>
+                            ui-sref=".listEvents.viewEvents"><i class="fa fa-calendar text-primary"></i>
                         Events</a></li>
                 </ul>
                 <br/>
@@ -63,7 +61,7 @@
             </div>
             <div class="row" id="group-convo">
                 <div class="col-sm-12">
-                    <h3 class="page-header"><i class="glyphicon glyphicon-comment text-primary"></i> Comments</h3>
+                    <h3 class="page-header">Comments</h3>
 
                     <div class="fb-comments" data-href="http://developers.facebook.com/docs/plugins/comments/"
                          data-numposts="5" data-colorscheme="light" data-width="100%"></div>

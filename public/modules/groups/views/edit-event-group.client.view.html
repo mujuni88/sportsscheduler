@@ -7,7 +7,7 @@
                     <i class="glyphicon glyphicon-arrow-left"></i>
                     </a>
                     <a class="btn btn-danger btn-sm pull-right" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event {{event.name}}?" ng-show="isAdmin()">
-                    <i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter" title="Delete"></i>
+                    <i class="glyphicon glyphicon-trash"  title="Delete"></i>
                     </a>
                 </div>
             </div>
@@ -62,8 +62,7 @@
                                     <p class="input-group">
                                     <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day" type="text"
                                     class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
-                                    is-open="opened" min-date="minDate" max-date="'2015-06-22'"
-                                    datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                                    is-open="opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
                                     ng-required="true" close-text="Close"/>
                                     <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="open($event)"><i
@@ -76,7 +75,9 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Time <span class="has-error">*</span></label>
                                 <div class="col-sm-7">
-                                    <timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""
+                                    <!--<timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""-->
+                                    <!--show-meridian=""></timepicker>-->
+                                    <timepicker ng-model="event.time" hour-step="" minute-step=""
                                     show-meridian=""></timepicker>
                                     <div class="has-error" ng-show="timeError">Time has to be 2 hours ahead</div>
                                 </div>

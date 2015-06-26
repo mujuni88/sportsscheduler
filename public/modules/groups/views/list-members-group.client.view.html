@@ -7,14 +7,14 @@
                         <input type="text" class="form-control"
                         placeholder="Search for a member" data-ng-model="search.members"/>
                         <span class="input-group-addon">
-                        <i class="glyphicon glyphicon-search"></i>
+                        <i class="fa fa-search"></i>
                         </span>
                     </div>
                 </div>
                 <div class="col-xs-3 col-sm-6">
                     <a class="btn btn-primary btn-sm pull-right"
-                    href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add members" popover-placement="left" popover="Add members" popover-trigger="mouseenter">
-                    <i class="glyphicon glyphicon-plus"></i>
+                    href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add members" popover-placement="left">
+                    <i class="fa fa-plus"></i>
                     </a>
                 </div>
             </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="list-groups" data-ng-if="group.members">
             <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin'] | filter:search.members">
-                <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i>{{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
+                <span class=""><i class="fa fa-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i>{{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <div id="members" class="pull-right float-none-xs">
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
                     owner
@@ -38,24 +38,24 @@
                     admin
                     </span>
                     <span class="admin-btns" data-ng-show="isAdmin()">
-                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" popover-placement="top" popover="Make admin" popover-trigger="mouseenter" ng-hide="canMakeAdmin(member)">
+                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)">
                         <i class="glyphicon glyphicon-king text-primary"></i>
                         </span>
-                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" popover-placement="top" popover="Revoke admin rights" popover-trigger="mouseenter" ng-show="canRevokeAdminRights(member)">
+                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)">
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
                         title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">
-                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                        <i class="fa fa-remove text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
                         title="Remove Member" message="Are you sure?" data-ng-show="canRmMember(member)">
-                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                        <i class="fa fa-remove text-danger"></i>
                         </span>
                     </span>
                                             <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
                         title="Remove Member" message="Are you sure?" data-ng-show="canRmvMember(member)">
-                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                        <i class="fa fa-remove text-danger"></i>
                         </span>
                 </div>
             </div>

@@ -228,6 +228,11 @@ $lg-screens: 1200px;
 
 #members{
   @include xs-screens{
-    padding-top:10px;
+    margin-top:20px;
+    padding-left:10px;
+
+    -moz-box-shadow: -2px -2px 5px #888;
+    -webkit-box-shadow: -2px -2px 5px #888;
+    box-shadow: -2px -2px 5px #888;
   }
 }

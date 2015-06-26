@@ -7,14 +7,14 @@
                     <i class="glyphicon glyphicon-arrow-left"></i>
                     </a>
                     <span class="pull-right"  ng-show="isAdmin()">
-                    <a class="btn btn-primary btn-sm spacing-sm-right" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" popover-placement="top" popover="Edit" popover-trigger="mouseenter" ng-hide="hasEventExpired(event.time)">
+                    <a class="btn btn-primary btn-sm spacing-sm-right" href="/#!/groups/{{event.group._id}}/events/{{event._id}}/edit" ng-hide="hasEventExpired(event.time)">
                     <i class="glyphicon glyphicon-edit"></i>
                     </a>
                     <a class="btn btn-danger btn-sm" ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete" message="Are you sure you want to delete event <span class='text-primary'>{{event.name}}</span>?">
-                    <i class="glyphicon glyphicon-trash"  popover-placement="top" popover="Delete" popover-trigger="mouseenter"></i>
+                    <i class="glyphicon glyphicon-trash"></i>
                     </a>
                     </span>
-                    <button class="btn btn-secondary btn-sm spacing-sm-right pull-right" popover-placement="top" popover="Refresh" popover-trigger="mouseenter" data-ng-click='findOne()'  ng-hide="hasEventExpired(event.time)">
+                    <button class="btn btn-secondary btn-sm spacing-sm-right pull-right" data-ng-click='findOne()'  ng-hide="hasEventExpired(event.time)">
                     <i class="glyphicon glyphicon-refresh"></i>
                     </button>
                 </div>
