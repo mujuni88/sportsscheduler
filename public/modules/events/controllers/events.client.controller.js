@@ -170,7 +170,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         return $scope.events = Events.query({
             groupId: $stateParams.groupId
         });
-    };
+    }
 
     function findOne() {
         var event = Events.get({
@@ -180,7 +180,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             $scope.votesUnr = getUnresponsiveUsers();   
         });
         return event.$promise;
-    };
+    }
 
     function _notifySuccess(text) {
         text = text || 'Event updated successfully';

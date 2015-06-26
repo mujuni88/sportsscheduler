@@ -242,5 +242,5 @@ module.exports = function (grunt) {
 
     //grunt.registerTask('test', ['env:test', 'karma:unit', 'protractor_webdriver', 'protractor','mochaTest']);
     grunt.registerTask('treyTest', ['env:test', 'mochaTest']);
-    grunt.registerTask('test', ['env:dev', 'mochaTest', 'protractor_webdriver', 'protractor','karma:unit']);
+    grunt.registerTask('test', ['env:dev', 'mochaTest']);
 };
