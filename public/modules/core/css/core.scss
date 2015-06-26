@@ -225,3 +225,9 @@ $lg-screens: 1200px;
   padding-top:10px;
   border-top:1px solid #eee;
 }
+.members{
+  @include xs-screens{
+    margin-top:20px;
+  }
+} 
+
