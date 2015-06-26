@@ -14,11 +14,11 @@
                     </div>
                 </div>
                 <div class="col-xs-3 col-sm-8">
-                    <a class="btn btn-primary btn-sm pull-right"
+                    <a class="btn btn-primary btn-sm pull-right float-none-xs"
                     href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin()" title="Create an event" popover-placement="top" popover="Create event" popover-trigger="mouseenter">
                     <i class="glyphicon glyphicon-plus"></i>
                     </a>
-                    <button class="btn btn-secondary btn-sm pull-right spacing-sm-right"
+                    <button class="btn btn-secondary btn-sm pull-right float-none-xs spacing-sm-right"
                     href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin() && events.length" popover-placement="top" popover="Refresh events" popover-trigger="mouseenter" data-ng-click='find()'>
                     <i class="glyphicon glyphicon-refresh"></i>
                     </button>
@@ -28,10 +28,10 @@
     </div>
     <div class="panel-body">
         <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isAdmin()">
-            No Events yet, why don't you <a href="/#!/groups/{{group._id}}/events/add">add one</a>?
+            No Events yet, <a href="/#!/groups/{{group._id}}/events/add">create one</a>.
         </div>
         <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isAdmin()">
-            No Events in this group
+            No Events yet
         </div>
         <div class="list-group">
             <a href='/#!/groups/{{group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" data-ng-repeat="event in events | orderBy:search.event | filter:search.event" data-ng-class="{'disabled':hasEventExpired(event.time)}">
@@ -49,7 +49,7 @@
                         </ul>
                     </div>
                     <div class="col-sm-8 vcenter">
-                        <ul class="list-unstyled pull-right">
+                        <ul class="list-unstyled pull-right float-none-xs">
                             <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
                             <li><p>Vote Count: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
                             <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>

@@ -214,3 +214,20 @@ $lg-screens: 1200px;
 .carousel-control{
   cursor:pointer !important;
 }
+
+.float-none-xs{
+  @include xs-screens{
+    float:none !important;
+  }
+}
+
+.brd-top-primary{
+  padding-top:10px;
+  border-top:1px solid #eee;
+}
+
+#members{
+  @include xs-screens{
+    padding-top:10px;
+  }
+}

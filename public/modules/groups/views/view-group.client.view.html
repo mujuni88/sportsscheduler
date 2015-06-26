@@ -3,8 +3,9 @@
         <div class="row">
             <div class="col-sm-3 col-sm-offset-9" ng-show="isAdmin()">
 
-                <div class="pull-right">
-                    <a class="btn btn-primary btn-sm" ng-click="editableForm.$show()" ng-show="!editableForm.$visible"  popover-placement="bottom" popover="Edit" popover-trigger="mouseenter">
+                <div class="pull-right float-none-xs">
+                    <a class="btn btn-primary btn-sm" ng-click="editableForm.$show()" ng-show="!editableForm.$visible"
+                       popover-placement="bottom" popover="Edit" popover-trigger="mouseenter">
                         <i class="glyphicon glyphicon-edit"></i>
                         <!--<span class="hidden-xs"> Edit Group</span>-->
                     </a>
@@ -18,21 +19,27 @@
                 </button>
                 </span>
                     <a class="btn btn-danger btn-sm" ng-show="!editableForm.$visible"
-                       ss-dialog dialog-ok="remove()" dialog-enable="true" title="Deleting group" message="Are you sure you want to delete {{group.name}}?">
-                        <i class="glyphicon glyphicon-trash"  popover-placement="bottom" popover="Delete" popover-trigger="mouseenter"></i>
+                       ss-dialog dialog-ok="remove()" dialog-enable="true" title="Deleting group"
+                       message="Are you sure you want to delete {{group.name}}?">
+                        <i class="glyphicon glyphicon-trash" popover-placement="bottom" popover="Delete"
+                           popover-trigger="mouseenter"></i>
                         <!--<span class="hidden-xs"> Delete Group</span>-->
                     </a>
                 </div>
             </div>
-                    <button class="btn btn-primary btn-block btn-lg" ng-hide="isMember()" ng-click="joinGroup()"><i class="glyphicon glyphicon-plus"></i> Join Group</button>
+            <button class="btn btn-primary btn-block btn-lg" ng-hide="isMember()" ng-click="joinGroup()"><i
+                    class="glyphicon glyphicon-plus"></i> Join Group
+            </button>
             <div class="jumbotron text-center">
-                <h1 editable-text="group.name" e-name="groupName" e-required><i class="fa fa-users text-primary spacing-sm-right"></i>{{group.name}}</h1>
+                <h2 editable-text="group.name" e-name="groupName" e-required><i
+                        class="fa fa-users text-primary spacing-sm-right"></i>{{group.name}}</h2>
                 <ul class="text-center list-unstyled">
-                    <li><h3><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h3></li>
-                    <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']"><h5 class="text-info">{{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
+                    <li><h4><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h4></li>
+                    <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']"><h5 class="text-info">
+                        {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
                 </ul>
             </div>
-            <br/> 
+            <br/>
         </div>
     </form>
 
@@ -41,9 +48,11 @@
 
             <ul class="nav nav-tabs">
                 <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listMembers') }"><a
-                        ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members</a></li>
+                        ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members</a>
+                </li>
                 <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listEvents') }"><a
-                        ui-sref=".listEvents.viewEvents"><i class="glyphicon glyphicon-calendar text-primary"></i> Events</a></li>
+                        ui-sref=".listEvents.viewEvents"><i class="glyphicon glyphicon-calendar text-primary"></i>
+                    Events</a></li>
             </ul>
             <br/>
 
@@ -53,14 +62,14 @@
         </div>
         <div class="row" id="group-convo">
             <div class="col-sm-12">
-                <h2 class="page-header"><i class="glyphicon glyphicon-comment text-primary"></i> Group Conversation</h2>
+                <h3 class="page-header"><i class="glyphicon glyphicon-comment text-primary"></i> Comments</h3>
 
-                     <div class="fb-comments" data-href="http://developers.facebook.com/docs/plugins/comments/" data-numposts="5" data-colorscheme="light" data-width="100%"><div class="text-center">
-                         <i class="fa fa-spinner fa-3x animated infinite rotateOut"></i>
-                     </div></div>
+                <div class="fb-comments" data-href="http://developers.facebook.com/docs/plugins/comments/"
+                     data-numposts="5" data-colorscheme="light" data-width="100%"></div>
             </div>
 
         </div>
     </div>
 
 </section>
+
