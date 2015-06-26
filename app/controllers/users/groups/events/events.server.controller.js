@@ -66,19 +66,16 @@ exports.create = function(req, res) {
 		_id : groupID
 	};
 
-	Helper.find(Group,query,function(err,mod) {
-		var group = null;
+	Helper.findOne(Group,query,function(err,group) {
 		var myResponse = new MyResponse();
 		
-		if(mod.length === 0)
+		if(!group)
 		{
 			myResponse.addMessages(serverJSON.api.groups._id.invalid);
 			Helper.output(EventModel,null,myResponse,res);
 			
 			return;
 		}
-
-		group = mod[0];
 
 		console.log('group: ' + group);
 
@@ -144,9 +141,9 @@ exports.read = function(req, res) {
 		_id: eventID
 	};
 
-	Helper.find(EventModel,query,function(err,mod) {
+	Helper.findOne(EventModel,query,function(err,event) {
 
-		if(err || mod.length === 0)
+		if(err || !event)
 		{
 			myResponse.addMessages(serverJSON.api.events._id.exist);
 			Helper.output(EventModel,null,myResponse,res);
@@ -154,7 +151,6 @@ exports.read = function(req, res) {
 			return;
 		}
 
-		var event = mod[0];
 		Helper.output(EventModel,event,myResponse,res);
 	});
 };
@@ -170,7 +166,7 @@ exports.update = function(req, res) {
 		_id : id
 	};
 
-	EventModel.findOne({_id: id}, function(err,event) {
+	Helper.findOne(EventModel,query,function(err,event) {
 		
 		var myResponse = new MyResponse();
 
@@ -230,9 +226,7 @@ exports.update = function(req, res) {
 				}
 				else
 				{
-					Helper.find(EventModel,query,function(err,mod) {
-
-						var event = mod[0];
+					Helper.findOne(EventModel,query,function(err,event) {
 
 						if (err) {
 							myResponse.transformMongooseError(EventModel.errPath,String(err));
@@ -257,8 +251,11 @@ exports.delete = function(req, res) {
 	var id = req.params.eventId;
 	console.log('event id: ' + id);
 	var myResponse = new MyResponse();
+	var query = {
+		_id : id
+	};
 
-	EventModel.findOne({_id: id}, function(err,event) {
+	Helper.findOne(EventModel,query,function(err,event) {
 		if(err)
 		{
 			myResponse.transformMongooseError(EventModel.errPath,String(err));
@@ -286,7 +283,9 @@ exports.delete = function(req, res) {
 /**
  * List of Events
  */
-exports.list = function(req, res) { EventModel.find().sort('-created').exec(function(err, events) {
+exports.list = function(req, res) { 
+
+	Helper.find({},function(err, events) {
 		
 		var myResponse = new MyResponse();
 
@@ -328,8 +327,6 @@ exports.list = function(req, res) { EventModel.find().sort('-created').exec(func
 			} 
 
 			Helper.output(EventModel,events,myResponse,res);
-
-			cron();
 		}
 	});
 };

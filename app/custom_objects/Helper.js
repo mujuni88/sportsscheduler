@@ -130,9 +130,23 @@ var Helper = (function() {
                 callback(err,mod);
             });
         },
+        findOneWithAllAtts: function(model,query,callback) {
+
+            model.findOne(query)
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },
         find: function(model,query,callback) {
 
             model.find(query)
+            .select(Helper.attsArryToAttsString(model.attsToShow))
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },
+        findOne: function(model,query,callback) {
+            model.findOne(query)
             .select(Helper.attsArryToAttsString(model.attsToShow))
             .exec(function(err,mod) {
                 callback(err,mod);
