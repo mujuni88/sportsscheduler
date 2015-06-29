@@ -34,7 +34,7 @@
             No Events yet
         </div>
         <div class="list-group">
-            <a href='/#!/groups/{{group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" data-ng-repeat="event in events | orderBy:'time':true" data-ng-class="{'list-group-item-expired':hasEventExpired(event.time)}">
+            <a href='/#!/groups/{{group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" dir-paginate="event in events | orderBy:'time':true | itemsPerPage: 5" data-ng-class="{'list-group-item-expired':hasEventExpired(event.time)}">
             <div class="media-left media-middle">
                 <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>
             </div>
@@ -62,6 +62,10 @@
                 </div>
             </div>
             </a>
+            <div class="text-center">
+                <dir-pagination-controls></dir-pagination-controls>
+            </div>
         </div>
+        
     </div>
 </div>

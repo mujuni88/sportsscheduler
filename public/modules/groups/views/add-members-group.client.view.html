@@ -45,18 +45,20 @@
                     <i class="glyphicon glyphicon-exclamation-sign"></i> No members added yet
                 </div>
             </li>
-            <li class="list-group-item" data-ng-repeat="member in tempMembers">
+            <li class="list-group-item" dir-paginate="member in tempMembers | itemsPerPage: 10" pagination-id="newMembers">
                 <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <span class="pull-right btn-link" ng-click="removeTempMember($index)">
                     <i class="glyphicon glyphicon-remove text-danger"></i>
                 </span>
             </li>
         </ul>
-
+        <div class="text-center">
+            <dir-pagination-controls pagination-id="newMembers"></dir-pagination-controls>
+        </div>
 
         <ul class="list-groups list-unstyled" ng-show="group.members.length">
             <li><h4>Existing members:</h4></li>
-            <li class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin']:true | filter:search.members">
+            <li class="list-group-item" dir-paginate="member in group.members | orderBy:['createdBy','isAdmin']:true | itemsPerPage: 10 | filter:search.members" pagination-id="exstMembers">
                 <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <div class="pull-right">
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
@@ -93,6 +95,9 @@
                 </div>
             </li>
         </ul>
+        <div class="text-center">
+            <dir-pagination-controls pagination-id="exstMembers"></dir-pagination-controls>
+        </div>
     </div>
 
     <div class="panel-footer">

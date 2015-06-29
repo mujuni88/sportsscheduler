@@ -22,7 +22,8 @@
     "angular-permission": "~0.2.0",
     "components-font-awesome": "~4.3.0",
     "angular-growl-v2": "~0.7.3",
-    "ngprogress": "~1.0.7"
+    "ngprogress": "~1.0.7",
+    "angular-utils-pagination": "~0.8.2"
   },
   "resolutions": {
     "angular": ">= 1.0.2",

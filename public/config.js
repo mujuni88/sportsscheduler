@@ -19,7 +19,8 @@ var ApplicationConfiguration = (function() {
 		'xeditable',
 		'dialogs.main',
 		'angular-growl',
-		'ngProgress'
+		'ngProgress',
+		'angularUtils.directives.dirPagination'
 	];
 
 	// Add a new vertical module
