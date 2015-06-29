@@ -38,10 +38,10 @@
                     admin
                     </span>
                     <span class="admin-btns" data-ng-show="isAdmin()">
-                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)">
+                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)" tooltip-placement="top" tooltip="Make Admin">
                         <i class="glyphicon glyphicon-king text-primary"></i>
                         </span>
-                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)">
+                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)" tooltip-placement="top" tooltip="Revoke Admin">
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"

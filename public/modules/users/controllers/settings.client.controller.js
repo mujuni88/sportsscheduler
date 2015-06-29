@@ -1,11 +1,15 @@
 'use strict';
 
-angular.module('users').controller('SettingsController', ['$scope', '$http','$state', '$location', 'Users', 'Authentication','growl','$window',
-	function($scope, $http, $state, $location, Users, Authentication, growl, $window) {
+angular.module('users').controller('SettingsController', ['$scope', '$http','$state', '$location', 'Users', 'Authentication','growl','$window','CarrierFactory',
+	function($scope, $http, $state, $location, Users, Authentication, growl, $window,CarrierFactory) {
 		$scope.user = Authentication.user;
         $scope.authentication = Authentication;
         $scope.$state = $state;
 
+		CarrierFactory.getCarriers().then(function(data){
+			$scope.carriers = data;
+		});
+		
 		// If user is not signed in then redirect back home
 		if (!$scope.user) $location.path('/');
 
