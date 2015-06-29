@@ -23,7 +23,7 @@
                     <form name="eventsForm" class="form-horizontal" novalidate>
                         <fieldset>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="name">Name <span class="has-error">*</span></label>
+                                <label class="col-sm-3 control-label" for="name">Title <span class="has-error">*</span></label>
                                 <div class="col-sm-7">
                                     <input type="text"
                                     name="name"
@@ -49,11 +49,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="locationAddress">Location Address <span class="has-error">*</span></label>
+                                <label class="col-sm-3 control-label" for="locationAddress">Location Address</label>
                                 <div class="col-sm-7">
                                     <input type="text" id="locationAddress" name="locationAddress" class="form-control"
-                                    data-ng-model="event.location.address" placeholder="Enter a location" ng-autocomplete options="options" details="details" required>
-                                    <div class="has-error" ng-show="eventsForm.locationAddress.$dirty && eventsForm.locationAddress.$error.required">Required!!</div>
+                                    data-ng-model="event.location.address" placeholder="Enter a location (optional)" ng-autocomplete options="options" details="details" required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -83,13 +82,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Votes</label>
-                                <div class="checkbox col-sm-7">
-                                    <label><input type="checkbox" name="vote" ng-model="event.voteEnabled" value="true" checked>
-                                    Enabled</label>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-show="event.voteEnabled">
                                 <label class="col-sm-3 control-label" for="minimumVotes">Minimum Votes <span class="has-error">*</span></label>
                                 <div class="col-sm-7">
                                     <input id="minimumVotes" name="minimumVotes" ng-model="event.minimumVotes" class="form-control"
@@ -99,11 +91,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="message">Message <span class="has-error">*</span></label>
+                                <label class="col-sm-3 control-label" for="message">Details <span class="has-error">*</span></label>
                                 <div class="col-sm-7">
                                     <div class="pull-right text-primary">{{120 - event.message.length}}</div>
                                     <textarea class="form-control" rows="3" maxlength="120" id="message" name="message" class="form-control"
-                                    data-ng-model="event.message" placeholder="120 character limit" validator="required"
+                                    data-ng-model="event.message" placeholder="120 character limit (optional)" validator="required"
                                     valid-method="blur"></textarea>
                                 </div>
                             </div>

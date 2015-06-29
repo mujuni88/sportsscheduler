@@ -28,7 +28,7 @@
             No Members yet
         </div>
         <div class="list-groups" data-ng-if="group.members">
-            <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin'] | filter:search.members">
+            <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin']:true | filter:search.members">
                 <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i>{{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <div class="pull-right float-none-xs members">
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">

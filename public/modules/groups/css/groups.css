@@ -5,4 +5,8 @@
   margin-bottom: 0;
   background-color: #fcfcfc; }
 
+.list-group-item-expired {
+  border: 1px solid #ff0039;
+  background-color: #eeeeee; }
+
 /*# sourceMappingURL=groups.css.map */
