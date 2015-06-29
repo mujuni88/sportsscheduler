@@ -18,7 +18,7 @@
                     Cancel
                 </button>
                 </span>
-                        <a class="btn btn-danger btn-sm" ng-show="!editableForm.$visible"
+                        <a class="btn btn-danger btn-sm" ng-show="isOwner(user) && !editableForm.$visible"
                            ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete group"
                            message="Are you sure you want to delete {{group.name}}?">
                             <i class="glyphicon glyphicon-trash"></i>
