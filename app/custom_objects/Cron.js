@@ -9,15 +9,20 @@ var Cron = (function() {
 	};
 
 	return {
+
 		getAllJobs: function() {
+
 			return jobs;
 		},
 		addJob: function(key,value) {
+
 			jobs[key] = value;
 		},
 		removeJob: function(key) {
+
 			jobs = _.omit(jobs,key);
 		}
+		
 	};
 })();
 

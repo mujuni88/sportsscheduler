@@ -17,7 +17,6 @@ var _ = require('lodash'),
  */
 exports.signup = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
-	console.log(req.body);
 	delete req.body.roles;
 
 	// Init Variables
@@ -31,9 +30,11 @@ exports.signup = function(req, res) {
 	
 	// Then save the user 
 	user.save(function(err) {
+		
 		var myResponse = new MyResponse();
 
 		if (err) {
+
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(User.errPath,String(err));
 			Helper.output(User,user,myResponse,res);
@@ -41,9 +42,11 @@ exports.signup = function(req, res) {
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
-			console.log('saved');
+
 			req.login(user, function(err) {
+
 				if (err) {
+
 					myResponse.transformMongooseError(User.errPath,String(err));
 				}
 				Helper.output(User,user,myResponse,res);
@@ -58,24 +61,31 @@ exports.signup = function(req, res) {
 exports.signin = function(req, res, next) {
 
 	passport.authenticate('local', function(err, user, info) {
+
 		var myResponse = new MyResponse();
 
 		if (err) {
+
 			myResponse.transformMongooseError(User.errPath,String(err));
 			Helper.output(User,user,myResponse,res);
 		}
 		else if(!user) {
+
 			myResponse.addMessages(serverJSON.api.users._id.login);
 			Helper.output(User,user,myResponse,res);
-		} else {
+		}
+		else {
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
 
 			req.login(user, function(err) {
+
 				if (err) {
+
 					myResponse.transformMongooseError(User.errPath,String(err));
-				} 
+				}
+
 				Helper.output(User,user,myResponse,res);
 			});
 		}

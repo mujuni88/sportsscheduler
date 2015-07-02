@@ -39,9 +39,11 @@ function Sender() {
 Sender.prototype.sendSMS = function(to,subject,text,callback) {
 
 	var mailOptions = {
+
 		to: to,
 		subject: subject,
 		text: text
+		
 	};
 
 	var response = new MyResponse();
@@ -51,7 +53,9 @@ Sender.prototype.sendSMS = function(to,subject,text,callback) {
 	    if(err){
 	    	//response.setError(serverJSON.api.sms.errors._5,err);
 	        console.log(err);
-	    }else{
+	    }
+	    else {
+
 	        console.log('Message sent: ' + info);
 	    }
 

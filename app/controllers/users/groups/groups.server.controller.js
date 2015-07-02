@@ -11,7 +11,6 @@ var mongoose = require('mongoose'),
 	serverJSON = require('../../../local_files/ui/server.ui.json'),
 	Helper = require('../../../custom_objects/Helper'),
 	PrivateFunctions = require('./_privateFunctions'),
-	util = require('util'),
 	_ = require('lodash');
 
 /**
@@ -20,10 +19,7 @@ var mongoose = require('mongoose'),
 exports.create = function(req, res) {
 	
 	var group = new Group(req.body);
-	console.log('original group: ' + group);
 	var myResponse = new MyResponse();
-	//var data = _.merge(group,{admins: req.user,createdBy : req.user},Helper.cleanMergeObj);
-	//_.extend(group,data);
 
 	//detect if group with this name has already been created
 	console.log(JSON.stringify(req.body,null,4));
@@ -31,8 +27,8 @@ exports.create = function(req, res) {
 	var createdByID = null;
 	//running test cases
 	console.log('createdByType: ' + typeof req.body.createdBy);
-	if(typeof req.body.createdBy !== 'undefined')
-	{
+	if(typeof req.body.createdBy !== 'undefined') {
+
 		createdByID = mongoose.Types.ObjectId(req.body.createdBy);
 		req.user = User.findById(req.body.createdBy);
 		console.log('req.user: ' + req.user.username);
@@ -47,23 +43,23 @@ exports.create = function(req, res) {
 
 	Helper.find(Group,query,function(err,mod) {
 
-		if(err)
-		{
+		if(err) {
+
 			myResponse.transformMongooseError(Group.errPath,String(err));
 			Helper.output(Group,null,myResponse,res);
 		}
-		else if(!mod)
-		{
+		else if(!mod) {
+
 			myResponse.addMessages(serverJSON.api.groups.name.invalid);
 			Helper.output(Group,null,myResponse,res);
 		}
-		else if(mod.length !== 0) 
-		{
+		else if(mod.length !== 0) {
+
 			myResponse.addMessages(serverJSON.api.groups.name.duplicate);
 			Helper.output(Group,null,myResponse,res);
 		}
-		else
-		{	
+		else {
+
 			group.createdBy = createdByID;
 			
 			//don't run if running test cases
@@ -71,17 +67,19 @@ exports.create = function(req, res) {
 				group.admins.push(createdByID);
 
 			group.save(function(err) {
+
 				console.log('in save');
 				
 				if (err) {
+
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
 					Helper.output(Group,group,myResponse,res);
 				}
 				else {
 					//don't run this if running test cases
-					if(typeof req.body.createdBy !== 'undefined')
-					{
+					if(typeof req.body.createdBy !== 'undefined') {
+
 						Helper.output(Group,group,myResponse,res);
 						return;
 					}
@@ -93,15 +91,13 @@ exports.create = function(req, res) {
 					Helper.executeWaterfall(functionsArray,function (err, group) {
 
 						if (err) {
+
 							console.log('error: ' + err);
 							myResponse.transformMongooseError(err.model.errPath,String(err.err));
-							Helper.output(err.model,null,myResponse,res);
 						}
-						else
-	                		Helper.output(Group,group,myResponse,res);
+	                	
+	                	Helper.output(Group,group,myResponse,res);
 					});
-
-					
 				}
 			});
 		}
@@ -124,11 +120,12 @@ exports.read = function(req, res) {
 		var group = mod[0];
 		
 		if (err) {
+
 			console.log('error: ' + err);
 			myResponse.transformMongooseError(Group.errPath,String(err));
 		}
-		else if(mod.length === 0)
-		{
+		else if(mod.length === 0) {
+
 			myResponse.addMessages(serverJSON.api.groups._id.exist);
 		}
 		
@@ -143,56 +140,60 @@ exports.update = function(req, res) {
 	
 	var myResponse = new MyResponse();
 	var id = req.params.groupId;
-	var i = 0;
 
 	Group.findOne({_id: id}, function(err,group) {
 		
 		var myResponse = new MyResponse();
 		console.log(err);
-		if(err)
-		{
+		
+		if(err) {
+
 			console.log(err);
 			myResponse.transformMongooseError(Group.errPath,String(err));
 			Helper.output(Group,group,myResponse,res);
 		}
-		else if(!group)
-		{
+		else if(!group) {
+
 			myResponse.addMessages(serverJSON.api.groups._id.invalid);
 			Helper.output(Group,group,myResponse,res);
 		}
-		else
-		{
+		else {
+
 			console.log('before save: ' + group);
 
 			var admins = req.body.admins;
 			var members = req.body.members;
 			var events = req.body.events;
+			var i = 0;
 
 			req.body.admins = [];
 			req.body.members = [];
 			req.body.events = [];
 
-			if(typeof admins !== 'undefined')
-			{
+			if(typeof admins !== 'undefined') {
+
 				for(i = 0; i < admins.length; ++i) {
-					req.body.admins.push(admins[i]._id.toString());
+
+					req.body.admins.push(admins[i]._id);
 				}
 			}
 
-			if(typeof members !== 'undefined')
-			{
+			if(typeof members !== 'undefined') {
+				
 				for(i = 0; i < members.length; ++i) {
-					req.body.members.push(members[i]._id.toString());
+
+					req.body.members.push(members[i]._id);
 				}
 			}
 
 			if(typeof req.body.createdBy !== 'undefined')
-				req.body.createdBy = req.body.createdBy._id.toString();
+				req.body.createdBy = req.body.createdBy._id;
 
-			if(typeof events !== 'undefined')
-			{
+			if(typeof events !== 'undefined') {
+				
 				for(i = 0; i < events.length; ++i) {
-					req.body.events.push(events[i]._id.toString());
+
+					req.body.events.push(events[i]._id);
 				}
 			}	
 
@@ -211,24 +212,26 @@ exports.update = function(req, res) {
 				console.log('in save');
 				
 				if (err) {
+
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
 					Helper.output(Group,null,myResponse,res);
 				}
-				else
-				{
+				else {
+
 					var functionsArray = [];
 					functionsArray.push(PrivateFunctions.update.joinedGroups(req,group));
 					functionsArray = Helper.buildWaterfall(functionsArray);
 
 					Helper.executeWaterfall(functionsArray,function (err, group) {
+						
 						if (err) {
+
 							console.log('error: ' + err);
 							myResponse.transformMongooseError(err.model.errPath,String(err.err));
-							Helper.output(err.model,null,myResponse,res);
 						}
-						else
-	                		Helper.output(Group,group,myResponse,res);
+	                	
+	                	Helper.output(Group,group,myResponse,res);
 	                });
 				}
 			});
@@ -249,25 +252,28 @@ exports.delete = function(req, res) {
 
 		var myResponse = new MyResponse();
 		
-		if(err)
-		{
+		if(err) {
+
 			console.log(err);
 			myResponse.transformMongooseError(Group.errPath,String(err));
 			Helper.output(Group,group,myResponse,res);
 		}
-		else if(!group)
-		{
+		else if(!group) {
+
 			myResponse.addMessages(serverJSON.api.groups._id.invalid);
 			myResponse.setError(res);
 			Helper.output(Group,group,myResponse,res);
 		}
-		else
-		{
+		else {
+
 			group.remove(function(err) {
+				
 				if (err) {
+
 					console.log('error: ' + err);
 					myResponse.transformMongooseError(Group.errPath,String(err));
 				}
+
 				Helper.output(Group,group,myResponse,res);
 			});
 		}
@@ -283,8 +289,9 @@ exports.list = function(req, res) { Group.find().sort('-created').exec(function(
 
 		var groupName = req.query.name;
 		console.log('groupName: ' + groupName);
-		if(groupName)
-		{
+		
+		if(groupName) {
+
 			var regex = ".*"+groupName+".*";
 			console.log('regex: ' + regex);
 
@@ -298,23 +305,21 @@ exports.list = function(req, res) { Group.find().sort('-created').exec(function(
 			Helper.find(Group,query,function(err,mod) {
 
 				if (err) {
+
 					myResponse.transformMongooseError(Group.errPath,String(err));
-					Helper.output(Group,null,myResponse,res);
 				}
 				else if(!mod) {
+
 					myResponse.addMessages(serverJSON.api.events._id.exist);
-					Helper.output(Group,null,myResponse,res);
 				}
-				else
-				{
-					Helper.output(Group,mod,myResponse,res);
-				}
+				
+				Helper.output(Group,mod,myResponse,res);
 			});
 		}
 		//Show all events if none are found in the DB
-		else
-		{
+		else {
 			if (err) {
+
 				myResponse.transformMongooseError(Group.errPath,String(err));
 			} 
 
@@ -330,8 +335,8 @@ exports.groupByID = function(req, res, next, id) {
 
 	var myResponse = new MyResponse();
 	
-	if(!mongoose.Types.ObjectId.isValid(id))
-	{
+	if(!mongoose.Types.ObjectId.isValid(id)) {
+
 		myResponse.addMessages(serverJSON.api.groups._id.invalid);
 		Helper.output(Group,null,myResponse,res);
 		return;
@@ -350,8 +355,10 @@ exports.groupByID = function(req, res, next, id) {
  * Group authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
+	
 	if (req.group.user.id !== req.user.id) {
 		return res.status(403).send('User is not authorized');
 	}
+	
 	next();
 };

@@ -15,7 +15,7 @@ var PrivateFunctions = (function() {
 			{
 				return function(arg1,arg2,done) {
 
-					req.user.createdGroups.push(group._id);
+					req.user.createdGroups.push(group.id);
 					req.user.save(function(err) {
 						if (err) {
 							err = {
@@ -58,21 +58,14 @@ var PrivateFunctions = (function() {
 					req.body.members = [];
 
 					for(i = 0; i < members.length; ++i) {
+
 						var membersID = members[i].toString();
+
 						if(membersID !== group.createdBy.toString())
 							req.body.members.push(membersID);
 					}
 
-					for(i = 0; i < req.body.members.length; ++i)
-						console.log('req members type: ' + typeof req.body.members[i]);
-
-					for(i = 0; i < oldMembersIDs.length; ++i)
-						console.log('oldMembersIDs type: ' + typeof oldMembersIDs[i]);
-
-
-					console.log('oldMembersIDs: ' + oldMembersIDs);
 					var removedUsers = _.difference(oldMembersIDs,req.body.members);
-					console.log('removedUsers: ' + removedUsers);
 
 					var query = {
 						_id : {
@@ -81,55 +74,52 @@ var PrivateFunctions = (function() {
 					};
 
 					console.log('all users: ' + req.body.members.concat(removedUsers));
+					
 					Helper.find(User,query,function(err,mod) {
 
 						Helper.populate(User,mod,function(err,mod) {
+							
 							var saveArray = [];
+							
+							for(i = 0; i < mod.length; ++i) {
 
-							console.log('members: ' + req.body.members);
-							console.log('mod: ' + mod.length);
-							for(i = 0; i < mod.length; ++i)
-							{
 								var updateData = {};
 								var user = mod[i];
-								console.log('working on user._id: ' + user._id);
 
 								//check if user is an old member
-								if(typeof oldMembersIDsHash[user._id.toString()] !== 'undefined' && removedUsers.indexOf(user._id.toString()) > -1)
-								{
-									console.log('user id old member: ' + user._id);
-									console.log('groups count: ' + user.joinedGroups.length);
-									for(j = 0; j < user.joinedGroups.length; ++j)
-									{
-										console.log('remove id? : ' + user.joinedGroups[j]._id);
-										console.log('group id: ' + group.id);
-										if(user.joinedGroups[j]._id.toString() === group.id.toString())
-										{
+								if(typeof oldMembersIDsHash[user.id] !== 'undefined' && removedUsers.indexOf(user.id) > -1) {
+									
+									for(j = 0; j < user.joinedGroups.length; ++j) {
+
+										if(user.joinedGroups[j].id === group.id) {
+
 											user.joinedGroups.splice(j,1);
 											updateData.joinedGroups = user.joinedGroups;
+
 											break;
 										}
 									}
 								}
 								//user is a current member of the group
-								else
-								{
+								else {
+
 									var alreadyJoined = false;
 									console.log('user is new member or existing user: ' + user._id);
 									console.log('groups count: ' + user.joinedGroups.length);
 
-									for(j = 0; j < user.joinedGroups.length; ++j)
-									{
+									for(j = 0; j < user.joinedGroups.length; ++j) {
 										//user already has group added to its joinedGroups attribute. Just skip this user
-										if(user.joinedGroups[j]._id.toString() === group.id.toString())
-										{
+										if(user.joinedGroups[j].id === group.id) {
+
 											alreadyJoined = true;
+
 											break;
 										}
 									}
-									if(!alreadyJoined)
-									{
-										console.log('user has not yet joined: ' + user._id);
+
+									if(!alreadyJoined) {
+
+										console.log('user has not yet joined: ' + user.id);
 										user.joinedGroups.push(group.id);
 										updateData.joinedGroups = user.joinedGroups; 
 									}
@@ -149,29 +139,41 @@ var PrivateFunctions = (function() {
 							Helper.executeWaterfall(saveArray,function(err,data) {
 
 								if (err) {
+
 									err = {
+
 										model: User,
 										err: err
+
 									};
+
 									console.log('error: ' + err);
 									done(err,null,arg2);
 								}
 								else {
+
 									query = {
+
 										_id : group.id
+
 									};
 
 									Helper.find(Group,query,function(err,mod) {
 
 										if (err) {
+
 											err = {
+
 												model: Group,
 												err: err
+
 											};
+
 											console.log('error: ' + err);
 											done(err,null,arg2);
 										}
 										else {
+
 											group = mod[0];
 											done(null,group,1);
 										}
@@ -181,14 +183,6 @@ var PrivateFunctions = (function() {
 							});
 						});
 					});
-					//5515a5d1c6c8151504e9bedf
-					//554908e4a7ed040000a11461
-					//add to joinedGroup
-					//for(var i = 0; i < req.body.members; ++i)
-					//{
-						
-					//}
-						
 				};
 			}
 		}

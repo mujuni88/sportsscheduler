@@ -123,35 +123,6 @@ var Helper = (function() {
                 });
             };
         },
-        findWithAllAtts: function(model,query,callback) {
-
-            model.find(query)
-            .exec(function(err,mod) {
-                callback(err,mod);
-            });
-        },
-        findOneWithAllAtts: function(model,query,callback) {
-
-            model.findOne(query)
-            .exec(function(err,mod) {
-                callback(err,mod);
-            });
-        },
-        find: function(model,query,callback) {
-
-            model.find(query)
-            .select(Helper.attsArryToAttsString(model.attsToShow))
-            .exec(function(err,mod) {
-                callback(err,mod);
-            });
-        },
-        findOne: function(model,query,callback) {
-            model.findOne(query)
-            .select(Helper.attsArryToAttsString(model.attsToShow))
-            .exec(function(err,mod) {
-                callback(err,mod);
-            });
-        },
         doesObjectExist: function(model,id) {
 
             return function(arg1,arg2,done) {
@@ -208,7 +179,36 @@ var Helper = (function() {
             };
         },
         /**************** END WATERFALL FUNCTIONS ***********/
-        
+
+        findWithAllAtts: function(model,query,callback) {
+
+            model.find(query)
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },
+        findOneWithAllAtts: function(model,query,callback) {
+
+            model.findOne(query)
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },
+        find: function(model,query,callback) {
+
+            model.find(query)
+            .select(Helper.attsArryToAttsString(model.attsToShow))
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },
+        findOne: function(model,query,callback) {
+            model.findOne(query)
+            .select(Helper.attsArryToAttsString(model.attsToShow))
+            .exec(function(err,mod) {
+                callback(err,mod);
+            });
+        },        
         isUniqueArray: function(arr) {
 
             var map = {};
@@ -239,38 +239,6 @@ var Helper = (function() {
             }
             
             return true;
-        },
-        cleanMergeObj: function(oldVal,newVal) {
-
-            //console.log('oldVal: ' + oldVal);
-            //console.log('typeof: ' + typeof newVal._id);
-            //console.log('newVal: ' + JSON.stringify(newVal, null, 4));
-            //console.log('isArray: ' + Array.isArray(newVal));
-            if(Array.isArray(newVal))
-            {
-                if(newVal.length > 0)
-                {
-                    //as long as the first index has an _id, then i know that this array is an array of refs
-                    if(typeof newVal[0]._id !== "undefined")
-                    {
-                        var arr = [];
-                        for(var i = 0; i < newVal.length; ++i)
-                        {
-                            //console.log('id: ' + newVal[i]._id);
-                            arr.push(newVal[i]._id.toString());
-                        }
-
-                        return arr;
-                    }
-                }
-            }
-            else if(typeof newVal._id === "string")
-            {
-                //console.log('string: ' + newVal._id);
-                return newVal._id.toString();
-            }
-            
-            return newVal;
         },
         populate: function(model, obj, callback) {
             var atts = model.objectIDAtts.slice(0);

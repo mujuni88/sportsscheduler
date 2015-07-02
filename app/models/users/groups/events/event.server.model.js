@@ -77,8 +77,7 @@ var EventSchema = new Schema({
 		type:Number,
 		required: 'minimumVotes.empty'
 	},
-	votes: 
-	{
+	votes: {
 		yes:
 		{
 			type: [Schema.ObjectId],
@@ -266,8 +265,8 @@ EventSchema.pre('save', function (next) {
 
 
 	console.log('intersection: ' + intersection);
-	if(intersection.length)
-	{
+	if(intersection.length) {
+		
 		var err = new ValidationError(this);
 		err.errors.votes = new ValidatorError('votes.yes', 'votes.yes.duplicate', 'notunique', '');
 	  	

@@ -301,17 +301,17 @@ UserSchema.path('addedBy').schema.path('groupID').validate(function (id,respond)
 
 	var Group = mongoose.model('Group');
 	var query = {
+
 		_id: id
+
 	};
 
 	console.log('validate addedBy.groupID: ' + id);
 	
 	Helper.find(Group,query,function(err,mod) {
 		
-		if(err || !mod || typeof mod.length === 0) 
-		{
-			console.log('FALSE!!!');
-			console.log('groupID mod: ' + mod);
+		if(err || !mod || typeof mod.length === 0)  {
+
 			respond(false);
 		}
 		else
@@ -323,7 +323,9 @@ UserSchema.path('addedBy').schema.path('userID').validate(function (id,respond) 
 
 	var User = mongoose.model('User');
 	var query = {
+
 		_id: id
+		
 	};
 
 	console.log('validate addedBy.userID: ' + id);

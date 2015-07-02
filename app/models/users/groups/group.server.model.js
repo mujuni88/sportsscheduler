@@ -95,8 +95,8 @@ var GroupSchema = new Schema({
 //functions to run whenever model is outputted to the client
 GroupSchema.statics.functionsArray = [
 	
-
 	PrivateFunctions.isAdmin
+	
 ];
 
 GroupSchema.statics.objectIDAtts = [
@@ -128,10 +128,12 @@ GroupSchema.path('admins').validate(function (ids,respond) {
 
 	var User = mongoose.model('User');
 	var query = {
+
     	_id: 
     	{
     		$in: ids
     	}
+
     };
 
     console.log('validate admins: ' + ids);
@@ -153,10 +155,12 @@ GroupSchema.path('members').validate(function (ids,respond) {
 
 	var User = mongoose.model('User');
 	var query = {
+
     	_id: 
     	{
     		$in: ids
     	}
+
     };
 
 	console.log('validate members: ' + ids);
@@ -175,14 +179,16 @@ GroupSchema.path('createdBy').validate(function (id,respond) {
 
 	var User = mongoose.model('User');
 	var query = {
+
 		_id: id
+
 	};
 
 	console.log('validate createdBy: ' + id);
 	
-	Helper.find(User,query,function(err,mod) {
+	Helper.findOne(User,query,function(err,user) {
 
-		if(err || !mod) 
+		if(err || !user) 
 			respond(false);
 		else
 			respond(true);
@@ -198,7 +204,8 @@ GroupSchema.pre('save', function(next){
   	var combinedArray = this.members.concat(this.admins);
   	
   	var arr = _.uniq(combinedArray,false,function(obj) {
-  		return obj.toString();
+
+  		return obj.id;
   	});
 
   	console.log('uniq: ' + arr);

@@ -16,31 +16,23 @@ var _ = require('lodash'),
 exports.userByID = function(req, res, next, id) {
 
 	var myResponse = new MyResponse();
-	
-	if(!mongoose.Types.ObjectId.isValid(id))
-	{
+	var query = {
+		_id: id
+	};
+
+	if(!mongoose.Types.ObjectId.isValid(id)) {
+
 		myResponse.addMessages(serverJSON.api.users._id.invalid);
 		Helper.output(User,null,myResponse,res);
 		return;
 	}
+		
+	Helper.findOne(User,query,function(err,user) {
 
-	User.findById(id).populate('user', 'displayName').exec(function(err, user) {
-		
-		
 		req.profile = user ;
 
 		next();
 	});
-	/*
-	User.findOne({
-		_id: id
-	}).exec(function(err, user) {
-		if (err) return next(err);
-		if (!user) return next(new Error('Failed to load User ' + id));
-		req.profile = user;
-		next();
-	});
-*/
 };
 
 /**
