@@ -35,7 +35,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.addMember = addMember;
     $scope.isAdmin = isAdmin;
     $scope.isOwner = isOwner;
-    $scope._isOwner = _isOwner;
+    $scope.isLoggedInOwner = isLoggedInOwner;
     $scope.makeAdmin = makeAdmin;
     $scope.removeAdmin = removeAdmin;
     $scope.canRemoveAdmin = canRemoveAdmin;
@@ -194,7 +194,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return _isUserInAdmins($scope.group.createdBy);
     }
 
-    function _isOwner(){
+    function isLoggedInOwner(){
         if(_.isUndefined($scope.group.createdBy)){
             return false;
         }
@@ -346,7 +346,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function canRevokeAdminRights(member){
-        return ( member.isAdmin && _isOwner() && !isOwner(member) );
+        return ( member.isAdmin && !isOwner(member) && isLoggedInAdmin(member)) || ( member.isAdmin && isLoggedInOwner() && !isOwner(member) );
     }
 
     function canMakeAdmin(member){
@@ -354,18 +354,28 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function canRemoveMember(member){
-        return ( !isOwner(member) && member._id === user._id && !_isOwner() );
+        return !member.isAdmin ||
+            ( !isOwner(member) && isLoggedInAdmin(member)) ||
+            ( isLoggedInOwner() && !isOwner(member) );
     }
 
     function canRmMember(member){
-        return ( !isOwner(member) && _isOwner() );
+        return ( !isOwner(member) && isLoggedInOwner() );
     }
 
     function canRmvMember(member){
-        return ( !isOwner(member) && !member.isAdmin && !_isOwner() );
+        return ( !isOwner(member) && !member.isAdmin && !isLoggedInOwner() );
     }
 
     function _isAdmin(member){
         return ( member.isAdmin && !isOwner(member) );
+    }
+    
+    function isLoggedInAdmin(member){
+        if(_.isUndefined($scope.authentication.user._id)){
+            return false;
+        }
+
+        return member._id === $scope.authentication.user._id;
     }
 }
