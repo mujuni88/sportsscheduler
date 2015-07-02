@@ -266,7 +266,20 @@ exports.delete = function(req, res) {
 					myResponse.transformMongooseError(EventModel.errPath,String(err));
 				} 
 
-				Helper.output(EventModel,event,myResponse,res);
+				var functionsArray = [];
+				functionsArray.push(PrivateFunctions.delete.notifiyUsersOfEventCancellation(event));
+				functionsArray = Helper.buildWaterfall(functionsArray);
+
+				Helper.executeWaterfall(functionsArray,function (err, obj) {
+
+					if(err) {
+
+						console.log('error: ' + err);
+						myResponse.transformMongooseError(err.model.errPath,String(err));
+					}
+
+                	Helper.output(EventModel,event,myResponse,res);
+                });
 			});
 		}
 

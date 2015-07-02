@@ -88,10 +88,6 @@ var PrivateFunctions = (function() {
 
 	return {
 
-		update: 
-		{
-
-		},
 		create:
 		{
 			addEventToGroup: function(group,eventID) {
@@ -249,7 +245,51 @@ var PrivateFunctions = (function() {
 					});					
 				};
 			}
-		}
+		},
+		update: 
+		{
+
+		},
+		delete: 
+		{
+			notifiyUsersOfEventCancellation: function(event) {
+
+				return function(arg1,arg2,done) {
+
+					var query = {
+
+						_id: event.id
+
+					};
+
+					Helper.populate(EventModel,event,function(err,event) {
+						
+						query = createEventMembersQuery(event);
+
+						Helper.findWithAllAtts(User,query,function(err,users) {
+
+							for(var i = 0; i < users.length; ++i) {
+
+								var user = users[i];
+																
+								if(user.preferences.receiveTexts) {
+
+									var recipient = user.phoneNumber + user.carrier;
+									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event: ' + event.name + ' for Group: '+event.group.name+' has been canceled', senderCallback(user));
+								}
+
+								if(user.preferences.receiveEmails) {
+
+									Sender.sendSMS(user.email, 'Sports Scheduler', 'Event: ' + event.name + ' for Group: '+event.group.name+' has been canceled', senderCallback(user));
+								}
+							}
+
+							done(null,arg1,arg2);
+						});
+					});
+				};
+			}
+		},
 	};
 
 })();
