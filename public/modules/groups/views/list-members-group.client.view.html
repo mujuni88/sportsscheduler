@@ -28,7 +28,7 @@
             No Members yet
         </div>
         <div class="list-groups" data-ng-if="group.members">
-            <div class="list-group-item" data-ng-repeat="member in group.members | orderBy:['createdBy','isAdmin'] | filter:search.members">
+            <div class="list-group-item" dir-paginate="member in group.members | orderBy:['createdBy','isAdmin']:true | filter:search.members | itemsPerPage: 10">
                 <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i>{{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <div class="pull-right float-none-xs members">
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
@@ -38,10 +38,10 @@
                     admin
                     </span>
                     <span class="admin-btns" data-ng-show="isAdmin()">
-                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)">
+                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)" tooltip-placement="top" tooltip="Make Admin">
                         <i class="glyphicon glyphicon-king text-primary"></i>
                         </span>
-                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)">
+                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)" tooltip-placement="top" tooltip="Revoke Admin">
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
                         <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
@@ -59,6 +59,9 @@
                         </span>
                 </div>
             </div>
+                <div class="text-center">
+                    <dir-pagination-controls></dir-pagination-controls>
+                </div>
         </div>
     </div>
 </div>

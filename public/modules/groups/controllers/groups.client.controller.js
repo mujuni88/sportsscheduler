@@ -183,6 +183,10 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
 
     function isOwner(member){
+        if(_.isUndefined($scope.group.createdBy)){
+            return false;
+        }
+        
         if(member._id !== $scope.group.createdBy._id){
             return false;
         }

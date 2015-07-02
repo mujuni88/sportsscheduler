@@ -1,25 +1,43 @@
 <section class="row" data-ng-controller="SettingsController">
 	<div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
-		<form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
+		<form name="userForm" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
 				<div class="form-group">
 					<label for="firstName">First Name</label>
-					<input type="text" id="firstName" name="firstName" class="form-control" data-ng-model="user.firstName" placeholder="First Name">
+					<input type="text" id="firstName" name="firstName" class="form-control" data-ng-model="user.firstName" placeholder="First Name" validator="required, alpha"
+						   required="required" valid-method="blur">
 				</div>
 				<div class="form-group">
 					<label for="lastName">Last Name</label>
-					<input type="text" id="lastName" name="lastName" class="form-control" data-ng-model="user.lastName" placeholder="Last Name">
+					<input type="text" id="lastName" name="lastName" class="form-control" data-ng-model="user.lastName" placeholder="Last Name" validator="required, alpha"
+						   required="required" valid-method="blur">
 				</div>
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="email" id="email" name="email" class="form-control" data-ng-model="user.email" placeholder="Email">
+					<input type="email" id="email" name="email" class="form-control" data-ng-model="user.email" placeholder="Email" validator="required, email"
+						   required="required" valid-method="blur">
 				</div>
 				<div class="form-group">
 					<label for="username">Username</label>
-					<input type="text" id="username" name="username" class="form-control" data-ng-model="user.username" placeholder="Username">
+					<input type="text" id="username" name="username" class="form-control" data-ng-model="user.username" placeholder="Username" validator="required, nospecialchars"
+						   required="required" valid-method="blur">
+				</div>
+				<div class="form-group">
+					<label for="username">Phone Number</label>
+					<input type="text" id="phone" name="phone" class="form-control" data-ng-model="user.phoneNumber" placeholder="Phone Number" validator="required, phone"
+						   required="required" valid-method="blur">
+				</div>
+				<div class="form-group">
+					<label for="carriers">Carrier</label>
+
+					<select id="carriers" class="form-control" name="carriers" ng-model="user.carrier"
+							ng-options="carrier.addr as carrier.carrier for carrier in carriers" validator="required"
+							required="required" valid-method="blur">
+						<option value="">-- choose carrier --</option>
+					</select>
 				</div>
 				<div class="text-left form-group">
-					<button type="submit" class="btn btn-large btn-primary btn-block">Save</button>
+					<button validation-submit="userForm" data-ng-click="updateUserProfile(userForm.$valid)" type="submit" class="btn btn-large btn-primary btn-block">Save</button>
 				</div>
 			</fieldset>
 		</form>

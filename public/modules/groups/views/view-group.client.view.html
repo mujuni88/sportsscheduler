@@ -18,7 +18,7 @@
                     Cancel
                 </button>
                 </span>
-                        <a class="btn btn-danger btn-sm" ng-show="!editableForm.$visible"
+                        <a class="btn btn-danger btn-sm" ng-show="isOwner(user) && !editableForm.$visible"
                            ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete group"
                            message="Are you sure you want to delete {{group.name}}?">
                             <i class="glyphicon glyphicon-trash"></i>
@@ -34,7 +34,7 @@
                             class="fa fa-users text-primary spacing-sm-right"></i>{{group.name}}</h2>
                     <ul class="text-center list-unstyled">
                         <li><h4><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h4></li>
-                        <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']"><h5 class="text-info">
+                        <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']:true"><h5 class="text-info">
                             {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
                     </ul>
                 </div>
@@ -47,11 +47,11 @@
 
                 <ul class="nav nav-tabs">
                     <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listMembers') }"><a
-                            ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members</a>
+                            ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members <span class="badge hidden" data-ng-bind="group.members.length"></span></a> 
                     </li>
                     <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listEvents') }"><a
                             ui-sref=".listEvents.viewEvents"><i class="glyphicon glyphicon-calendar text-primary"></i>
-                        Events</a></li>
+                        Events <span class="badge hidden" data-ng-bind="group.events.length"></span></a></li>
                 </ul>
                 <br/>
 

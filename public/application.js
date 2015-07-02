@@ -5,13 +5,14 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName)
-    .config(['$locationProvider',config])
-    .run(['editableOptions','editableThemes', run]);
+    .config(config)
+    .run(run);
 //Then define the init function for starting up the application
 angular.element(document).ready(ready);
 
-function config($locationProvider) {
+function config($locationProvider, paginationTemplateProvider) {
     $locationProvider.hashPrefix('!');
+    paginationTemplateProvider.setPath('lib/angular-utils-pagination/dirPagination.tpl.html');
 }
 
 function run(editableOptions, editableThemes) {

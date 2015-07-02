@@ -6,3 +6,15 @@
   background-color: #fcfcfc;
 }
 
+.list-group-item-expired{
+  border:1px solid #ff0039;
+  background-color: #eeeeee;
+}
+.btn-secondary{
+  background-color: #c3c3c3;
+  color:#000;
+}
+.badge-secondary{
+  @extend .btn-secondary;
+  color:#000;
+}

@@ -40,7 +40,8 @@ module.exports = {
                 'public/lib/angular-xeditable/dist/js/xeditable.min.js',
 				'public/lib/angular-dialog-service/dist/dialogs.min.js',
 				'public/lib/angular-growl-v2/build/angular-growl.js',
-				'public/lib/ngprogress/build/ngProgress.min.js'
+				'public/lib/ngprogress/build/ngProgress.min.js',
+				'public/lib/angular-utils-pagination/dirPagination.js'
             ]
 		},
 		css: [
