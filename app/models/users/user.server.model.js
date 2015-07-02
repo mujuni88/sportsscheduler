@@ -14,6 +14,7 @@ var mongoose = require('mongoose'),
 	crypto = require('crypto'),
 	serverJSON = require('../../local_files/ui/server.ui.json'),
 	async = require('async'),
+	PrivateFunctions = require('./_privateFunctions'),
 	Helper = require('../../custom_objects/Helper');
 
 /*
@@ -224,6 +225,7 @@ var UserSchema = new Schema({
 
 UserSchema.statics.functionsArray = [
 	
+	PrivateFunctions.populateAtts	
 ];
 
 UserSchema.statics.objectIDAtts = [

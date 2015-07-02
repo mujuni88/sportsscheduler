@@ -241,6 +241,7 @@ var Helper = (function() {
             return true;
         },
         populate: function(model, obj, callback) {
+
             var atts = model.objectIDAtts.slice(0);
 
             //console.log('atts: ' + atts);
@@ -252,6 +253,7 @@ var Helper = (function() {
                     model: optionsModel.title,
                     select: Helper.attsArryToAttsString(optionsModel.attsToShow)
                 };
+                
                 console.log('options: ' + JSON.stringify(options,null,1));
                 model.populate(obj, options, function (err, obj) {
                     
