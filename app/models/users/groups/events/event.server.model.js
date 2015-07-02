@@ -44,7 +44,6 @@ var EventSchema = new Schema({
 		},
 		address: {
 			type: String,
-			required: 'location.address.empty',
 			//match: [new RegExp(serverJSON.api.events.location.address.invalid.regex), 'location.address.invalid'],
 			trim: true
 		},
@@ -113,8 +112,7 @@ var EventSchema = new Schema({
 	},
 
 	message:{
-		type: String,
-		required: 'message.empty'
+		type: String
 	},
 	group: {
 		type: Schema.ObjectId,
