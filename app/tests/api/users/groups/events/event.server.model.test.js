@@ -149,6 +149,28 @@ describe('Event Model Unit Tests:', function() {
 	        });
 	    });
 
+	it('GET: retrive event by pagination of group events', function(done) {
+		superagent.get('http://localhost:3000/api/users/groups/'+groupID+'/events?page=1&count=1')
+          .end(function(e, res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+            chaiExpect(res.statusCode).to.eql(200);
+            chaiExpect(res.body._metadata.count).to.eql(1);
+            chaiExpect(res.body.data[0]._id).to.eql(eventID);
+            done();
+        });
+    });
+
+    it('GET: retrive all events for group', function(done) {
+		superagent.get('http://localhost:3000/api/users/groups/'+groupID+'/events')
+          .end(function(e, res){
+            console.log(e);
+            chaiExpect(e).to.eql(null);
+            chaiExpect(res.statusCode).to.eql(200);
+            done();
+        });
+    });
+
 	it('PUT: check if updating an event works when req has the required parameters', function(done) {
 		var name = 'PostMan Updated Event Name';
     	superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)

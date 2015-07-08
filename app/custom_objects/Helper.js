@@ -276,8 +276,8 @@ var Helper = (function() {
             res.status(myResponse.status);
 
             //coming from an api that doesn't use models
-            if(model === null)
-            {
+            if(model === null) {
+
                 if(typeof myResponse.error !== 'undefined')
                     res.json(myResponse.error);
                 else
@@ -288,15 +288,29 @@ var Helper = (function() {
 
             if(typeof myResponse.error !== 'undefined')
                 res.json(myResponse.error);
-            else
-            {
+            else {
+
                 var functionsArray = model.functionsArray.slice(0);
                 functionsArray.unshift(populate(model,obj));
                 functionsArray = Helper.buildWaterfall(functionsArray);
                 
                 Helper.executeWaterfall(functionsArray,function (error, data) {
+                    
                     console.log('data: ' + JSON.stringify(data,null,1));
-                    res.json(data);        
+
+                    if(myResponse.paginate) {
+
+                        data = {
+
+                            _metadata: myResponse.paginate.metadata,
+                            data: data
+
+                        };
+
+                        res.json(data);
+                    }
+                    else
+                        res.json(data);        
                 });
             }
         }

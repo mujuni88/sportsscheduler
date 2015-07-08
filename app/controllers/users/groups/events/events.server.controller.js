@@ -366,6 +366,28 @@ exports.listEventsForGroup = function(req, res) {
 				}
 			};
 
+			if(typeof req.query.page !== 'undefined') {
+
+				var count = parseInt(req.query.count);
+				var page = parseInt(req.query.page);
+				
+				if(page > 0 && count > 0) {
+
+					var skip = count * (page - 1);
+
+					var eventIDs = group.events.slice(skip,count + skip);
+					
+					query = {
+						_id:
+						{
+							$in: eventIDs
+						}
+					};
+
+					myResponse.setPaginate(group.events.length);
+				}
+			}
+
 			Helper.find(EventModel,query,function(err,mod) {
 
 				if(err) {
