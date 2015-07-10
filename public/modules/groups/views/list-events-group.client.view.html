@@ -45,7 +45,7 @@
                             <li><h4 class="media-heading">{{event.name}}</h4></li>
                             <li><span class="hidden">Location Name:</span> <p class="text-primary">{{event.location.name}}</p></li>
                             <li data-ng-if="event.location.address"><span class="hidden">Address:</span><p class="text-primary">{{event.location.address}}</p></li>
-                            <li><span class="hidden">Time:</span><p class="text-primary">{{event.time | date:'fullDate'}}</p></li>
+                            <li><span class="hidden">Time:</span><p class="text-primary">{{event.time | date:'short'}}</p></li>
                         </ul> 
                     </div>
                     <div class="col-sm-7 vcenter">

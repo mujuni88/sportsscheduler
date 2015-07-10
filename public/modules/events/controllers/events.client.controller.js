@@ -74,20 +74,20 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         current: 1,
         pageChanged: pageChanged,
         totalEvents: 0,
-        eventsPerPage: 5
+        eventsPerPage:2
     };
-    getResultsPage(1);
+    getResultsPage(1,$scope.pagination.eventsPerPage);
 
     function pageChanged(newPage) {
-        getResultsPage(newPage);
+        getResultsPage(newPage, $scope.pagination.eventsPerPage);
     }
 
-    function getResultsPage(pageNumber) {
+    function getResultsPage(pageNumber, count) {
         if (!evntPagination) {
-            evntPagination = new PaginationService('/api/users/events/' + $stateParams.eventId);
+            evntPagination = new PaginationService('/api/users/groups/'+$stateParams.groupId+'/events');
         }
 
-        return evntPagination.getResultsPage(pageNumber).then(function (result) {
+        return evntPagination.getResultsPage(pageNumber, count).then(function (result) {
             $scope.totalEvents = result._metadata.count;
             $scope.events = result.data;
         });

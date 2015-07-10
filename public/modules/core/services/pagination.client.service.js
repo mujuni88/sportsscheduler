@@ -8,15 +8,13 @@ function PaginationService($http) {
     }
 
     Pagination.prototype = {
-        getResultsPage: getResultsPage
+        getResultsPage: function (pageNumber, count) {
+            return $http.get(this.url + '?page=' + pageNumber + '&count=' + count)
+                .then(function (result) {
+                    return result.data;
+                });
+        }
     };
-
-    function getResultsPage(pageNumber) {
-        return $http.get(this.url + '?page=' + pageNumber)
-            .then(function (result) {
-                return result.data;
-            });
-    }
 
     return Pagination;
 }
