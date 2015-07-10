@@ -2,10 +2,10 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope, PaginationService) {
     var _ = lodash;
     _.mixin({
-        rejectList:rejectList
+        rejectList: rejectList
     });
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -60,13 +60,38 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.timeChange = timeChange;
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
-    $scope.$on('voted', watchVotes);    
+    $scope.$on('voted', watchVotes);
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
     $scope.voteNo = voteNo;
     $scope.hasVotedYes = hasVotedYes;
     $scope.hasVotedNo = hasVotedNo;
     $scope.group = $scope.$parent.group;
+
+    // pagination
+    var evntPagination = null;
+    $scope.pagination = {
+        current: 1,
+        pageChanged: pageChanged,
+        totalEvents: 0,
+        eventsPerPage: 5
+    };
+    getResultsPage(1);
+
+    function pageChanged(newPage) {
+        getResultsPage(newPage);
+    }
+
+    function getResultsPage(pageNumber) {
+        if (!evntPagination) {
+            evntPagination = new PaginationService('/api/users/events/' + $stateParams.eventId);
+        }
+
+        return evntPagination.getResultsPage(pageNumber).then(function (result) {
+            $scope.totalEvents = result._metadata.count;
+            $scope.events = result.data;
+        });
+    }
 
     function getDate() {
         $scope.event.date = new Date();
@@ -127,7 +152,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
                 groupId: $stateParams.groupId
             };
         event.group = $stateParams.groupId;
-        event.$save(params, function(data) {
+        event.$save(params, function (data) {
             $scope.event = event;
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
@@ -141,7 +166,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         var params = {
             eventId: $stateParams.eventId
         };
-        var event = Events.remove(params, function() {
+        var event = Events.remove(params, function () {
             $scope.event = event;
             $state.go('viewGroup.listEvents.viewEvents');
             _notifySuccess('Event successfully removed');
@@ -152,12 +177,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function update() {
         if ($scope.timeError || $scope.dateError) {
             return _getPromise(false, '');
-        };
+        }
+        ;
         var params = {
             eventId: $stateParams.eventId
         };
         $scope.event.group = $stateParams.groupId;
-        var event = Events.update(params, $scope.event, function(data) {
+        var event = Events.update(params, $scope.event, function (data) {
             $scope.event = data;
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
@@ -175,9 +201,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function findOne() {
         var event = Events.get({
             eventId: $stateParams.eventId
-        }, function() {
+        }, function () {
             $scope.event = event;
-            $scope.votesUnr = getUnresponsiveUsers();   
+            $scope.votesUnr = getUnresponsiveUsers();
         });
         return event.$promise;
     }
@@ -203,8 +229,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             // only add to yes, if they were previously there
             _addUserToVoteNo($scope.user);
         }
-        
-        function final(data){
+
+        function final(data) {
             $rootScope.$broadcast('voted', data);
         }
     }
@@ -219,12 +245,12 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
         function failure(data) {
             _deleteUserFromNo($scope.user);
-            
+
             // only add to yes, if they were previously there
             _addUserToVoteYes($scope.user);
         }
 
-        function final(data){
+        function final(data) {
             $rootScope.$broadcast('voted', data);
         }
     }
@@ -251,21 +277,21 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _deleteUserFromYes(user) {
         user = user || $scope.user;
-        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function(item) {
+        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function (item) {
             return _.isEqual(item._id, user._id);
         });
     }
 
     function _deleteUserFromNo(user) {
         user = user || $scope.user;
-        $scope.event.votes.no = _.reject($scope.event.votes.no, function(item) {
+        $scope.event.votes.no = _.reject($scope.event.votes.no, function (item) {
             return _.isEqual(item._id, user._id);
         });
     }
 
     function _getPromise(isSuccess, data) {
         var deferred = $q.defer();
-        setTimeout(function() {
+        setTimeout(function () {
             if (isSuccess) {
                 deferred.resolve(data);
             } else {
@@ -285,18 +311,23 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _hasUserVotedYes(user) {
         user = user || $scope.user;
-        if(_.isUndefined($scope.event.votes)) {return false;}
+        if (_.isUndefined($scope.event.votes)) {
+            return false;
+        }
         return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
     }
 
     function _hasUserVotedNo(user) {
         user = user || $scope.user;
-                if(_.isUndefined($scope.event.votes)) {return false;}
+        if (_.isUndefined($scope.event.votes)) {
+            return false;
+        }
         return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
     }
+
     function rejectList(list, rej, key) {
-        rej.forEach(function(item) {
-            list = _(list).reject(function(it) {
+        rej.forEach(function (item) {
+            list = _(list).reject(function (it) {
                 return item[key] === it[key];
             }).value();
         });
@@ -306,9 +337,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function getUnresponsiveUsers(members) {
         members = members || $scope.group.members;
         return _(members)
-          .rejectList($scope.event.votes.no,'_id')
-          .rejectList($scope.event.votes.yes,'_id')
-          .value();
+            .rejectList($scope.event.votes.no, '_id')
+            .rejectList($scope.event.votes.yes, '_id')
+            .value();
     }
 
 }
