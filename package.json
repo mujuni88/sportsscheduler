@@ -72,6 +72,7 @@
     "grunt-nodemon": "~0.3.0",
     "grunt-protractor-runner": "^1.1.4",
     "grunt-protractor-webdriver": "^0.1.9",
+    "ink-docstrap": "^0.5.2",
     "jsdoc": "~3.3.0-alpha4",
     "karma": "~0.12.24",
     "karma-chrome-launcher": "~0.1.2",
