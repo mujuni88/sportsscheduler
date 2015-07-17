@@ -10,7 +10,7 @@
             <a data-ng-repeat="group in user.createdGroups | orderBy:'name'" data-ng-href="#!/groups/{{group._id}}/members/list" class="list-group-item">
                 <small class="list-group-item-text">
                     Created on
-                    <span data-ng-bind="group.created | date:'medium'"></span>
+                    <span data-ng-bind="group.created | date:'short'"></span>
                 </small>
                 <p class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length}}</span></span></p>
             </a>
@@ -23,7 +23,7 @@
             <a data-ng-repeat="group in user.joinedGroups | orderBy:'name'" data-ng-href="#!/groups/{{group._id}}/members/list" class="list-group-item">
                 <small class="list-group-item-text">
                     Created on
-                    <span data-ng-bind="group.created | date:'medium'"></span>
+                    <span data-ng-bind="group.created | date:'short'"></span>
                     by
                     <span data-ng-bind="group.createdBy.displayName"></span>
                 </small>

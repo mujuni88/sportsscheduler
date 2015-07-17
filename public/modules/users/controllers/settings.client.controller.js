@@ -75,7 +75,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 
         function _notifySuccess(text){
             text = text || 'Settings Saved Successfully';
-            growl.success(text, {title:text});
+            growl.success(text);
         }
 	}
 ]);

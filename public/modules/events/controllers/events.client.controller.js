@@ -74,8 +74,10 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         current: 1,
         pageChanged: pageChanged,
         totalEvents: 0,
-        eventsPerPage:2
+        eventsPerPage:1
     };
+    $scope.getResultsPage = getResultsPage;
+    
     getResultsPage(1,$scope.pagination.eventsPerPage);
 
     function pageChanged(newPage) {
@@ -210,9 +212,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _notifySuccess(text) {
         text = text || 'Event updated successfully';
-        growl.success(text, {
-            title: text
-        });
+        growl.success(text);
     }
 
     function voteYes() {

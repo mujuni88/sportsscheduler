@@ -17,6 +17,9 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		watch: {
+			options:{
+				port:9000
+			},
 			serverViews: {
 				files: watchFiles.serverViews,
 				options: {

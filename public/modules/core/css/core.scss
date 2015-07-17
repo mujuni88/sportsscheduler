@@ -229,5 +229,44 @@ $lg-screens: 1200px;
   @include xs-screens{
     margin-top:20px;
   }
-} 
+}
 
+.truncate{
+  width:50px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.group-search{
+  position: relative;
+}
+.group-search-name{
+  font-weight: bold;
+  @extend .truncate;
+  width:100px;
+  margin-bottom: 0;
+}
+.group-search-username{
+  @extend .truncate;
+  width:100px;
+}
+.group-search-icon{
+  position: absolute;
+  right:10px;
+  top:38%;
+}
+
+.members-search{
+  @extend .group-search;
+}
+.members-search-username{
+  @extend .group-search-name;
+}
+.members-search-displayName{
+  @extend .group-search-username;
+}
+.members-search-icon{
+  @extend .group-search-icon;
+}

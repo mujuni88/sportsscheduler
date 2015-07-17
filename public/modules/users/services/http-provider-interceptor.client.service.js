@@ -6,29 +6,11 @@
 
     function HttpProviderInterceptor($q, $location, Authentication, growl) {
         var provider =  {
-            // 'request': request,
-            // 'requestError': requestError,
-            // 'response': response,
             'responseError': responseError
         };
         
         return provider;
-
-        function request(config){
-            ngProgress.reset();
-            ngProgress.start();
-
-        }
-        function requestError(rejection) {
-            ngProgress.reset();
-        };
-        function response (response) {
-            // ngProgress.complete();
-            if(!response.data){
-                growl.warning(config.title, {title:'Sorry, We are having internal server issues :('});
-            }
-            return response;
-        }
+        
         function responseError(rejection) {
 
             switch (rejection.status) {
@@ -37,11 +19,11 @@
                         var data = rejection.data, config = {};
                         data.clientMessage.forEach(function(msg){
                             config.title = msg;
-                            growl.warning(msg, config);
+                            growl.warning(msg);
                         });
                         data.devMessage.forEach(function(msg){
                             config.title = msg;
-                            growl.warning(msg,config);
+                            growl.warning(msg);
 
                         });
                     }
@@ -58,7 +40,7 @@
                     break;
                 case 500:
                     var config = {title:'Sorry, We are having internal server issues :('};
-                    growl.warning(config.title, config);
+                    growl.warning(config.title);
                     break;
                 
             }

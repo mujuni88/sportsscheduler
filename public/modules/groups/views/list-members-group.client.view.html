@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-xs-3 col-sm-6">
                     <a class="btn btn-primary btn-sm pull-right"
-                    href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add members" popover-placement="left">
+                    href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add members" popover-placement="left" tooltip-placement="top" tooltip="Add members">
                     <i class="glyphicon glyphicon-plus"></i>
                     </a>
                 </div>
@@ -44,14 +44,6 @@
                         <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)" tooltip-placement="top" tooltip="Revoke Admin Rights">
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
-                        <!--<span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"-->
-                        <!--title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">-->
-                        <!--<i class="glyphicon glyphicon-remove text-danger"></i>-->
-                        <!--</span>-->
-                        <!--<span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"-->
-                        <!--title="Remove Member" message="Are you sure?" data-ng-show="canRmMember(member)">-->
-                        <!--<i class="glyphicon glyphicon-remove text-danger"></i>-->
-                        <!--</span>-->
                     </span>
                                             <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
                         title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">

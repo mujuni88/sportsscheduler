@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-sm-8 text-right">
                     <button class="btn btn-secondary btn-sm spacing-sm-right"
-                    href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin() && events.length" data-ng-click='find()'>
+                    href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin() && events.length" data-ng-click='getResultsPage(1,pagination.eventsPerPage);'>
                     <i class="glyphicon glyphicon-refresh"></i>
                     </button>
                     <a class="btn btn-primary btn-sm"
@@ -63,7 +63,7 @@
             </div>
             </a>
             <div class="text-center">
-                <dir-pagination-controls on-page-change="pagination.pageChanged(newPageNumber)></dir-pagination-controls>
+                <dir-pagination-controls on-page-change="pagination.pageChanged(newPageNumber)"></dir-pagination-controls>
             </div>
         </div>
         

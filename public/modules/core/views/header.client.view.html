@@ -1,8 +1,9 @@
-<script type="text/ng-template" id="addGroup.html">
-    <a class="">
-        <span>{{match.model.name}} ( {{match.model.createdBy.username}} ) </span>
+<script type="text/ng-template" id="searchGroups.html">
+    <a class="group-search">
+        <p class="group-search-name">{{match.model.name}} </p>
+        <span class="group-search-username">( {{match.model.createdBy.username}} ) </span>
         <!--<span class="badge"> </span>-->
-        <span class="pull-right">&nbsp;<i class="glyphicon glyphicon-plus-sign"></i></span>
+        <span class="group-search-icon">&nbsp;<i class="glyphicon glyphicon-plus-sign"></i></span>
     </a>
 </script>
 <div class="container" data-ng-controller="HeaderController">
@@ -60,14 +61,11 @@
             <div class="input-group">
                         <input type="text" 
                             typeahead-on-select="onSelect(search.groups); search.groups = '';"
-                            typeahead="group as group._id for group in getGroups($viewValue)" 
-                            typeahead-template-url="addGroup.html"
+                            typeahead="group for group in getGroups($viewValue)" 
+                            typeahead-template-url="searchGroups.html"
                             typeahead-wait-ms="250"
                             class="form-control"
                             placeholder="Search for a group" data-ng-model="search.groups"/>
-<!--                     <span class="input-group-addon">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </span> -->
                     </div>
             </div>
         </div>

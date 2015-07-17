@@ -134,4 +134,27 @@
   .members {
     margin-top: 20px; } }
 
+.truncate, .group-search-name, .members-search-username, .group-search-username, .members-search-displayName {
+  width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block; }
+
+.group-search, .members-search {
+  position: relative; }
+
+.group-search-name, .members-search-username {
+  font-weight: bold;
+  width: 100px;
+  margin-bottom: 0; }
+
+.group-search-username, .members-search-displayName {
+  width: 100px; }
+
+.group-search-icon, .members-search-icon {
+  position: absolute;
+  right: 10px;
+  top: 38%; }
+
 /*# sourceMappingURL=core.css.map */

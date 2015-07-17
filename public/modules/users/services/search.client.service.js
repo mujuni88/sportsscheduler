@@ -3,7 +3,7 @@
 angular.module('users').
 	factory('Search', Search);
 
-function Search($http){
+function Search($http, $q){
 	var service = {
         getUsers:getUsers,
 		getGroups:getGroups
@@ -17,7 +17,11 @@ function Search($http){
                 username: val
             }
         }).then(function(response){
-            return response.data;
+            if(!angular.isObject(response.data)){
+                return [];
+            }
+            
+            return [response.data];
         });
     }
     function getGroups(val) {
@@ -26,7 +30,11 @@ function Search($http){
                 name: val
             }
         }).then(function(response){
-            return response.data;
+            if(!angular.isObject(response.data)){
+                return $q.defer().reject(response.data);
+            }
+
+            return [response.data];
         });
     }
 }

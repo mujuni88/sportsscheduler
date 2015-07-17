@@ -94,7 +94,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return $scope.group = Groups.get({
             groupId: $stateParams.groupId
         });
-        $scope.tempMembers = [];
     }
 
     function onSelect($model) {
@@ -313,7 +312,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _notifySuccess(text){
         text = text || 'Group successfully updated';
-        growl.success(text, {title:text});
+        growl.success(text);
     }
 
     function getUser(){
