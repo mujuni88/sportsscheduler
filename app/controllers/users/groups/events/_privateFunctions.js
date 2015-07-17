@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
 	async = require('async'),
 	time = require('time'),
-	dateFormat = require('dateFormat');
+	dateFormat = require('dateformat');
 
 var PrivateFunctions = (function() {
 	
