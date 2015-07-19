@@ -24,7 +24,7 @@ var Helper = (function() {
 
             var atts = model.objectIDAtts.slice(0);
 
-            console.log('atts: ' + JSON.stringify(atts,null,1));
+            //console.log('atts: ' + JSON.stringify(atts,null,1));
 
             var rec = function(atts) {
                 var optionsModel = mongoose.model(atts[0].model);
@@ -33,7 +33,7 @@ var Helper = (function() {
                     model: optionsModel.title,
                     select: Helper.attsArryToAttsString(optionsModel.attsToShow)
                 };
-                console.log('options: ' + JSON.stringify(options,null,1));
+                //console.log('options: ' + JSON.stringify(options,null,1));
                 model.populate(obj, options, function (err, obj) {
                     
                     atts.splice(0,1);
@@ -254,7 +254,7 @@ var Helper = (function() {
                     select: Helper.attsArryToAttsString(optionsModel.attsToShow)
                 };
                 
-                console.log('options: ' + JSON.stringify(options,null,1));
+                //console.log('options: ' + JSON.stringify(options,null,1));
                 model.populate(obj, options, function (err, obj) {
                     
                     atts.splice(0,1);
@@ -296,7 +296,7 @@ var Helper = (function() {
                 
                 Helper.executeWaterfall(functionsArray,function (error, data) {
                     
-                    console.log('data: ' + JSON.stringify(data,null,1));
+                    //console.log('data: ' + JSON.stringify(data,null,1));
 
                     if(myResponse.paginate) {
 

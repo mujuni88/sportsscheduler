@@ -128,17 +128,13 @@ exports.list = function(req, res) { User.find().sort('-created').exec(function(e
 				if (err) {
 
 					myResponse.transformMongooseError(User.errPath,String(err));
-					Helper.output(User,null,myResponse,res);
 				}
 				else if(!mod) {
 
-					myResponse.addMessages(serverJSON.api.events._id.exist);
-					Helper.output(User,null,myResponse,res);
+					myResponse.addMessages(serverJSON.api.users._id.exist);
 				}
-				else {
 
-					Helper.output(User,mod,myResponse,res);
-				}
+				Helper.output(User,mod,myResponse,res);
 			});
 		}
 		//Show all users if none are found in the DB
@@ -172,7 +168,7 @@ exports.read = function(req, res) {
 		}
 		else if(!user) {
 
-			myResponse.addMessages(serverJSON.api.groups._id.exist);
+			myResponse.addMessages(serverJSON.api.users._id.exist);
 		}
 		
 		Helper.output(User,user,myResponse,res);
