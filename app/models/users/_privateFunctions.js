@@ -47,7 +47,7 @@ var PrivateFunctions = (function() {
 			
 			functionsArray = Helper.buildWaterfall(functionsArray);
 
-			Helper.executeWaterfall(functionsArray,function (err, obj) {
+			Helper.executeWaterfall(functionsArray,function (err, user) {
 
 				done(null,obj,1);
 			});
