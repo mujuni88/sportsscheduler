@@ -21,7 +21,7 @@ function Search($http, $q){
                 return [];
             }
             
-            return [response.data];
+            return response.data;
         });
     }
     function getGroups(val) {
@@ -31,10 +31,10 @@ function Search($http, $q){
             }
         }).then(function(response){
             if(!angular.isObject(response.data)){
-                return $q.defer().reject(response.data);
+                return [];
             }
 
-            return [response.data];
+            return response.data;
         });
     }
 }
