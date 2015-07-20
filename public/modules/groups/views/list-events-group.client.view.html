@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-controller="EventsController" ng-init="find()">
+<div class="panel panel-default" ng-controller="EventsController" ng-init="find(pagination.current)">
     <div class="panel-heading clearfix">
         <div class="form-horizontal">
             <div class="form-group">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-sm-8 text-right">
                     <button class="btn btn-secondary btn-sm spacing-sm-right"
-                    href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin() && events.length" data-ng-click='getResultsPage(1,pagination.eventsPerPage);'>
+                    href="/#!/groups/{{group._id}}/events/add" data-ng-show="isAdmin() && events.length" data-ng-click='find(1)'>
                     <i class="glyphicon glyphicon-refresh"></i>
                     </button>
                     <a class="btn btn-primary btn-sm"
@@ -34,7 +34,7 @@
             No Events yet
         </div>
         <div class="list-group">
-            <a href='/#!/groups/{{group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" dir-paginate="event in events | orderBy:'time':true | itemsPerPage: pagination.eventsPerPage" total-items="pagination.totalEvents" current-page="pagination.current" data-ng-class="{'list-group-item-expired':hasEventExpired(event.time)}">
+            <a href='/#!/groups/{{group._id}}/events/{{event._id}}' class="media list-group-item" data-ng-if="events.length" dir-paginate="event in events | orderBy:'time':true | itemsPerPage: pagination.eventsPerPage" total-items="pagination.totalEvents" current-page="pagination.current" data-ng-class="{'list-group-item-expired':hasEventExpired(event.time)}" pagination-id="events">
             <div class="media-left media-middle">
                 <i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>
             </div>
@@ -50,9 +50,8 @@
                     </div>
                     <div class="col-sm-7 vcenter">
                         <ul class="list-unstyled pull-right float-none-xs">
-                            <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
-                            <li><p>Vote Count: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
-                            <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
+                            <li><p>Responses: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
+                            <li ng-if="event.attndNotifMins"><p>Attendance Notification: <span class="badge">{{event.attndNotifMins}} before</span></p></li>
                             <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                         </ul>
                     </div>
@@ -63,7 +62,7 @@
             </div>
             </a>
             <div class="text-center">
-                <dir-pagination-controls on-page-change="pagination.pageChanged(newPageNumber)"></dir-pagination-controls>
+                <dir-pagination-controls on-page-change="find(pagination.current)" pagination-id="events"></dir-pagination-controls>
             </div>
         </div>
         

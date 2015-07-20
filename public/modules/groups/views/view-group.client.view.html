@@ -2,7 +2,7 @@
     <section data-ng-controller="GroupsController" data-ng-init="findOne()" class="group animated fadeIn container">
         <form editable-form name="editableForm" onaftersave="update()">
             <div class="row">
-                <div class="col-sm-3 col-sm-offset-9" ng-show="isAdmin()">
+                <div class="col-sm-3 col-sm-offset-9" ng-show="isOwner(user)">
 
                     <div class="pull-right float-none-xs">
                         <a class="btn btn-primary btn-sm" ng-click="editableForm.$show()" ng-show="!editableForm.$visible"
@@ -18,7 +18,7 @@
                     Cancel
                 </button>
                 </span>
-                        <a class="btn btn-danger btn-sm" ng-show="isOwner(user) && !editableForm.$visible"
+                        <a class="btn btn-danger btn-sm" ng-show="!editableForm.$visible"
                            ss-dialog dialog-ok="remove()" dialog-enable="true" title="Delete group"
                            message="Are you sure you want to delete {{group.name}}?">
                             <i class="glyphicon glyphicon-trash"></i>
@@ -46,12 +46,12 @@
             <div class="col-sm-12">
 
                 <ul class="nav nav-tabs">
-                    <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listMembers') }"><a
-                            ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members <span class="badge hidden" data-ng-bind="group.members.length"></span></a> 
-                    </li>
                     <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listEvents') }"><a
                             ui-sref=".listEvents.viewEvents"><i class="glyphicon glyphicon-calendar text-primary"></i>
                         Events <span class="badge hidden" data-ng-bind="group.events.length"></span></a></li>
+                    <li role="presentation" data-ng-class="{ active: $state.includes('viewGroup.listMembers') }"><a
+                            ui-sref=".listMembers.viewMembers"><i class="glyphicon glyphicon-user text-primary"></i> Members <span class="badge hidden" data-ng-bind="group.members.length"></span></a> 
+                    </li>
                 </ul>
                 <br/>
 

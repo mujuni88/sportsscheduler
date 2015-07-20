@@ -1,7 +1,7 @@
 'use strict';
 angular.module('groups').factory('GroupEvents', GroupEvents);
 
-function GroupEvents($http) {
+function GroupEvents($http, $q) {
     var service = {
         create: create,
         get: get,

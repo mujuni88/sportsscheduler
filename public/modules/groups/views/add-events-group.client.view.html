@@ -15,9 +15,8 @@
     </div>
     <div class="panel-body">
         <section>
-                <p class="alert alert-info alert-sm">
-                <i class="glyphicon glyphicon-info-sign hidden"></i> An event can only be created if the
-                start time is 2 hours or more ahead of the creation time. This is so to allow our algorithms to collect all the votes before deadline.
+                <p class="alert alert-info alert-sm text-center">
+                <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that will include both the number of members attending and absent. 
                 </p>
                 <br>  
             <div class="col-md-12">
@@ -75,20 +74,22 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Time <span class="has-error hidden">*</span></label>
                             <div class="col-sm-7">
-                                <!--<timepicker ng-model="event.time" ng-change="timeChange()" hour-step="" minute-step=""-->
-                                <!--show-meridian=""></timepicker>-->
                                 <timepicker ng-model="event.time" hour-step="" minute-step=""
                                 show-meridian=""></timepicker>
-                                <div class="has-error" ng-show="timeError">Time has to be 2 hours ahead</div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="minimumVotes">Minimum Votes <span class="has-error">*</span></label>
+                            <label class="col-sm-3 control-label" for="attndNotifMins">Attendance notification</label>
                             <div class="col-sm-7">
-                                <input id="minimumVotes" name="minimumVotes" ng-model="event.minimumVotes" class="form-control"
-                                type="number" min="0" tooltip-placement="top" validator="required, positiveIntegers"
-                                valid-method="blur" tooltip="Minimum number of attendees before the event is cancelled."
-                                required/>
+                                <div class="input-group">
+                                    <input id="attndNotifMins" name="attndNotifMins" ng-model="event.attndNotifMins" class="form-control"
+                                           type="number" min="5" max="60" tooltip-placement="top" validator="positiveIntegers"
+                                           valid-method="blur" tooltip="Minutes before attendance notification is sent out" placeholder="30 minutes (optional)"
+                                            />
+                                    <div class="input-group-addon">mins</div>
+                                </div>
+                                <small>5 - 60 mins(min/max). Digits only and no decimals. Invalid time will be defaulted to 30 mins</small>
+
                             </div>
                         </div>
                         <div class="form-group">

@@ -2,7 +2,7 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope, PaginationService) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope,$q) {
     var _ = lodash;
     _.mixin({
         rejectList: rejectList
@@ -14,11 +14,10 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
     $scope.state = $state;
     $scope.stateParams = $stateParams;
-    $scope.event = $scope.event || {};
-    $scope.event = {
-        voteEnabled: true,
-        minimumVotes: 0
-    };
+    $scope.event = $scope.event || {
+            attndNotifMins:30,
+            minimumVotes:0
+        };
     // Create new Event
     $scope.create = create;
     // Remove existing Event
@@ -50,16 +49,15 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
     $scope.dateChange = dateChange;
+   
     // Timepicker
     var date = new Date();
-    var plusTwoHrs = (date.getHours() + 3);
-    date.setHours(plusTwoHrs);
+    date.setHours(date.getHours() + 1);
     $scope.event.time = date;
-    var now, hrsDiff, time, HRS = 2,
-        HRS_MS = HRS * 60 * 60 * 1000;
-    $scope.timeChange = timeChange;
+   
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
+    
     $scope.$on('voted', watchVotes);
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
@@ -69,31 +67,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.group = $scope.$parent.group;
 
     // pagination
-    var evntPagination = null;
     $scope.pagination = {
         current: 1,
-        pageChanged: pageChanged,
         totalEvents: 0,
         eventsPerPage:1
     };
-    $scope.getResultsPage = getResultsPage;
-    
-    getResultsPage(1,$scope.pagination.eventsPerPage);
-
-    function pageChanged(newPage) {
-        getResultsPage(newPage, $scope.pagination.eventsPerPage);
-    }
-
-    function getResultsPage(pageNumber, count) {
-        if (!evntPagination) {
-            evntPagination = new PaginationService('/api/users/groups/'+$stateParams.groupId+'/events');
-        }
-
-        return evntPagination.getResultsPage(pageNumber, count).then(function (result) {
-            $scope.totalEvents = result._metadata.count;
-            $scope.events = result.data;
-        });
-    }
 
     function getDate() {
         $scope.event.date = new Date();
@@ -121,16 +99,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $scope.dateError = (!$scope.event.date) ? true : false;
     }
 
-    function timeChange() {
-        now = new Date();
-        time = now.getTime();
-        hrsDiff = $scope.event.time.getTime() - time;
-        $scope.timeError = (hrsDiff < HRS_MS) ? true : false;
-    };
-
     function hasEventExpired(eventTime) {
         var now = Date.now(),
-            eD = Date.parse(eventTime);
+            eD = Date.parse(eventTime),
+            hrsDiff;
+        
         hrsDiff = eD - now;
         return (hrsDiff < 0) ? true : false;
     }
@@ -148,7 +121,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function create() {
-        if ($scope.timeError || $scope.dateError) return;
+        if (_.isUndefined($scope.event.attndNotifMins) ||
+            !_.isNaN($scope.event.attndNotifMins) ||
+            $scope.event.attndNotifMins < 5 ||
+            $scope.event.attndNotifMins > 60) {
+            $scope.event.attndNotifMins = 30;
+        }
+        
         var event = new Events($scope.event),
             params = {
                 groupId: $stateParams.groupId
@@ -194,9 +173,15 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         return event.$promise;
     }
 
-    function find() {
-        return $scope.events = Events.query({
-            groupId: $stateParams.groupId
+    function find(newPage) {
+        return Events.get({
+            groupId: $stateParams.groupId,
+            page:newPage,
+            count:$scope.pagination.eventsPerPage
+        }, function(result){
+            debugger;
+            $scope.totalEvents = result._metadata.count;
+            $scope.events = result.data;
         });
     }
 

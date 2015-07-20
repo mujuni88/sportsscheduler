@@ -23,20 +23,20 @@
     </div>
     <div class="panel-body">
                                     <div class="text-center">
-                <h2 ng-show="hasVotedYes() && !hasEventExpired(event.time)" class="text-success">You are going</h2>
-                <h2 ng-show="hasVotedYes() && hasEventExpired(event.time)" class="text-success">You went</h2>
-                <h2 ng-show="hasVotedNo() && !hasEventExpired(event.time)" class="text-danger">You are not going</h2>
-                <h2 ng-show="hasVotedNo() && hasEventExpired(event.time)" class="text-danger">You did not go</h2>
-                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && !hasEventExpired(event.time)" class="text-info">You have not voted</h2>
-                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && hasEventExpired(event.time)" class="text-info">You did not vote</h2>
+                <h2 ng-show="hasVotedYes() && !hasEventExpired(event.time)" class="text-success">You are attending</h2>
+                <h2 ng-show="hasVotedYes() && hasEventExpired(event.time)" class="text-success">You attended</h2>
+                <h2 ng-show="hasVotedNo() && !hasEventExpired(event.time)" class="text-danger">You are not attending</h2>
+                <h2 ng-show="hasVotedNo() && hasEventExpired(event.time)" class="text-danger">You did not attend</h2>
+                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && !hasEventExpired(event.time)" class="text-info">You have not responded</h2>
+                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && hasEventExpired(event.time)" class="text-info">You did not respond</h2>
             </div>
         <div class="page-header">
             <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
             <div class="page-header-btns pull-right float-none-xs" ng-hide="hasEventExpired(event.time)">
                 <br class="visible-xs"/>
                 <span>Vote:</span>
-                <button class="btn btn-primary btn-sm" ng-hide="hasVotedYes()" ng-class="{disabled:hasVotedYes()}" ng-click="voteYes()">Going</button>
-                <button class="btn btn-secondary btn-sm" ng-hide="hasVotedNo()" ng-class="{disabled:hasVotedNo()}" ng-click="voteNo()">Not Going</button>
+                <button class="btn btn-primary btn-sm" ng-hide="hasVotedYes()" ng-class="{disabled:hasVotedYes()}" ng-click="voteYes()">Attending</button>
+                <button class="btn btn-secondary btn-sm" ng-hide="hasVotedNo()" ng-class="{disabled:hasVotedNo()}" ng-click="voteNo()">Not Attending</button>
             </div>
             </h1>
         </div>
@@ -52,8 +52,8 @@
             <div class="col-sm-8 vcenter">
                 <ul class="list-unstyled pull-right float-none-xs">
                     <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
-                    <li><p>Vote Count: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
-                    <li><p>Votes Required: <span class="badge">{{event.minimumVotes}}</span></p></li>
+                    <li><p>Responses: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
+                    <li ng-if="event.attndNotifMins"><p>Attendance Notification: <span class="badge">{{event.attndNotifMins}} mins before</span></p></li>
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
             </div>
@@ -65,8 +65,8 @@
                 <div class="col-sm-4">
                     <div class="page-header">
                     <h3>  
-                    <span ng-show="!hasEventExpired(event.time)">Going</span>
-                    <span ng-show="hasEventExpired(event.time)">Went</span> 
+                    <span ng-show="!hasEventExpired(event.time)">Attending</span>
+                    <span ng-show="hasEventExpired(event.time)">Attended</span> 
                     ({{event.votes.yes.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
@@ -76,8 +76,8 @@
                 <div class="col-sm-4">
                     <div class="page-header">
                     <h3>  
-                    <span ng-show="!hasEventExpired(event.time)">Not Going</span>
-                    <span ng-show="hasEventExpired(event.time)">Didn't Go</span> 
+                    <span ng-show="!hasEventExpired(event.time)">Not Attending</span>
+                    <span ng-show="hasEventExpired(event.time)">Didn't Attend</span> 
                     ({{event.votes.no.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
