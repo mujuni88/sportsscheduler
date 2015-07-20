@@ -7,7 +7,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.authentication = Authentication;
     $scope.user = $scope.authentication.user;
     if (!$scope.user) {
-        $location.path('/')
+        $location.path('/');
     }
 
     $scope.$state = $state;

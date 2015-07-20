@@ -2,7 +2,7 @@
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope,$q) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope,$q, dialogs) {
     var _ = lodash;
     _.mixin({
         rejectList: rejectList
@@ -65,6 +65,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.hasVotedYes = hasVotedYes;
     $scope.hasVotedNo = hasVotedNo;
     $scope.group = $scope.$parent.group;
+    var findOneGroup = $scope.$parent.findOne;
 
     // pagination
     $scope.pagination = {
@@ -73,6 +74,10 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         eventsPerPage:1
     };
 
+    $scope.canCreateEvent = canCreateEvent;
+    var MAX_EVENTS = 5;
+
+    
     function getDate() {
         $scope.event.date = new Date();
     }
@@ -121,6 +126,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function create() {
+        if(!_canCreateEvent()){
+            _notifyEventMax();
+            return;
+        }
+        
         if (_.isUndefined($scope.event.attndNotifMins) ||
             !_.isNaN($scope.event.attndNotifMins) ||
             $scope.event.attndNotifMins < 5 ||
@@ -135,6 +145,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         event.group = $stateParams.groupId;
         event.$save(params, function (data) {
             $scope.event = event;
+            _refreshData();
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
             });
@@ -149,6 +160,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         };
         var event = Events.remove(params, function () {
             $scope.event = event;
+            _refreshData();
             $state.go('viewGroup.listEvents.viewEvents');
             _notifySuccess('Event successfully removed');
         });
@@ -159,13 +171,14 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         if ($scope.timeError || $scope.dateError) {
             return _getPromise(false, '');
         }
-        ;
+        
         var params = {
             eventId: $stateParams.eventId
         };
         $scope.event.group = $stateParams.groupId;
         var event = Events.update(params, $scope.event, function (data) {
             $scope.event = data;
+            _refreshData();
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
             });
@@ -173,15 +186,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         return event.$promise;
     }
 
-    function find(newPage) {
-        return Events.get({
-            groupId: $stateParams.groupId,
-            page:newPage,
-            count:$scope.pagination.eventsPerPage
-        }, function(result){
-            debugger;
-            $scope.totalEvents = result._metadata.count;
-            $scope.events = result.data;
+    function find() {
+        $scope.events = Events.query({
+            groupId: $stateParams.groupId
         });
     }
 
@@ -190,7 +197,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             eventId: $stateParams.eventId
         }, function () {
             $scope.event = event;
-            $scope.votesUnr = getUnresponsiveUsers();
+            $scope.unrespUsers = getUnresponsiveUsers();
         });
         return event.$promise;
     }
@@ -325,6 +332,45 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             .rejectList($scope.event.votes.no, '_id')
             .rejectList($scope.event.votes.yes, '_id')
             .value();
+    }
+    
+    function canCreateEvent(){
+        if(!_canCreateEvent()){
+            _notifyEventMax();
+            return;
+        }
+
+        $state.go('viewGroup.listEvents.addEvents',{
+            groupId:$stateParams.groupId
+        });
+    }
+    
+    function _canCreateEvent(){
+        if(!_.isUndefined($scope.events)){
+            return ($scope.events.length < MAX_EVENTS);
+        }
+        
+        if(_.isUndefined($scope.group.events.length)){
+            growl.warning("Internal error :(");
+            return false;
+        }
+        
+        return ($scope.group.events.length < MAX_EVENTS);
+    }
+    
+    function _notifyEventMax(){
+        var header = 'Add Event',
+            msg = 'You have reached the maximum number(5) of events allowed. Please delete one to continue.',
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+        dialogs.notify(header, msg, opts);
+    }
+    
+    function _refreshData(){
+        find();
+        findOneGroup();
     }
 
 }
