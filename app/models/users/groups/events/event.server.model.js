@@ -103,7 +103,8 @@ var EventSchema = new Schema({
 		},
 	},
 	attndNotifMins: {
-		type: Number
+		type: Number,
+		default: 30
 	},
 	message:{
 		type: String
