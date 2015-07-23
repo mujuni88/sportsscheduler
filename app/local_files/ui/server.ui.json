@@ -575,23 +575,7 @@
 					"status": 400
 				}
 			},
-			"minimumVotes":
-			{
-				"empty":
-				{
-					"devMessage": "No value has been entered for the 'minimumVotes' attribute",
-					"clientMessage": "Please fill in the Minimum Votes needed for this event",
-					"status": 400
-				},
-				"invalid":
-				{
-					"regex": "^\\d*$",
-					"devMessage": "Minimum Votes value does not match the proper validation regex of '^\\d*$'",
-					"clientMessage": "Please fill in a valid value for Minimum Votes",
-					"status": 400
-				}
-			},
-			"votes":
+			"attendance":
 			{
 				"yes":
 				{

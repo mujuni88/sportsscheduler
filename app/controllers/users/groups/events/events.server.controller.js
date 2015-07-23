@@ -96,7 +96,7 @@ exports.create = function(req, res) {
 				var functionsArray = [];
 				functionsArray.push(PrivateFunctions.create.addEventToGroup(group,event._id));
 				functionsArray.push(PrivateFunctions.create.eventStartNotifications(req,event));
-				functionsArray.push(PrivateFunctions.create.createGatherVotesCron(event));
+				functionsArray.push(PrivateFunctions.create.createGatherAttendanceCron(event));
 				functionsArray = Helper.buildWaterfall(functionsArray);
 
 				Helper.executeWaterfall(functionsArray,function (err, obj) {
@@ -176,24 +176,24 @@ exports.update = function(req, res) {
 		}
 		else {
 
-			//get the ids of votes
-			if(typeof req.body.votes !== 'undefined') {
+			//get the ids of attendance
+			if(typeof req.body.attendance !== 'undefined') {
 
-				var yesVotes = req.body.votes.yes;
-				var noVotes = req.body.votes.no;
+				var yesattendance = req.body.attendance.yes;
+				var noattendance = req.body.attendance.no;
 				var i = 0;
 
-				req.body.votes.yes = [];
-				req.body.votes.no = [];
+				req.body.attendance.yes = [];
+				req.body.attendance.no = [];
 
-				for(i = 0; i < yesVotes.length; ++i)
-					req.body.votes.yes.push(yesVotes[i]._id);
+				for(i = 0; i < yesattendance.length; ++i)
+					req.body.attendance.yes.push(yesattendance[i]._id);
 
-				for(i = 0; i < noVotes.length; ++i)
-					req.body.votes.no.push(noVotes[i]._id);
+				for(i = 0; i < noattendance.length; ++i)
+					req.body.attendance.no.push(noattendance[i]._id);
 
-				req.body.votes.yes = _.uniq(req.body.votes.yes);
-				req.body.votes.no = _.uniq(req.body.votes.no);
+				req.body.attendance.yes = _.uniq(req.body.attendance.yes);
+				req.body.attendance.no = _.uniq(req.body.attendance.no);
 
 			}
 

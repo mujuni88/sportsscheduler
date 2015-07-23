@@ -68,15 +68,7 @@ var EventSchema = new Schema({
 		required: 'time.empty',
 		//match: [new RegExp(serverJSON.api.events.time.invalid.regex), 'time.invalid'],
 	},
-	voteEnabled:{
-		type:Boolean,
-		default:true
-	},
-	minimumVotes:{
-		type:Number,
-		required: 'minimumVotes.empty'
-	},
-	votes: {
+	attendance: {
 		yes:
 		{
 			type: [Schema.ObjectId],
@@ -85,11 +77,11 @@ var EventSchema = new Schema({
 			[
 				{
 					validator: Helper.isValidObjectIDs,
-					msg: 'votes.yes.invalid'
+					msg: 'attendance.yes.invalid'
 				},
 				{
 					validator: Helper.isUniqueArray,
-					msg: 'votes.yes.duplicate'
+					msg: 'attendance.yes.duplicate'
 				}
 			]
 		},
@@ -101,16 +93,18 @@ var EventSchema = new Schema({
 			[
 				{
 					validator: Helper.isValidObjectIDs,
-					msg: 'votes.no.invalid'
+					msg: 'attendance.no.invalid'
 				},
 				{
 					validator: Helper.isUniqueArray,
-					msg: 'votes.no.duplicate'
+					msg: 'attendance.no.duplicate'
 				}
 			]
 		},
 	},
-
+	attndNotifMins: {
+		type: Number
+	},
 	message:{
 		type: String
 	},
@@ -155,18 +149,18 @@ EventSchema.statics.objectIDAtts = [
 		model: 'Group'
 	},
 	{
-		name: 'votes.yes',
+		name: 'attendance.yes',
 		model: 'User'
 	},
 	{
-		name: 'votes.no',
+		name: 'attendance.no',
 		model: 'User'
 	}
 ];
 
 EventSchema.statics.title = serverJSON.constants.events;
 EventSchema.statics.errPath = 'api.events';
-EventSchema.statics.attsToShow = ['_id', 'name', 'location', 'date', 'time', 'voteEnabled', 'minimumVotes', 'votes', 'message', 'group'];
+EventSchema.statics.attsToShow = ['_id', 'name', 'location', 'date', 'time', 'attendance', 'message', 'group'];
 
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {
@@ -189,7 +183,7 @@ EventSchema.path('group').validate(function (id,respond) {
 	
 },'group.exist');
 
-EventSchema.path('votes.yes').validate(function (ids,respond) {
+EventSchema.path('attendance.yes').validate(function (ids,respond) {
 
 	if(ids.length === 0)
 		respond(true);
@@ -202,7 +196,7 @@ EventSchema.path('votes.yes').validate(function (ids,respond) {
     	}
     };
 
-	console.log('validate votes "yes"' + ids);
+	console.log('validate attendance "yes"' + ids);
 	
 	Helper.find(User,query,function(err,mods) {
 
@@ -212,9 +206,9 @@ EventSchema.path('votes.yes').validate(function (ids,respond) {
 			respond(true);
 	});
 	
-},'votes.yes.exist');
+},'attendance.yes.exist');
 
-EventSchema.path('votes.no').validate(function (ids,respond) {
+EventSchema.path('attendance.no').validate(function (ids,respond) {
 
 	if(ids.length === 0)
 		respond(true);
@@ -227,7 +221,7 @@ EventSchema.path('votes.no').validate(function (ids,respond) {
     	}
     };
 
-	console.log('validate votes "no"' + ids);
+	console.log('validate attendance "no"' + ids);
 	
 	Helper.find(User,query,function(err,mods) {
 
@@ -237,7 +231,7 @@ EventSchema.path('votes.no').validate(function (ids,respond) {
 			respond(true);
 	});
 	
-},'votes.no.exist');
+},'attendance.no.exist');
 
 /*********** END Validate Functions **************/
 
@@ -250,11 +244,11 @@ EventSchema.pre('save', function (next) {
 	var noArr = [];
 	var i = null;
 
-	for(i = 0; i < this.votes.yes.length; ++i)
-		yesArr.push(this.votes.yes[i].toString());
+	for(i = 0; i < this.attendance.yes.length; ++i)
+		yesArr.push(this.attendance.yes[i].toString());
 
-	for(i = 0; i < this.votes.no.length; ++i)
-		noArr.push(this.votes.no[i].toString());
+	for(i = 0; i < this.attendance.no.length; ++i)
+		noArr.push(this.attendance.no[i].toString());
 
 	console.log('yesArr: ' + yesArr);
 	console.log('noArr: ' + noArr);
@@ -266,7 +260,7 @@ EventSchema.pre('save', function (next) {
 	if(intersection.length) {
 		
 		var err = new ValidationError(this);
-		err.errors.votes = new ValidatorError('votes.yes', 'votes.yes.duplicate', 'notunique', '');
+		err.errors.attendance = new ValidatorError('attendance.yes', 'attendance.yes.duplicate', 'notunique', '');
 	  	
 	  	console.log(err);
 	  	

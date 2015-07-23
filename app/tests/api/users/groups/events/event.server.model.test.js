@@ -134,10 +134,7 @@ describe('Event Model Unit Tests:', function() {
 			  	},
 			  	date: '2014-06-11T15:33:00.244Z',
 				message: 'w',
-				minVotes: 0,
-				minimumVotes: 5,
-				time: '2015-06-12T15:17:30.244Z',
-				voteEnabled: true
+				time: '2015-06-12T15:17:30.244Z'
 			})
 	        .end(function(e,res){
 	            console.log(e);
@@ -180,10 +177,7 @@ describe('Event Model Unit Tests:', function() {
 			    	address: 'address2'
 			  	},
 			  	date: '2014-06-11T15:33:00.244Z',
-				message: 'w',
-				minVotes: 0,
-				minimumVotes: 5,
-				voteEnabled: true
+				message: 'w'
 			})
 	        .end(function(e,res){
 	            console.log(e);
@@ -194,10 +188,10 @@ describe('Event Model Unit Tests:', function() {
 	        });
 	    });
 
-	it('PUT: cast valid votes', function(done) {
+	it('PUT: cast attendance', function(done) {
     	superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)
 	        .send({
-	        	votes: {
+	        	attendance: {
 	        		yes: [
 	        				{
 	        					_id: memberID
@@ -223,64 +217,6 @@ describe('Event Model Unit Tests:', function() {
 	            done();
 	        });
 	    });
-
-	/*
-	it('PUT: cast a vote for yes and no. Should return an error', function(done) {
-    	superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)
-	        .send({
-	        	votes: {
-	        		yes: [
-	        				{
-	        					_id: memberID
-	        				},
-	        				{
-	        					_id: admin1ID
-	        				}
-	        			],
-	        		no: [
-	        				{
-	        					_id: memberID
-	        				}
-	        			]
-	        	}
-			})
-	        .end(function(e,res){
-	            console.log(e);
-	            console.log(res.statusCode);
-	            chaiExpect(e).to.eql(null);
-	            chaiExpect(res.statusCode).to.eql(400);
-	            console.log('updated eventID: ' + eventID);
-	            done();
-	        });
-	    });
-	it('PUT: cast a duplicate vote for yes. Should return an error', function(done) {
-		superagent.put('http://localhost:3000/api/users/groups/events/'+eventID)
-		.send({
-			votes: {
-        		yes: [
-        				{
-        					_id: memberID
-        				},
-        				{
-        					_id: admin1ID
-        				}
-        			],
-        		no: [
-        				{
-        					_id: admin2ID
-        				}
-        			]
-        	}
-		})
-		.end(function(e,res){
-            console.log(e);
-            chaiExpect(e).to.eql(null);
-            chaiExpect(res.statusCode).to.eql(400);
-            console.log('updated eventID: ' + eventID);
-            done();
-        });
-	});
-	*/
 	
 	it('PUT: updating an event should fail when id does not exist in DB', function(done) {
     	superagent.put('http://localhost:3000/api/users/groups/events/-108309842')
@@ -290,10 +226,7 @@ describe('Event Model Unit Tests:', function() {
 			    	address: 'add'
 			  	},
 			  	date: '2014-06-11T15:33:00.244Z',
-				message: 'w',
-				minVotes: 0,
-				minimumVotes: 5,
-				voteEnabled: true
+				message: 'w'
 			})
 	        .end(function(e,res){
 	            console.log(e);

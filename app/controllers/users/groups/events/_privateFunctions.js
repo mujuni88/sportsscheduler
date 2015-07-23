@@ -118,11 +118,11 @@ var PrivateFunctions = (function() {
 					});
 				};
 			},
-			createGatherVotesCron: function(event) {
+			createGatherAttendanceCron: function(event) {
 
 				return function(arg1,arg2,done) {
 					
-					var gatherVotes = function() {
+					var gatherAttendance = function() {
 
 						var query = {
 
@@ -135,7 +135,7 @@ var PrivateFunctions = (function() {
 							var group = event.group;
 							var ids = [];
 
-							console.log('firing gather votes cron for eventID: ' + event.id);
+							console.log('firing gather attendance cron for eventID: ' + event.id);
 							//gather all member ids for population
 							for(var i = 0; i < group.members.length; ++i) {
 
@@ -163,12 +163,12 @@ var PrivateFunctions = (function() {
 									if(user.preferences.receiveTexts) {
 
 										var recipient = user.phoneNumber + user.carrier;
-										Sender.sendSMS(recipient, 'Event\n', 'Votes Are In!\n' + event.votes.yes.length + ' people voted YES \n' + event.votes.no.length + ' people voted NO \n', senderCallback(user));
+										Sender.sendSMS(recipient, 'Event\n', 'Attendance Results!\n' + event.attendance.yes.length + ' YES \n' + event.attendance.no.length + ' NO \n', senderCallback(user));
 									}
 
 									if(user.preferences.receiveEmails) {
 
-										Sender.sendSMS(user.email, 'Event', 'Votes Are In!\n' + event.votes.yes.length + ' people voted YES \n' + event.votes.no.length + ' people voted NO \n', senderCallback(user));
+										Sender.sendSMS(user.email, 'Event\n', 'Attendance Results!\n' + event.attendance.yes.length + ' YES \n' + event.attendance.no.length + ' NO \n', senderCallback(user));
 									}
 								}
 							});
@@ -183,7 +183,7 @@ var PrivateFunctions = (function() {
 					var settings = {
 
 				  		cronTime: new Date(convertedTime),
-				  		onTick: gatherVotes,
+				  		onTick: gatherAttendance,
 				  		start: true,
 				  		timeZone: 'America/Chicago'
 
@@ -231,12 +231,12 @@ var PrivateFunctions = (function() {
 								if(user.preferences.receiveTexts) {
 
 									var recipient = user.phoneNumber + user.carrier;
-									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nVote at: ' + eventURL + '\nVoting Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
+									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans at: ' + eventURL + '\nAttendance Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
 								}
 
 								if(user.preferences.receiveEmails) {
 
-									Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nTo vote go to\n' + eventURL + '\n\nVoting Ends at: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
+									Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans at:\n' + eventURL + '\n\nAttendance Ends at: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
 								}
 							}
 
