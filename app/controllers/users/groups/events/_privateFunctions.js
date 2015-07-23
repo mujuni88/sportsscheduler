@@ -176,13 +176,13 @@ var PrivateFunctions = (function() {
 					};
 
 					console.log('event time: ' + event.time);
+					console.log('attndCloseTime: ' + event.attndCloseTime);
 					console.log('event id: ' + event.id);
-					var convertedTime = new time.Date(event.time);
-					convertedTime.setTimezone('America/Chicago');
+					event.attndCloseTime.setTimezone('America/Chicago');
 
 					var settings = {
 
-				  		cronTime: new Date(convertedTime),
+				  		cronTime: new Date(event.attndCloseTime),
 				  		onTick: gatherAttendance,
 				  		start: true,
 				  		timeZone: 'America/Chicago'
@@ -231,12 +231,12 @@ var PrivateFunctions = (function() {
 								if(user.preferences.receiveTexts) {
 
 									var recipient = user.phoneNumber + user.carrier;
-									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans at: ' + eventURL + '\nAttendance Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
+									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at": ' + eventURL + '\nAttendance Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
 								}
 
 								if(user.preferences.receiveEmails) {
 
-									Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans at:\n' + eventURL + '\n\nAttendance Ends at: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
+									Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at":\n' + eventURL + '\n\nAttendance Ends: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
 								}
 							}
 

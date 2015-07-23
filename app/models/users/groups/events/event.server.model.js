@@ -10,7 +10,8 @@ var _ = require('lodash'),
 	Helper = require('../../../../custom_objects/Helper'),
 	async = require('async'),
 	ValidationError = require('mongoose/lib/error/validation'),
-	ValidatorError =  require('mongoose/lib/error/validator');
+	ValidatorError =  require('mongoose/lib/error/validator'),
+	time = require('time');
 
 var validateNameProperty = function(property)
 {
@@ -134,6 +135,11 @@ var EventSchema = new Schema({
 			}		
 		}
 	]
+});
+
+EventSchema.virtual('attndCloseTime')
+.get(function() {
+	return new time.Date(this.time.getTime() - this.attndNotifMins * 60000);
 });
 
 EventSchema.statics.functionsArray = [
