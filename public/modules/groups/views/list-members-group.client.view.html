@@ -21,6 +21,9 @@
         </div>
     </div>
     <div class="panel-body">
+        <p class="bold">
+            {{group.members.length}} {{(group.members.length > 1) ? "members" : "member";}}
+        </p>
         <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && isAdmin()">
             No Members yet, <a href="/#!/groups/{{group._id}}/members/add">add one</a>.
         </div>

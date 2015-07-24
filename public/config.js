@@ -19,7 +19,6 @@ var ApplicationConfiguration = (function() {
 		'xeditable',
 		'dialogs.main',
 		'angular-growl',
-		'ngProgress',
 		'angularUtils.directives.dirPagination'
 	];
 
