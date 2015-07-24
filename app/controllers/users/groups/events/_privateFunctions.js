@@ -256,6 +256,10 @@ var PrivateFunctions = (function() {
 
 				return function(arg1,arg2,done) {
 
+					//if event time has passed, don't send notifications
+					if(event.time.getTime() < new Date().getTime())
+						return;
+
 					var query = {
 
 						_id: event.id
