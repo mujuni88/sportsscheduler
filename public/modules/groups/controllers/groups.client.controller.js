@@ -41,6 +41,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.canRemoveAdmin = canRemoveAdmin;
     $scope.isMember = isMember;
     $scope.joinGroup = joinGroup;
+    $scope.absUrl = $location.absUrl();
 
     // user functions
     $scope.getUser = getUser;
