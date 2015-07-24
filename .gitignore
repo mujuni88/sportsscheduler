@@ -8,4 +8,4 @@ coverage/
 .bower-*/
 .idea/
 phantomjsdriver.log
-documentation
+documentation/
