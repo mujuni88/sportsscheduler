@@ -83,7 +83,7 @@
                             <div class="col-sm-7">
                                 <div class="input-group">
                                     <input id="attndNotifMins" name="attndNotifMins" ng-model="event.attndNotifMins" class="form-control"
-                                           type="number" min="5" max="60" tooltip-placement="top" validator="positiveIntegers"
+                                           type="number" min="5" max="60" tooltip-placement="top" 
                                            valid-method="blur" tooltip="Minutes before attendance notification is sent out" placeholder="30 minutes (optional)"
                                             />
                                     <div class="input-group-addon">mins</div>
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                         <div class="text-center form-group">
-                            <button type="submit" validation-submit="eventsForm" ng-click="create()"
+                            <button type="submit" ng-click="create()"
                             class="btn btn-large btn-primary">Create Event
                             </button>
                         </div>
