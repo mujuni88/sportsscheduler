@@ -18,6 +18,7 @@ function SettingsController($scope, $http, $state, $location, Users, Authenticat
     $scope.removeUserSocialAccount = removeUserSocialAccount;
     $scope.updateUserProfile = updateUserProfile;
     $scope.canText = canText;
+    $scope.user.phoneNumber =  ($validation.getExpression('phone').test($scope.user.phoneNumber)) ? $scope.user.phoneNumber : null;
 
     function hasConnectedAdditionalSocialAccounts(provider) {
         for (var i in $scope.user.additionalProvidersData) {
@@ -79,7 +80,7 @@ function SettingsController($scope, $http, $state, $location, Users, Authenticat
     }
 
     function userHasCarrier() {
-        return !_.isUndefined($scope.user.carrier);
+        return !_.isUndefined($scope.user.carrier) && !_.isEmpty($scope.user.carrier);
     }
 
     function alertSetPhone() {
@@ -96,9 +97,9 @@ function SettingsController($scope, $http, $state, $location, Users, Authenticat
     }
 
     function canText() {
-        if (!userHasPhone() || !userHasCarrier()) {
-            $scope.user.preferences.receiveTexts = false;
-            alertSetPhone();
-        }
+        if (userHasCarrier() === true && userHasPhone() === true) {return}
+
+        $scope.user.preferences.receiveTexts = false;
+        alertSetPhone();
     }
 }
