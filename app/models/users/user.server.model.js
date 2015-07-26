@@ -108,7 +108,7 @@ var UserSchema = new Schema({
 	},
 	phoneNumber: {
 		type: Number,
-		default: -1,
+		default: null,
 		match: [new RegExp(serverJSON.api.users.phoneNumber.invalid.regex), 'phoneNumber.invalid']
 	},
 	username: {
