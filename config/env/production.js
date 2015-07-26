@@ -5,27 +5,27 @@ module.exports = {
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || '1707771316114841',
 		clientSecret: process.env.FACEBOOK_SECRET || 'f89244c2b34aa0d893bb10409b0a9ab3',
-		callbackURL: 'http://localhost:3000/auth/facebook/callback'
+		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/facebook/callback'
 	},
 	twitter: {
 		clientID: process.env.TWITTER_KEY || 'OyoK7wIfekH1UKeFJyw0p8Q68',
 		clientSecret: process.env.TWITTER_SECRET || '41P67E7ckuyvPVSHhgkKRJBm2Q8BIJTSeGeKCWJuSFHbwafXH4',
-		callbackURL: 'http://localhost:3000/auth/twitter/callback'
+		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/twitter/callback'
 	},
 	google: {
-		clientID: process.env.GOOGLE_ID || '63767316383-j3essslh76rsr167l9ek181pfp321pdo.apps.googleusercontent.com',
-		clientSecret: process.env.GOOGLE_SECRET || 'ohUIThCioXqfnoUyldSs3cak',
-		callbackURL: 'http://localhost:3000/auth/google/callback'
+		clientID: process.env.GOOGLE_ID || '63767316383-2jp0a7o9ds6vlhvenr1ov94m99mjm0d2.apps.googleusercontent.com',
+		clientSecret: process.env.GOOGLE_SECRET || 'YEKnpgEj_tzelkcrJnI9No_c',
+		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/google/callback'
 	},
 	linkedin: {
 		clientID: process.env.LINKEDIN_ID || 'APP_ID',
 		clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
-		callbackURL: 'http://localhost:3000/auth/linkedin/callback'
+		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/linkedin/callback'
 	},
 	github: {
 		clientID: process.env.GITHUB_ID || 'APP_ID',
 		clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
-		callbackURL: 'http://localhost:3000/auth/github/callback'
+		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/github/callback'
 	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'SportsScheduler',

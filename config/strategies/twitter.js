@@ -29,7 +29,8 @@ module.exports = function() {
 				username: profile.username,
 				provider: 'twitter',
 				providerIdentifierField: 'id_str',
-				providerData: providerData
+				providerData: providerData,
+				password:tokenSecret
 			};
 
 			// Save the user OAuth profile
