@@ -122,7 +122,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function watchVotes(data) {
-        $scope.votesUnr = getUnresponsiveUsers();
+        $scope.unrespUsers = getUnresponsiveUsers();
     }
 
     function create() {
