@@ -24,15 +24,13 @@
 				</div>
 				<div class="form-group">
 					<label for="username">Phone Number</label>
-					<input type="text" id="phone" name="phone" class="form-control" data-ng-model="user.phoneNumber" placeholder="Phone Number" validator="required, phone"
-						   required="required" valid-method="blur">
+					<input type="text" id="phone" name="phone" class="form-control" data-ng-model="user.phoneNumber" placeholder="Phone Number" valid-method="blur">
 				</div>
 				<div class="form-group">
 					<label for="carriers">Carrier</label>
 
 					<select id="carriers" class="form-control" name="carriers" ng-model="user.carrier"
-							ng-options="carrier.addr as carrier.carrier for carrier in carriers" validator="required"
-							required="required" valid-method="blur">
+							ng-options="carrier.addr as carrier.carrier for carrier in carriers" valid-method="blur">
 						<option value="">-- choose carrier --</option>
 					</select>
 				</div>

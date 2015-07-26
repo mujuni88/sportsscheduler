@@ -224,7 +224,7 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['lint', 'concurrent:default', 'jsdoc']);
+    grunt.registerTask('default', ['lint', 'concurrent:default']);
 
     // Documentation task
     grunt.loadNpmTasks('grunt-jsdoc');

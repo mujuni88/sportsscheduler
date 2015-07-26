@@ -8,14 +8,14 @@
                     </a>
                 </div>
                 <div class="col-sm-6 col-sm-offset-1">
-                                    <h3 class="text-center">New Event</h3>
+                     <h3 class="text-center">New Event</h3>
                 </div>
             </div>
         </div>
     </div>
     <div class="panel-body">
         <section>
-                <p class="alert alert-info alert-sm text-center">
+                <p class="alert alert-info alert-sm">
                 <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that will include both the number of members attending and absent. 
                 </p>
                 <br>  
@@ -83,7 +83,7 @@
                             <div class="col-sm-7">
                                 <div class="input-group">
                                     <input id="attndNotifMins" name="attndNotifMins" ng-model="event.attndNotifMins" class="form-control"
-                                           type="number" min="5" max="60" tooltip-placement="top" validator="positiveIntegers"
+                                           type="number" min="5" max="60" tooltip-placement="top" 
                                            valid-method="blur" tooltip="Minutes before attendance notification is sent out" placeholder="30 minutes (optional)"
                                             />
                                     <div class="input-group-addon">mins</div>
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                         <div class="text-center form-group">
-                            <button type="submit" validation-submit="eventsForm" ng-click="create()"
+                            <button type="submit" ng-click="create()"
                             class="btn btn-large btn-primary">Create Event
                             </button>
                         </div>

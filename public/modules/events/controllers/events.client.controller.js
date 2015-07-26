@@ -76,8 +76,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     $scope.canCreateEvent = canCreateEvent;
     var MAX_EVENTS = 5;
+    $scope.MAX_EVENTS =  MAX_EVENTS;
 
-    
     function getDate() {
         $scope.event.date = new Date();
     }
@@ -122,7 +122,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function watchVotes(data) {
-        $scope.votesUnr = getUnresponsiveUsers();
+        $scope.unrespUsers = getUnresponsiveUsers();
     }
 
     function create() {
@@ -253,7 +253,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             _deleteUserFromNo(user);
         }
         if (!_hasUserVotedYes(user)) {
-            $scope.event.votes.yes.push(user);
+            $scope.event.attendance.yes.push(user);
         }
     }
 
@@ -263,20 +263,20 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             _deleteUserFromYes(user);
         }
         if (!_hasUserVotedNo(user)) {
-            $scope.event.votes.no.push(user);
+            $scope.event.attendance.no.push(user);
         }
     }
 
     function _deleteUserFromYes(user) {
         user = user || $scope.user;
-        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function (item) {
+        $scope.event.attendance.yes = _.reject($scope.event.attendance.yes, function (item) {
             return _.isEqual(item._id, user._id);
         });
     }
 
     function _deleteUserFromNo(user) {
         user = user || $scope.user;
-        $scope.event.votes.no = _.reject($scope.event.votes.no, function (item) {
+        $scope.event.attendance.no = _.reject($scope.event.attendance.no, function (item) {
             return _.isEqual(item._id, user._id);
         });
     }
@@ -303,18 +303,18 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _hasUserVotedYes(user) {
         user = user || $scope.user;
-        if (_.isUndefined($scope.event.votes)) {
+        if (_.isUndefined($scope.event.attendance)) {
             return false;
         }
-        return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
+        return _.include(_.pluck($scope.event.attendance.yes, '_id'), user._id);
     }
 
     function _hasUserVotedNo(user) {
         user = user || $scope.user;
-        if (_.isUndefined($scope.event.votes)) {
+        if (_.isUndefined($scope.event.attendance)) {
             return false;
         }
-        return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
+        return _.include(_.pluck($scope.event.attendance.no, '_id'), user._id);
     }
 
     function rejectList(list, rej, key) {
@@ -329,8 +329,8 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function getUnresponsiveUsers(members) {
         members = members || $scope.group.members;
         return _(members)
-            .rejectList($scope.event.votes.no, '_id')
-            .rejectList($scope.event.votes.yes, '_id')
+            .rejectList($scope.event.attendance.no, '_id')
+            .rejectList($scope.event.attendance.yes, '_id')
             .value();
     }
     
@@ -372,5 +372,5 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         find();
         findOneGroup();
     }
-
+    
 }

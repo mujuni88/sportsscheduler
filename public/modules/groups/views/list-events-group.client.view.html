@@ -1,7 +1,4 @@
 <div class="panel panel-default" ng-controller="EventsController" ng-init="find()">
-    <p class="alert alert-info alert-sm text-center">
-        <i class="glyphicon glyphicon-info-sign"></i> A maximum of 5 events can be created per group
-    </p>
     <div class="panel-heading clearfix">
         <div class="form-horizontal">
             <div class="form-group">
@@ -18,6 +15,9 @@
         </div>
     </div>
     <div class="panel-body">
+        <p class="bold">
+            {{events.length}}/{{MAX_EVENTS}} events. {{(MAX_EVENTS - events.length) < 0 ? 0: (MAX_EVENTS - events.length)}} left
+        </p>
         <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isAdmin()">
             No Events yet, <a href="/#!/groups/{{group._id}}/events/add">create one</a>.
         </div>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-sm-7 vcenter">
                         <ul class="list-unstyled pull-right float-none-xs">
-                            <li><p>Responses: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
+                            <li><p>Responses: <span class="badge">{{event.attendance.yes.length + event.attendance.no.length}}</span></p></li>
                             <li ng-if="event.attndNotifMins"><p>Attendance Notification: <span class="badge">{{event.attndNotifMins}} before</span></p></li>
                             <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                         </ul>

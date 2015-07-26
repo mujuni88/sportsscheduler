@@ -22,14 +22,14 @@
         </div>
     </div>
     <div class="panel-body">
-                                    <div class="text-center">
-                <h2 ng-show="hasVotedYes() && !hasEventExpired(event.time)" class="text-success">You are attending</h2>
-                <h2 ng-show="hasVotedYes() && hasEventExpired(event.time)" class="text-success">You attended</h2>
-                <h2 ng-show="hasVotedNo() && !hasEventExpired(event.time)" class="text-danger">You are not attending</h2>
-                <h2 ng-show="hasVotedNo() && hasEventExpired(event.time)" class="text-danger">You did not attend</h2>
-                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && !hasEventExpired(event.time)" class="text-info">You have not responded</h2>
-                <h2 ng-show="!hasVotedYes() && !hasVotedNo() && hasEventExpired(event.time)" class="text-info">You did not respond</h2>
-            </div>
+        <div class="text-center">
+            <h2 ng-show="hasVotedYes() && !hasEventExpired(event.time)" class="text-success">You are attending</h2>
+            <h2 ng-show="hasVotedYes() && hasEventExpired(event.time)" class="text-success">You attended</h2>
+            <h2 ng-show="hasVotedNo() && !hasEventExpired(event.time)" class="text-danger">You are not attending</h2>
+            <h2 ng-show="hasVotedNo() && hasEventExpired(event.time)" class="text-danger">You did not attend</h2>
+            <h2 ng-show="!hasVotedYes() && !hasVotedNo() && !hasEventExpired(event.time)" class="text-info">You have not responded</h2>
+            <h2 ng-show="!hasVotedYes() && !hasVotedNo() && hasEventExpired(event.time)" class="text-info">You did not respond</h2>
+        </div>
         <div class="page-header">
             <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
             <div class="page-header-btns pull-right float-none-xs" ng-hide="hasEventExpired(event.time)">
@@ -44,20 +44,20 @@
             <div class="col-sm-4 vcenter">
                 <ul class="list-unstyled">
                     <li><span>Location Name:</span> <p class="text-primary">{{event.location.name}}</p></li>
-                    <li><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
+                    <li ng-if="event.location.address"><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
                     <li><span>Time:</span><p class="text-primary">{{event.time | date:'short'}}</p></li>
-                    <li><span>Created:</span><p class="text-primary">{{event.created | date:'short'}}</p></li>
+                    <li ng-if="event.created"><span>Created:</span><p class="text-primary">{{event.created | date:'short'}}</p></li>
                 </ul>
             </div>
             <div class="col-sm-8 vcenter">
                 <ul class="list-unstyled pull-right float-none-xs">
                     <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
-                    <li><p>Responses: <span class="badge">{{event.votes.yes.length + event.votes.no.length}}</span></p></li>
+                    <li><p>Responses: <span class="badge">{{event.attendance.yes.length + event.attendance.no.length}}</span></p></li>
                     <li ng-if="event.attndNotifMins"><p>Attendance Notification: <span class="badge">{{event.attndNotifMins}} mins before</span></p></li>
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
             </div>
-            <div class="col-sm-12">
+            <div class="col-sm-12" ng-if="event.message">
                 <span>Message:</span>
                 <p class="text-primary well well-sm">{{event.message}}</p>
             </div>
@@ -67,10 +67,10 @@
                     <h3>  
                     <span ng-show="!hasEventExpired(event.time)">Attending</span>
                     <span ng-show="hasEventExpired(event.time)">Attended</span> 
-                    ({{event.votes.yes.length}}):</h3>
+                    ({{event.attendance.yes.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in event.votes.yes"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in event.attendance.yes"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 <div class="col-sm-4">
@@ -78,10 +78,10 @@
                     <h3>  
                     <span ng-show="!hasEventExpired(event.time)">Not Attending</span>
                     <span ng-show="hasEventExpired(event.time)">Didn't Attend</span> 
-                    ({{event.votes.no.length}}):</h3>
+                    ({{event.attendance.no.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in event.votes.no"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in event.attendance.no"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 <div class="col-sm-4">

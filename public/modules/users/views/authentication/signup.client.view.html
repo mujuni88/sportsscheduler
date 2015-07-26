@@ -1,24 +1,15 @@
 <section class="row" ng-controller="AuthenticationController">
-    <h3 class="col-md-12 text-center">Sign up using your social accounts</h3>
+    <h3 class="col-md-12 text-center">Sign up using facebook</h3>
 
     <div class="col-md-12 text-center">
         <a href="/auth/facebook" class="undecorated-link">
             <img src="/modules/users/img/buttons/facebook.png">
         </a>
-        <a href="/auth/twitter" class="undecorated-link">
-            <img src="/modules/users/img/buttons/twitter.png">
-        </a>
         <a href="/auth/google" class="undecorated-link">
             <img src="/modules/users/img/buttons/google.png">
         </a>
-        <a href="/auth/linkedin" class="undecorated-link">
-            <img src="/modules/users/img/buttons/linkedin.png">
-        </a>
-        <a href="/auth/github" class="undecorated-link">
-            <img src="/modules/users/img/buttons/github.png">
-        </a>
     </div>
-    <h3 class="col-md-12 text-center">Or with your email</h3>
+    <h3 class="col-md-12 text-center">Or the form below</h3>
 
     <div class="col-sm-6 col-sm-offset-3">
         <form name="userForm" class="form-horizontal" novalidate autocomplete="off">
@@ -78,23 +69,25 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="phone">Phone Number <span class="has-error">*</span></label>
+                    <label class="col-sm-3 control-label" for="phone">Phone Number</label>
 
                     <div class="col-sm-7">
                         <input type="text" name="phone" class="form-control" ng-model="credentials.phoneNumber" id="phone"
-                               placeholder="Phone number" validator="required, phone"  valid-method="blur" required>
+                               placeholder="Phone number" valid-method="blur" required>
 
+                        <p><small>If you want to receive texts</small></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="carriers">Carrier <span class="has-error">*</span></label>
+                    <label class="col-sm-3 control-label" for="carriers">Carrier</label>
 
                     <div class="col-sm-7">
                         <select id="carriers" class="form-control" name="carriers" ng-model="credentials.carrier"
-                                ng-options="carrier.carrier for carrier in carriers" validator="required"
-                                required="required" valid-method="blur">
+                                ng-options="carrier.carrier for carrier in carriers" valid-method="blur">
                             <option value="">-- choose carrier --</option>
                         </select>
+                                                <p><small>If you want to receive texts</small></p>
+
                     </div>
                 </div>
                 <div class="text-center form-group">
