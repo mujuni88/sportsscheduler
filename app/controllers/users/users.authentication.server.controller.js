@@ -10,7 +10,8 @@ var _ = require('lodash'),
 	User = mongoose.model('User'),
 	MyResponse = require('../../custom_objects/MyResponse'),
 	serverJSON = require('../../local_files/ui/server.ui.json'),
-	Helper = require('../../custom_objects/Helper');
+	Helper = require('../../custom_objects/Helper'),
+	Sender = require('../../custom_objects/Sender');
 
 /**
  * Signup
@@ -163,6 +164,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 
 						// And save the user
 						user.save(function(err) {
+							Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Welcome to Sports Scheduler.\nBelow are some Pro Tips to help you get started.\n 1. Call 769-230-7747 for Pro Tips', null);
 							return done(err, user);
 						});
 					});

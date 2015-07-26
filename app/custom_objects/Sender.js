@@ -59,7 +59,8 @@ Sender.prototype.sendSMS = function(to,subject,text,callback) {
 	        console.log('Message sent: ' + info);
 	    }
 
-    	callback(response);
+	    if(callback !== null)
+    		callback(response);
 
 	});
 };
