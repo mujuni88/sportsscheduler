@@ -167,7 +167,7 @@ EventSchema.statics.objectIDAtts = [
 
 EventSchema.statics.title = serverJSON.constants.events;
 EventSchema.statics.errPath = 'api.events';
-EventSchema.statics.attsToShow = ['_id', 'name', 'location', 'date', 'time', 'attendance', 'message', 'group'];
+EventSchema.statics.attsToShow = ['_id', 'name', 'location', 'date', 'time', 'attendance', 'message', 'group', 'attndNotifMins'];
 
 /*********** Validate Functions **************/
 EventSchema.path('group').validate(function (id,respond) {
