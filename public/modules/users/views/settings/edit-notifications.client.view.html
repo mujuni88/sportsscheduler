@@ -5,7 +5,7 @@
 				<div class="checkbox text-left">
 					<label><input type="checkbox" id="receiveEmail" name="receiveEmail" data-ng-model="user.preferences.receiveEmails">Receive Email</label>
 				</div>	<div class="checkbox text-left">
-					<label><input type="checkbox" id="receiveText" name="receiveText" data-ng-model="user.preferences.receiveTexts">Receive Text</label>
+					<label><input type="checkbox" id="receiveText" name="receiveText" data-ng-model="user.preferences.receiveTexts" ng-change="canText()">Receive Text</label>
 				</div>
 				<br/>
 				<div class="text-left">
