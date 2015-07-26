@@ -6,8 +6,8 @@ module.exports = {
 		title: 'SportsScheduler | Dev'
 	},
 	facebook: {
-		clientID: process.env.FACEBOOK_ID || '1707771316114841',
-		clientSecret: process.env.FACEBOOK_SECRET || 'f89244c2b34aa0d893bb10409b0a9ab3',
+		clientID: process.env.FACEBOOK_ID || '1838551826370122',
+		clientSecret: process.env.FACEBOOK_SECRET || 'de4b9f69dec4591797fee5c5d0f3025b',
 		callbackURL: 'http://localhost:3000/auth/facebook/callback'
 	},
 	twitter: {
