@@ -44,9 +44,9 @@
             <div class="col-sm-4 vcenter">
                 <ul class="list-unstyled">
                     <li><span>Location Name:</span> <p class="text-primary">{{event.location.name}}</p></li>
-                    <li><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
+                    <li ng-if="event.location.address"><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
                     <li><span>Time:</span><p class="text-primary">{{event.time | date:'short'}}</p></li>
-                    <li><span>Created:</span><p class="text-primary">{{event.created | date:'short'}}</p></li>
+                    <li ng-if="event.created"><span>Created:</span><p class="text-primary">{{event.created | date:'short'}}</p></li>
                 </ul>
             </div>
             <div class="col-sm-8 vcenter">
@@ -57,7 +57,7 @@
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
             </div>
-            <div class="col-sm-12">
+            <div class="col-sm-12" ng-if="event.message">
                 <span>Message:</span>
                 <p class="text-primary well well-sm">{{event.message}}</p>
             </div>
