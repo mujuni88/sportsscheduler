@@ -15,7 +15,7 @@
         <div class="panel-body">
             <section>
                 <p class="alert alert-info alert-sm text-center">
-                <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that will include both the number of members attending and absent.
+                <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that will include both the number of members attending and not attending.
                 </p>
                 <br>
                 <div class="col-md-12">
@@ -92,16 +92,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="message">Details <span class="has-error">*</span></label>
+                                <label class="col-sm-3 control-label" for="message">Details</label>
                                 <div class="col-sm-7">
                                     <div class="pull-right text-primary">{{120 - event.message.length}}</div>
                                     <textarea class="form-control" rows="3" maxlength="120" id="message" name="message" class="form-control"
-                                    data-ng-model="event.message" placeholder="120 character limit (optional)" validator="required"
-                                    valid-method="blur"></textarea>
+                                    data-ng-model="event.message" placeholder="120 character limit (optional)"></textarea>
                                 </div>
                             </div>
                             <div class="text-center form-group">
-                                <button type="submit" validation-submit="eventsForm" ng-click="update()"
+                                <button type="submit" ng-click="update()"
                                 class="btn btn-large btn-primary">Update Event
                                 </button>
                             </div>

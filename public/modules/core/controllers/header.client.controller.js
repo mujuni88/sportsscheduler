@@ -19,7 +19,7 @@ function HeaderController($scope, $state, Authentication, Menus, Search, Users, 
     });
 
     function onSelect(group) {
-        $state.go('viewGroup.listMembers.viewMembers',{
+        $state.go('viewGroup.listEvents.viewEvents',{
             groupId:group._id
         });
     }

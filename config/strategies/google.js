@@ -32,8 +32,7 @@ module.exports = function() {
 				username: profile.username,
 				provider: 'google',
 				providerIdentifierField: 'id',
-				providerData: providerData,
-				password:accessToken
+				providerData: providerData
 			};
 
 			// Save the user OAuth profile

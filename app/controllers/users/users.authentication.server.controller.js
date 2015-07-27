@@ -164,7 +164,9 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 
 						// And save the user
 						user.save(function(err) {
-							Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Welcome to Sports Scheduler.\nBelow are some Pro Tips to help you get started.\n 1. Call 769-230-7747 for Pro Tips', null);
+							Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Welcome to Sports Scheduler.\nBelow are some Pro Tips to help you get started.\n 1. Call 769-230-7747 for Pro Tips', function(e){
+								console.log(e);
+							});
 							return done(err, user);
 						});
 					});

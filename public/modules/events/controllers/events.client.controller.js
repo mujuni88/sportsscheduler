@@ -129,10 +129,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         if(!_canCreateEvent()){
             _notifyEventMax();
             return;
-        }
-        
+        }        
         if (_.isUndefined($scope.event.attndNotifMins) ||
-            !_.isNaN($scope.event.attndNotifMins) ||
+            _.isNaN($scope.event.attndNotifMins) ||
             $scope.event.attndNotifMins < 5 ||
             $scope.event.attndNotifMins > 60) {
             $scope.event.attndNotifMins = 30;
@@ -168,10 +167,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function update() {
-        if ($scope.timeError || $scope.dateError) {
-            return _getPromise(false, '');
-        }
-        
         var params = {
             eventId: $stateParams.eventId
         };
