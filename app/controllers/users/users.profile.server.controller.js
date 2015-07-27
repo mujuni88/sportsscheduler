@@ -41,14 +41,39 @@ exports.update = function(req, res) {
 			delete req.body.roles;
 			
 			// Merge existing user
-			user = _.extend(user, req.body);
-			var data = _.merge(user,req.body,Helper.cleanMergeObj);
-			_.extend(user,data);
+			var createdGroups = req.body.createdGroups;
+			var joinedGroups = req.body.joinedGroups;
+			var i = 0;
+
+			req.body.createdGroups = [];
+			req.body.joinedGroups = [];
+
+			if(createdGroups.length > 0 && typeof createdGroups[0] === 'object') {
+				
+				for(i = 0; i < createdGroups.length; ++i)
+					req.body.createdGroups.push(createdGroups[i]._id);
+			}
+
+			if(joinedGroups.length > 0 && typeof joinedGroups[0] === 'object') {
+				
+				for(i = 0; i < joinedGroups.length; ++i)
+					req.body.joinedGroups.push(joinedGroups[i]._id);
+			}
 			
 			user.updated = Date.now();
 			user.displayName = user.firstName + ' ' + user.lastName;
 
-			user.save(function(err) {
+			User.update(
+			{
+				_id: user.id
+			},
+			{
+				'$set': req.body
+			},
+			{
+				runValidators: true
+			},
+			function(err) {
 				
 				if (err) {
 
@@ -56,15 +81,19 @@ exports.update = function(req, res) {
 					Helper.output(User,null,myResponse,res);
 				} else {
 
-					req.login(user, function(err) {
+					//get the updated user
+					Helper.findOne(User,query,function(err,user) {
 
-						if (err) {
+						req.login(user, function(err) {
 
-							console.log('error: ' + err);
-							myResponse.transformMongooseError(User.errPath,String(err));
-						}
-						
-						Helper.output(User,user,myResponse,res);
+							if (err) {
+
+								console.log('error: ' + err);
+								myResponse.transformMongooseError(User.errPath,String(err));
+							}
+							
+							Helper.output(User,user,myResponse,res);
+						});
 					});
 				}
 			});
