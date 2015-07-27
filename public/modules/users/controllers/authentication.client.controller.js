@@ -1,42 +1,43 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication','CarrierFactory',
-	function($scope, $http, $location, Authentication, CarrierFactory) {
+angular.module('users').controller('AuthenticationController', AuthenticationController);
 
-        CarrierFactory.getCarriers().then(function(data){
-            $scope.carriers = data;
-        });
+function AuthenticationController($scope, $http, $location, Authentication, CarrierFactory, lodash) {
+	var _ = lodash;
 
-		$scope.authentication = Authentication;
+    CarrierFactory.getCarriers().then(function(data){
+        $scope.carriers = data;
+    });
 
-		// If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/');
+	$scope.authentication = Authentication;
 
-		$scope.signup = function() {
-			$scope.credentials.carrier = $scope.credentials.carrier.addr;
+	// If user is signed in then redirect back home
+	if ($scope.authentication.user) $location.path('/');
 
-			$http.post('/api/users', $scope.credentials).success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+	$scope.signup = function() {
+		$scope.credentials.carrier = (_.isUndefined($scope.credentials.carrier)) ? '' : $scope.credentials.carrier.addr;
 
-				// And redirect to the index page
-				$location.path('/');
-			});
-		};
+		$http.post('/api/users', $scope.credentials).success(function(response) {
+			// If successful we assign the response to the global user model
+			$scope.authentication.user = response;
 
-		$scope.signin = function() {
-			$http.post('/auth/signin', $scope.credentials).success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+			// And redirect to the index page
+			$location.path('/');
+		});
+	};
 
-				// And redirect to the index page
-				$location.path('/');
-			});
-		};
+	$scope.signin = function() {
+		$http.post('/auth/signin', $scope.credentials).success(function(response) {
+			// If successful we assign the response to the global user model
+			$scope.authentication.user = response;
 
-        $scope.confirmPassword = function(){
-            var password = $scope.credentials.password || '';
-            $scope.isPasswordError =  (password.trimRight() === $scope.credentials.confirmPassword.trimRight());
-        };
-	}
-]);
+			// And redirect to the index page
+			$location.path('/');
+		});
+	};
+
+    $scope.confirmPassword = function(){
+        var password = $scope.credentials.password || '';
+        $scope.isPasswordError =  (password.trimRight() === $scope.credentials.confirmPassword.trimRight());
+    };
+}
