@@ -82,6 +82,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.canCreateEvent = canCreateEvent;
     var MAX_EVENTS = 5;
     $scope.MAX_EVENTS =  MAX_EVENTS;
+    $scope.getTimeDiff = getTimeDiff;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -139,6 +140,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             _.isNaN($scope.event.attndNotifMins) ||
             $scope.event.attndNotifMins < $scope.attndNotifMin ||
             $scope.event.attndNotifMins > $scope.attndNotifMax) {
+            debugger;
             $scope.event.attndNotifMins = 0;
         }
         
@@ -370,6 +372,11 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         }
         
         $scope.attndNotifTime = new Date($scope.event.time - newVal * MS_PER_MINUTE);
+    }
+    
+    function getTimeDiff(date, mins){
+        date = Date.parse(date);
+        return new Date(date - mins * MS_PER_MINUTE);
     }
     
 }

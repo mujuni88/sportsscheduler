@@ -42,7 +42,7 @@
                     <div class="col-sm-7 vcenter">
                         <ul class="list-unstyled pull-right float-none-xs">
                             <li><p>Responses: <span class="badge">{{event.attendance.yes.length + event.attendance.no.length}}</span></p></li>
-                            <li ng-if="event.attndNotifMins"><p>Attendance Notification: <span class="badge">{{event.attndNotifMins}} before</span></p></li>
+                            <li><p>Attendance Notification: <span ng-if="!event.attndNotifMins" class="text-danger">Not sent</span> <span ng-if="event.attndNotifMins" class="text-primary">{{getTimeDiff(event.time, event.attndNotifMins) | date:'shortTime'}}</span></p></li>
                             <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                         </ul>
                     </div>
