@@ -385,8 +385,8 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         var header = 'Share Group',
             msg = ['<p>Share either:</p>',
                 '<ul>',
-                '<li>Group name <span class="text-primary">'+$scope.group.name+'</span></li>',
-                '<li>Group url <a href="'+$location.absUrl()+'">here</a></li>',
+                '<li>Group name (best)<br><span class="text-primary">'+$scope.group.name+'</span></li>',
+                '<li>Group url <br><a href="'+$location.absUrl()+'">here</a></li>',
                 '</ul>'].join(' '),
             opts = {
                 size: 'sm',
