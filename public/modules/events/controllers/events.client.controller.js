@@ -56,12 +56,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     var date = new Date();
     date.setHours(date.getHours() + 1);
     $scope.event.time = date;
-    $scope.attndTimeMin = 30;
+    $scope.attndTimeMin = 0;
     $scope.attndTimeMax = 60;
 
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
-    $scope.$watch("event.attndNotifMins", watchAttndMins);
+    $scope.$watch("event.attndNotifMins", watchEventAttndMins);
+    $scope.$watch("event.time", watchEventTime);
     
     $scope.$on('voted', watchVotes);
     $scope.hasEventExpired = hasEventExpired;
@@ -363,20 +364,23 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         findOneGroup();
     }
     
-    function watchAttndMins(newVal, oldVal){
+    function watchEventAttndMins(newVal, oldVal){
         if(!newVal){
             $scope.attndNotifError = true;
             newVal = 0;
         } else{
             $scope.attndNotifError = false;
         }
-        
-        $scope.attndNotifTime = new Date($scope.event.time - newVal * MS_PER_MINUTE);
+        $scope.attndNotifTime = new Date(Date.parse($scope.event.time)- newVal * MS_PER_MINUTE);
     }
     
+    function watchEventTime(newVal, oldVal){
+        $scope.attndNotifTime = new Date(Date.parse(newVal)- $scope.event.attndNotifMins * MS_PER_MINUTE);
+    }
+    
+    
     function getTimeDiff(date, mins){
-        date = Date.parse(date);
-        return new Date(date - mins * MS_PER_MINUTE);
+        return new Date(Date.parse(date) - mins * MS_PER_MINUTE);
     }
     
 }
