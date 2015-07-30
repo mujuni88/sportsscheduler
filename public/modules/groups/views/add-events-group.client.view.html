@@ -1,71 +1,83 @@
-<div class="panel panel-default animated fadeIn"  data-ng-controller="EventsController">
+<div class="panel panel-default animated fadeIn" data-ng-controller="EventsController">
     <div class="panel-heading clearfix">
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-2">
                     <a class="btn btn-primary btn-sm" ng-click="$state.go('viewGroup.listEvents.viewEvents')">
-                    <i class="glyphicon glyphicon-arrow-left"></i>
+                        <i class="glyphicon glyphicon-arrow-left"></i>
                     </a>
                 </div>
                 <div class="col-sm-6 col-sm-offset-1">
-                     <h3 class="text-center">New Event</h3>
+                    <h3 class="text-center">New Event</h3>
                 </div>
             </div>
         </div>
     </div>
     <div class="panel-body">
         <section>
-                <p class="alert alert-info alert-sm">
-                <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that will include both the number of members attending and absent. 
-                </p>
-                <br>  
+            <p class="alert alert-info alert-sm">
+                <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that
+                will include both the number of members attending and absent.
+            </p>
+            <br>
+
             <div class="col-md-12">
                 <form name="eventsForm" class="form-horizontal" novalidate>
                     <fieldset>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="name">Title <span class="has-error">*</span></label>
+                            <label class="col-sm-3 control-label" for="name">Title <span
+                                    class="has-error">*</span></label>
+
                             <div class="col-sm-7">
                                 <input type="text"
-                                name="name"
-                                data-ng-model="event.name"
-                                id="name"
-                                class="form-control"
-                                validator="required"
-                                placeholder="Name"
-                                valid-method="blur" required>
+                                       name="name"
+                                       data-ng-model="event.name"
+                                       id="name"
+                                       class="form-control"
+                                       validator="required"
+                                       placeholder="Name"
+                                       valid-method="blur" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="locationName">Location Name <span class="has-error">*</span></label>
+                            <label class="col-sm-3 control-label" for="locationName">Location Name <span
+                                    class="has-error">*</span></label>
+
                             <div class="col-sm-7">
                                 <input type="text"
-                                name="locationName"
-                                data-ng-model="event.location.name"
-                                id="locationName"
-                                class="form-control"
-                                validator="required"
-                                placeholder="Location"
-                                valid-method="blur" required>
+                                       name="locationName"
+                                       data-ng-model="event.location.name"
+                                       id="locationName"
+                                       class="form-control"
+                                       validator="required"
+                                       placeholder="Location"
+                                       valid-method="blur" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="locationAddress">Location Address</label>
+
                             <div class="col-sm-7">
                                 <input type="text" id="locationAddress" name="locationAddress" class="form-control"
-                                data-ng-model="event.location.address" placeholder="Enter a location (optional)" ng-autocomplete options="options" details="details">
+                                       data-ng-model="event.location.address" placeholder="Enter a location (optional)"
+                                       ng-autocomplete options="options" details="details">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="day">Date <span class="has-error">*</span></label>
+                            <label class="col-sm-3 control-label" for="day">Date <span
+                                    class="has-error">*</span></label>
+
                             <div class="col-sm-7">
                                 <p class="input-group">
-                                <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day" type="text"
-                                class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
-                                is-open="opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-                                ng-required="true" close-text="Close"/>
+                                    <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day"
+                                           type="text"
+                                           class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
+                                           is-open="opened" min-date="minDate" datepicker-options="dateOptions"
+                                           date-disabled="disabled(date, mode)"
+                                           ng-required="true" close-text="Close"/>
                                 <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="open($event)"><i
-                                class="glyphicon glyphicon-calendar"></i></button>
+                                        class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
                                 </p>
                                 <div class="has-error" ng-show="dateError">Required!!</div>
@@ -73,36 +85,55 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Time <span class="has-error hidden">*</span></label>
+
                             <div class="col-sm-7">
                                 <timepicker ng-model="event.time" hour-step="" minute-step=""
-                                show-meridian=""></timepicker>
+                                            show-meridian=""></timepicker>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="attndNotifMins">Attendance notification</label>
+
                             <div class="col-sm-7">
+                                <div class="text-right">
+                                    <small>Notification will be sent at <span
+                                            ng-class="{'text-primary':!attndNotifError, 'text-danger':attndNotifError}">{{attndNotifTime | date:'shortTime'}}</span>
+                                    </small>
+                                </div>
                                 <div class="input-group">
-                                    <input id="attndNotifMins" name="attndNotifMins" ng-model="event.attndNotifMins" class="form-control"
-                                           type="number" min="5" max="60" tooltip-placement="top" 
-                                           valid-method="blur" tooltip="Minutes before attendance notification is sent out" placeholder="30 minutes (optional)"
+                                    <input id="attndNotifMins" name="attndNotifMins" ng-model="event.attndNotifMins"
+                                           class="form-control"
+                                           type="number" min="{{attndTimeMin}}" max="{{attndTimeMax}}"
+                                           tooltip-placement="top"
+                                           valid-method="blur"
+                                           tooltip="Minutes before attendance notification is sent out"
+                                           placeholder="30 minutes (optional)"
                                             />
+
                                     <div class="input-group-addon">mins</div>
                                 </div>
-                                <small>5 - 60 mins(min/max). Digits only and no decimals. Invalid time will be defaulted to 30 mins</small>
-
+                                <div class="text-right">
+                                    <small ng-hide="attndNotifError">{{attndTimeMin}} min - {{attndTimeMax}} max</small>
+                                    <small ng-show="attndNotifError" class="text-info">Notification will not be sent.
+                                        Time needs to be within 30 - 60 mins
+                                    </small>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="message">Details</label>
+
                             <div class="col-sm-7">
-                                <div class="pull-right text-primary">{{120 - event.message.length}}</div>
-                                <textarea class="form-control" rows="3" maxlength="120" id="message" name="message" class="form-control"
-                                data-ng-model="event.message" placeholder="120 character limit (optional)"></textarea>
+                                <div class="text-right text-primary">{{120 - event.message.length}}</div>
+                                <textarea class="form-control" rows="3" maxlength="120" id="message" name="message"
+                                          class="form-control"
+                                          data-ng-model="event.message"
+                                          placeholder="120 character limit (optional)"></textarea>
                             </div>
                         </div>
                         <div class="text-center form-group">
                             <button type="submit" ng-click="create()"
-                            class="btn btn-large btn-primary">Create Event
+                                    class="btn btn-large btn-primary">Create Event
                             </button>
                         </div>
                         <!--<div class="form-group">-->

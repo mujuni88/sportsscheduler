@@ -14,10 +14,12 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
     $scope.state = $state;
     $scope.stateParams = $stateParams;
+    
+    var MS_PER_MINUTE = 60000;
     $scope.event = $scope.event || {
-            attndNotifMins:30,
-            minimumVotes:0
+            attndNotifMins:30
         };
+
     // Create new Event
     $scope.create = create;
     // Remove existing Event
@@ -54,9 +56,12 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     var date = new Date();
     date.setHours(date.getHours() + 1);
     $scope.event.time = date;
-   
+    $scope.attndTimeMin = 30;
+    $scope.attndTimeMax = 60;
+
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
+    $scope.$watch("event.attndNotifMins", watchAttndMins);
     
     $scope.$on('voted', watchVotes);
     $scope.hasEventExpired = hasEventExpired;
@@ -132,9 +137,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         }        
         if (_.isUndefined($scope.event.attndNotifMins) ||
             _.isNaN($scope.event.attndNotifMins) ||
-            $scope.event.attndNotifMins < 5 ||
-            $scope.event.attndNotifMins > 60) {
-            $scope.event.attndNotifMins = 30;
+            $scope.event.attndNotifMins < $scope.attndNotifMin ||
+            $scope.event.attndNotifMins > $scope.attndNotifMax) {
+            $scope.event.attndNotifMins = 0;
         }
         
         var event = new Events($scope.event),
@@ -276,18 +281,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         });
     }
 
-    function _getPromise(isSuccess, data) {
-        var deferred = $q.defer();
-        setTimeout(function () {
-            if (isSuccess) {
-                deferred.resolve(data);
-            } else {
-                deferred.reject(data);
-            }
-        }, 1);
-        return deferred.promise;
-    }
-
     function hasVotedYes(user) {
         return _hasUserVotedYes(user);
     }
@@ -366,6 +359,17 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     function _refreshData(){
         find();
         findOneGroup();
+    }
+    
+    function watchAttndMins(newVal, oldVal){
+        if(!newVal){
+            $scope.attndNotifError = true;
+            newVal = 0;
+        } else{
+            $scope.attndNotifError = false;
+        }
+        
+        $scope.attndNotifTime = new Date($scope.event.time - newVal * MS_PER_MINUTE);
     }
     
 }

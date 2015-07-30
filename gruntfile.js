@@ -232,7 +232,7 @@ module.exports = function (grunt) {
     //grunt.registerTask('docs',['jsdoc']);
 
     // Debug task.
-    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
+    grunt.registerTask('debug', ['env:dev','lint', 'concurrent:debug']);
 
     // Lint task(s).
     grunt.registerTask('lint', ['jshint','csslint']);
