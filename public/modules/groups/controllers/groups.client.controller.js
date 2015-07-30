@@ -51,6 +51,8 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.canRmMember = canRmMember;
     $scope.canRmvMember = canRmvMember;
     $scope._isAdmin = _isAdmin;
+    
+    $scope.shareGroup = shareGroup;
 
     // Group Functions
     function create() {
@@ -377,5 +379,19 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         }
 
         return member._id === $scope.authentication.user._id;
+    }
+    
+    function shareGroup(){
+        var header = 'Share Group',
+            msg = ['<p>Share either:</p>',
+                '<ul>',
+                '<li>Group name <span class="text-primary">'+$scope.group.name+'</span></li>',
+                '<li>Group url <a href="'+$location.absUrl()+'">here</a></li>',
+                '</ul>'].join(' '),
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+        dialogs.notify(header, msg, opts);
     }
 }
