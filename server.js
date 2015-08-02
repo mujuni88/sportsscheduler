@@ -5,6 +5,8 @@
 var init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose');
+
+
 /**
  * Main application entry file.
  * Please note that the order of loading is important.
@@ -32,6 +34,9 @@ app.listen(config.port);
 
 // Expose app
 exports = module.exports = app;
+
+var CronHandler = require('./app/custom_objects/CronHandler');
+CronHandler.restartCrons();
 
 // Logging initialization
 console.log('MEAN.JS application started on port ' + config.port);
