@@ -219,7 +219,10 @@ var UserSchema = new Schema({
   			type: Boolean,
   			default: true
   		}
-  	}
+  	},
+	photo:{
+		type:String
+	}
 });
 
 UserSchema.statics.functionsArray = [
@@ -240,7 +243,7 @@ UserSchema.statics.objectIDAtts = [
 
 UserSchema.statics.title = serverJSON.constants.users;
 UserSchema.statics.errPath = 'api.users';
-UserSchema.statics.attsToShow = ['_id', 'displayName', 'provider', 'firstName', 'lastName', 'username', 'preferences', 'created', 'updated', 'roles', 'addedBy', 'joinedGroups', 'createdGroups', 'phoneNumber', 'carrier', 'email'];
+UserSchema.statics.attsToShow = ['_id', 'displayName', 'provider', 'firstName', 'lastName', 'username', 'preferences', 'created', 'updated', 'roles', 'addedBy', 'joinedGroups', 'createdGroups', 'phoneNumber', 'carrier', 'email','photo'];
 /**
  * Hook a pre save method to hash the password
  */

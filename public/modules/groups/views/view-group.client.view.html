@@ -32,10 +32,10 @@
                 <div class="jumbotron text-center">
                     <h2 editable-text="group.name" e-name="groupName" e-required><i
                             class="fa fa-users text-primary spacing-sm-right"></i>{{group.name}}</h2>
-                    <ul class="text-center list-unstyled">
-                        <li><h4><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h4></li>
+                    <ul class="list-unstyled">
+                        <li><h4 class="text-center" ><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h4></li>
                         <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']:true"><h5 class="text-info">
-                            {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
+                            <img width="30px" height="30px" ng-src="{{admin.photo}}" alt="" class="img-circle"/> {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
                     </ul>
                 </div>
                 <br/>

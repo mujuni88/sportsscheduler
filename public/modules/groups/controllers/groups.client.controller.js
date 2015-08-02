@@ -383,10 +383,11 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     
     function shareGroup(){
         var header = 'Share Group',
-            msg = ['<p>Share either:</p>',
+            msg = ['<p>Want people to join this group?</p>',
                 '<ul>',
-                '<li>Group name (best)<br><span class="text-primary">'+$scope.group.name+'</span></li>',
-                '<li>Group url <br><a href="'+$location.absUrl()+'">here</a></li>',
+                '<li>Share group name <br><a href="'+$location.absUrl()+'">'+$scope.group.name+'</a></li>',
+                '<li>Search for the group</li>',
+                '<li>Click Join Group</li>',
                 '</ul>'].join(' '),
             opts = {
                 size: 'sm',

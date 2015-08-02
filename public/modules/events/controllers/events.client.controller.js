@@ -50,7 +50,6 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     };
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
-    $scope.dateChange = dateChange;
    
     // Timepicker
     var date = new Date();
@@ -106,10 +105,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $event.stopPropagation();
         $scope.opened = true;
     }
-
-    function dateChange() {
-        $scope.dateError = (!$scope.event.date) ? true : false;
-    }
+    
 
     function hasEventExpired(eventTime) {
         var now = Date.now(),
