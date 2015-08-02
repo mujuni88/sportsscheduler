@@ -33,7 +33,7 @@ var CronHandler = (function() {
 		removeCron: function(eventID) {
 
 			//jobs = _.omit(jobs,key);
-			CronHandler.restartCrons();
+
 			var query = {
 				eventID: new mongoose.Types.ObjectId(eventID)
 			};

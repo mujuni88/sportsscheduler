@@ -1,6 +1,7 @@
 'use strict';
 
-var serverJSON = require('../local_files/ui/server.ui.json'),
+var _ = require('lodash'),
+    serverJSON = require('../local_files/ui/server.ui.json'),
 	mongoose = require('mongoose'),
     MyResponse = require('./MyResponse'),
     async = require('async');
@@ -99,6 +100,9 @@ var Helper = (function() {
         update: function(model,query,data) {
             
             return function(arg1,arg2,done) {
+
+                data = _.omit(data,'_id');
+                
                 model.update(query,
                 {
                     $set: data

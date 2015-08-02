@@ -197,6 +197,8 @@ exports.update = function(req, res) {
 				}
 			}	
 
+			req.body = _.omit(req.body,'_id');
+			
 			Group.update(
 			{
 				_id : id

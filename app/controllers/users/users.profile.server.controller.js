@@ -63,6 +63,8 @@ exports.update = function(req, res) {
 			user.updated = Date.now();
 			user.displayName = user.firstName + ' ' + user.lastName;
 
+			req.body = _.omit(req.body,'_id');
+			
 			User.update(
 			{
 				_id: user.id

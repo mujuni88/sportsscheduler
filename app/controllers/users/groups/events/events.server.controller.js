@@ -196,6 +196,8 @@ exports.update = function(req, res) {
 
 			}
 
+			req.body = _.omit(req.body,'_id');
+
 			EventModel.update(
 			{
 				_id : id
@@ -351,7 +353,7 @@ exports.listEventsForGroup = function(req, res) {
 		}
 		else if(mod.length === 0 || !mod) {
 
-			myResponse.addMessages(serverJSON.api.group._id.exist);
+			myResponse.addMessages(serverJSON.api.groups._id.exist);
 			Helper.output(Group,null,myResponse,res);
 		}
 		else {
