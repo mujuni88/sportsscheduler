@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 	Helper = require('../../../../custom_objects/Helper'),
 	Sender = require('../../../../custom_objects/Sender'),
 	CronJob = require('cron').CronJob,
-	Cron = require('../../../../custom_objects/Cron'),
+	CronHandler = require('../../../../custom_objects/CronHandler'),
+	CronFunctions = require('../../../../custom_objects/CronFunctions'),
 	_ = require('lodash'),
 	async = require('async'),
 	time = require('time'),
@@ -21,47 +22,6 @@ var PrivateFunctions = (function() {
 
 			console.log('Email sent successfully to: %s',user.email);
 		};
-	};
-
-	//get up to date event for cron fires
-	var getEvent = function(event,callback) {
-
-		async.waterfall([
-			
-			function(done) {
-
-				var query = {
-
-					_id: event.id
-
-				};
-
-				Helper.findOne(EventModel,query,function(err,updatedEvent) {
-					//need to figure out what to do here
-					if(err)	{
-
-						console.log('error with event ID %s: %s',event.id,err);
-						return false;
-					}
-					else if(!updatedEvent) {
-
-						console.log('The event with ID %s has been deleted since cron was created. Not sending email',event.id);
-						return false;
-					}
-					
-					done(null,updatedEvent);
-				});
-			},
-			function(updatedEvent,done) {
-
-				Helper.populate(EventModel,updatedEvent,function(err,updatedEvent) { 
-
-					done(null,updatedEvent);
-
-				});
-			}
-		],
-		callback);
 	};
 
 	var createEventMembersQuery = function(event) {
@@ -122,68 +82,16 @@ var PrivateFunctions = (function() {
 
 				return function(arg1,arg2,done) {
 					
-					var gatherAttendance = function() {
-
-						var query = {
-
-							_id: event.id
-
-						};
-
-						getEvent(event,function(err,event) {
-
-							var group = event.group;
-							var ids = [];
-
-							console.log('firing gather attendance cron for eventID: ' + event.id);
-							//gather all member ids for population
-							for(var i = 0; i < group.members.length; ++i) {
-
-								ids.push(group.members[i].toString());
-							}
-
-							console.log('ids: ' + ids);
-
-							//populate ids
-							var query = {
-
-								_id: 
-								{ 
-									$in: ids
-								}
-
-							};
-
-							Helper.findWithAllAtts(User,query,function(err,users) {
-
-								for(var j = 0; j < users.length; ++j) {
-
-									var user = users[j];
-									
-									if(user.preferences.receiveTexts) {
-
-										var recipient = user.phoneNumber + user.carrier;
-										Sender.sendSMS(recipient, 'Event\n', 'Attendance Results!\n' + event.attendance.yes.length + ' YES \n' + event.attendance.no.length + ' NO \n', senderCallback(user));
-									}
-
-									if(user.preferences.receiveEmails) {
-
-										Sender.sendSMS(user.email, 'Event\n', 'Attendance Results!\n' + event.attendance.yes.length + ' YES \n' + event.attendance.no.length + ' NO \n', senderCallback(user));
-									}
-								}
-							});
-						});
-					};
-
 					console.log('event time: ' + event.time);
 					console.log('attndCloseTime: ' + event.attndCloseTime);
 					console.log('event id: ' + event.id);
 					event.attndCloseTime.setTimezone('America/Chicago');
+					var cronTime = new Date(event.attndCloseTime);
 
 					var settings = {
 
-				  		cronTime: new Date(event.attndCloseTime),
-				  		onTick: gatherAttendance,
+				  		cronTime: cronTime,
+				  		onTick: CronFunctions.gatherAttendance(event.id),
 				  		start: true,
 				  		timeZone: 'America/Chicago'
 
@@ -193,12 +101,13 @@ var PrivateFunctions = (function() {
 
 					var cron = {
 
-						key: event.id,
-						settings: settings
-
+						eventID: event.id,
+						timeZone: settings.timeZone,
+						cronTime: cronTime,
+						onTick: 'gatherAttendance'
 					};
 
-					Cron.addJob(cron.key,job);
+					CronHandler.addJob(cron);
 
 					done(null,arg1,arg2);
 				};
@@ -213,7 +122,7 @@ var PrivateFunctions = (function() {
 
 					};
 
-					getEvent(event,function(err,event) {
+					Helper.getPopulatedObjectByID(EventModel,event.id,function(err,event) {
 
 						query = createEventMembersQuery(event);
 
@@ -256,6 +165,9 @@ var PrivateFunctions = (function() {
 
 				return function(arg1,arg2,done) {
 
+					//remove from cron
+					CronHandler.removeCron(event.id);
+					
 					//if event time has passed, don't send notifications
 					var now = new Date().getTime();
 					if(event.time.getTime() < now)

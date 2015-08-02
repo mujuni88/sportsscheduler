@@ -54,8 +54,8 @@ var Helper = (function() {
 
     /*******************END FUNCTIONS*********************/    
     return {
-        attsArryToAttsString: function(arr)
-        {
+        attsArryToAttsString: function(arr) {
+
             var attsString = '';
 
             for(var i = 0; i < arr.length; ++i)
@@ -112,8 +112,6 @@ var Helper = (function() {
                         done(err,1,1);
                     }
                     else {
-                        console.log('final query: ' + JSON.stringify(query,null,1));
-                        console.log('final data: ' + JSON.stringify(query,null,1));
 
                         Helper.find(model,query,function(err,mod) {
                             var obj = mod[0];
@@ -180,6 +178,46 @@ var Helper = (function() {
         },
         /**************** END WATERFALL FUNCTIONS ***********/
 
+        //get up to date event for cron fires
+        getPopulatedObjectByID: function(model,objID,callback) {
+
+            async.waterfall([
+                
+                function(done) {
+
+                    var query = {
+
+                        _id: objID
+
+                    };
+
+                    Helper.findOne(model,query,function(err,updatedObj) {
+                        //need to figure out what to do here
+                        if(err) {
+
+                            console.log('error with event ID %s: %s',objID,err);
+                            return false;
+                        }
+                        else if(!updatedObj) {
+
+                            console.log('The event with ID %s has been deleted since cron was created. Not sending email',objID);
+                            return false;
+                        }
+                        
+                        done(null,updatedObj);
+                    });
+                },
+                function(updatedObj,done) {
+
+                    Helper.populate(model,updatedObj,function(err,updatedObj) { 
+
+                        done(null,updatedObj);
+
+                    });
+                }
+            ],
+            callback);
+        },
         findWithAllAtts: function(model,query,callback) {
 
             model.find(query)
@@ -214,8 +252,8 @@ var Helper = (function() {
             var map = {};
             var i = null;
 
-            for(i = 0; i < arr.length; ++i)
-            {
+            for(i = 0; i < arr.length; ++i) {
+
                 if(typeof map[arr[i]] === 'undefined')
                     map[arr[i]] = 1;
                 else
@@ -232,8 +270,8 @@ var Helper = (function() {
         },
         isValidObjectIDs: function(ids) {
     
-            for(var i = 0; i < ids.length; ++i)
-            {
+            for(var i = 0; i < ids.length; ++i) {
+
                 if(!mongoose.Types.ObjectId.isValid(ids[i].toString()))
                     return false;
             }
@@ -247,6 +285,7 @@ var Helper = (function() {
             //console.log('atts: ' + atts);
 
             var rec = function(atts) {
+
                 var optionsModel = mongoose.model(atts[0].model);
                 var options = {
                     path: atts[0].name,
@@ -261,8 +300,8 @@ var Helper = (function() {
                     //console.log('new atts: ' + atts);
                     if(atts.length === 0)
                         callback(err,obj);
-                    else
-                    {
+                    else {
+
                         //console.log('populated obj: ' + obj);
                         rec(atts);
                     }

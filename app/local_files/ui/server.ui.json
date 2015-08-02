@@ -3,7 +3,8 @@
 	{
 		"users": "User",
 		"groups": "Group",
-		"events": "Event"
+		"events": "Event",
+		"crons": "Cron"
 	},
 	"mongo":
 	{
@@ -668,6 +669,36 @@
 				{
 					"devMessage": "The passed in ObjectId is in an invalid format for the User atribute",
 					"clientMessage": "This User does not exist",
+					"status": 400
+				}
+			}
+		},
+		"cron":
+		{
+			"eventID":
+			{
+				"empty":
+				{
+					"devMessage": "No ObjectId has been entered for the 'empty' attribute",
+					"clientMessage": "This Cron must have an eventID",
+					"status": 400
+				}
+			},
+			"key":
+			{
+				"empty":
+				{
+					"devMessage": "No ObjectId has been entered for the 'empty' attribute",
+					"clientMessage": "This cron must have a key",
+					"status": 400
+				}
+			},
+			"cronTime":
+			{
+				"empty":
+				{
+					"devMessage": "No ObjectId has been entered for the 'empty' attribute",
+					"clientMessage": "This cron must have a cronTime",
 					"status": 400
 				}
 			}

@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 	Helper = require('../../../../custom_objects/Helper'),
 	Group = mongoose.model('Group'),
 	CronJob = require('cron').CronJob,
-	Cron = require('../../../../custom_objects/Cron'),
+	CronHandler = require('../../../../custom_objects/CronHandler'),
 	PrivateFunctions = require('./_privateFunctions'),
 	_ = require('lodash');
 
@@ -54,7 +54,6 @@ exports.cron = function(req, res) {
 		settings: settings
 	};
 
-	Cron.addJob(cron.key,job);
 	res.json(convertedTime);
 };
 
