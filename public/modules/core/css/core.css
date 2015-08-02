@@ -157,4 +157,16 @@
   right: 10px;
   top: 38%; }
 
+.profile-image {
+  width: 30px;
+  height: 30px; }
+
+.navbar-nav > li > a {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  line-height: 32px; }
+
+body {
+  padding-top: 59px; }
+
 /*# sourceMappingURL=core.css.map */

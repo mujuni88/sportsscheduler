@@ -7,7 +7,8 @@ var passport = require('passport'),
 	url = require('url'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	config = require('../config'),
-	users = require('../../app/controllers/users/users');
+	users = require('../../app/controllers/users/users'),
+	gravatar = require('gravatar');
 
 module.exports = function() {
 	// Use facebook strategy
@@ -15,7 +16,8 @@ module.exports = function() {
 			clientID: config.facebook.clientID,
 			clientSecret: config.facebook.clientSecret,
 			callbackURL: config.facebook.callbackURL,
-			passReqToCallback: true
+			passReqToCallback: true,
+			profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
 		},
 		function(req, accessToken, refreshToken, profile, done) {
 			// Set the provider data and include tokens
@@ -32,7 +34,8 @@ module.exports = function() {
 				username: profile.username,
 				provider: 'facebook',
 				providerIdentifierField: 'id',
-				providerData: providerData
+				providerData: providerData,
+				photo: profile.photos ? profile.photos[0].value : gravatar.url(profile.emails[0].value, {s:'40', d:'retro', r:'pg'}),
 			};
 
 			// Save the user OAuth profile

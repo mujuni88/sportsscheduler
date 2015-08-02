@@ -15,14 +15,8 @@
     </div>
     <div class="panel-body">
         <section>
-            <p class="alert alert-info alert-sm">
-                <i class="glyphicon glyphicon-info-sign"></i> An email will be sent 30 minutes before start time that
-                will include both the number of members attending and absent.
-            </p>
-            <br>
-
             <div class="col-md-12">
-                <form name="eventsForm" class="form-horizontal" novalidate>
+                <form name="eventForm" class="form-horizontal" novalidate>
                     <fieldset>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="name">Title <span
@@ -69,12 +63,10 @@
 
                             <div class="col-sm-7">
                                 <p class="input-group">
-                                    <input id="day" ng-change="dateChange()" ng-click="open($event)" name="day"
+                                    <input id="day" ng-click="open($event)" name="day"
                                            type="text"
                                            class="form-control" datepicker-popup="{{format}}" ng-model="event.date"
-                                           is-open="opened" min-date="minDate" datepicker-options="dateOptions"
-                                           date-disabled="disabled(date, mode)"
-                                           ng-required="true" close-text="Close"/>
+                                           is-open="opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close"/>
                                 <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="open($event)"><i
                                         class="glyphicon glyphicon-calendar"></i></button>
@@ -84,7 +76,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Time <span class="has-error hidden">*</span></label>
+                            <label class="col-sm-3 control-label">Time <span class="has-error">*</span></label>
 
                             <div class="col-sm-7">
                                 <timepicker ng-model="event.time" hour-step="" minute-step=""
@@ -105,7 +97,6 @@
                                            class="form-control"
                                            type="number" min="{{attndTimeMin}}" max="{{attndTimeMax}}"
                                            tooltip-placement="top"
-                                           valid-method="blur"
                                            tooltip="Minutes before attendance notification is sent out"
                                            placeholder="30 minutes (optional)"
                                             />
@@ -114,7 +105,7 @@
                                 </div>
                                 <div class="text-right">
                                     <small ng-hide="attndNotifError">{{attndTimeMin}} min - {{attndTimeMax}} max</small>
-                                    <small ng-show="attndNotifError" class="text-info">To receive notification, time needs to be within 30 - 60 mins
+                                    <small ng-show="attndNotifError" class="text-info">To receive notification, time needs to be within 30 - {{attndTimeMax}} mins
                                     </small>
                                 </div>
                             </div>
@@ -125,14 +116,12 @@
                             <div class="col-sm-7">
                                 <div class="text-right text-primary">{{120 - event.message.length}}</div>
                                 <textarea class="form-control" rows="3" maxlength="120" id="message" name="message"
-                                          class="form-control"
                                           data-ng-model="event.message"
                                           placeholder="120 character limit (optional)"></textarea>
                             </div>
                         </div>
                         <div class="text-center form-group">
-                            <button type="submit" ng-click="create()"
-                                    class="btn btn-large btn-primary">Create Event
+                            <button type="submit" validation-submit="eventForm" ng-click="create()" class="btn btn-large btn-primary">Create Event
                             </button>
                         </div>
                         <!--<div class="form-group">-->

@@ -11,7 +11,8 @@ var _ = require('lodash'),
 	MyResponse = require('../../custom_objects/MyResponse'),
 	serverJSON = require('../../local_files/ui/server.ui.json'),
 	Helper = require('../../custom_objects/Helper'),
-	Sender = require('../../custom_objects/Sender');
+	Sender = require('../../custom_objects/Sender'),
+	gravatar = require('gravatar');
 
 /**
  * Signup
@@ -28,6 +29,7 @@ exports.signup = function(req, res) {
 	user.provider = 'local';
 	user.displayName = user.firstName + ' ' + user.lastName;
 	user.plainTextPassword = user.password;
+	user.photo = gravatar.url(user.email, {s:'40', d:'retro', r:'pg'});
 	
 	// Then save the user 
 	user.save(function(err) {
@@ -159,7 +161,8 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 							displayName: providerUserProfile.displayName,
 							email: providerUserProfile.email,
 							provider: providerUserProfile.provider,
-							providerData: providerUserProfile.providerData
+							providerData: providerUserProfile.providerData,
+							photo:providerUserProfile.photo
 						});
 
 						// And save the user
@@ -190,7 +193,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 
 			// And save the user
 			user.save(function(err) {
-				return done(err, user, '/#!/settings/accounts');
+				return done(err, user, '/#!/settings/me/accounts');
 			});
 		} else {
 			return done(new Error('User is already connected using this provider'), user);

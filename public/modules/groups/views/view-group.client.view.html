@@ -35,7 +35,7 @@
                     <ul class="text-center list-unstyled">
                         <li><h4><i class="glyphicon glyphicon-king text-primary"></i> Admins:</h4></li>
                         <li data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']:true"><h5 class="text-info">
-                            {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
+                            <img width="40px" height="40px" ng-src="{{authentication.user.photo}}" alt="" class="img-circle"/> {{admin.displayName}} <span class="badge" ng-show="isOwner(admin)">owner</span></h5></li>
                     </ul>
                 </div>
                 <br/>
