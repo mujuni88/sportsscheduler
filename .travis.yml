@@ -16,3 +16,4 @@ notifications:
     - treyqg15@gmail.com
    on_success: always
    on_failure: always
+sudo: false
