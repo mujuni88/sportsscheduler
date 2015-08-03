@@ -18,7 +18,8 @@ module.exports = {
 	google: {
 		clientID: process.env.GOOGLE_ID || '63767316383-j3essslh76rsr167l9ek181pfp321pdo.apps.googleusercontent.com',
 		clientSecret: process.env.GOOGLE_SECRET || 'ohUIThCioXqfnoUyldSs3cak',
-		callbackURL: 'http://localhost:3000/auth/google/callback'
+		callbackURL: 'http://localhost:3000/auth/google/callback',
+		apiKey:'AIzaSyDM9sJYRl6GO1TPmaDwBu9UxueH2RxJ-eY'
 	},
 	linkedin: {
 		clientID: process.env.LINKEDIN_ID || 'APP_ID',

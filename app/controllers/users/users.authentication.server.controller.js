@@ -14,7 +14,8 @@ var _ = require('lodash'),
 	Sender = require('../../custom_objects/Sender'),
 	gravatar = require('gravatar');
 
-/**
+
+	/**
  * Signup
  */
 exports.signup = function(req, res) {

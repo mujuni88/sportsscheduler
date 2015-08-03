@@ -15,7 +15,8 @@ module.exports = {
 	google: {
 		clientID: process.env.GOOGLE_ID || '63767316383-2jp0a7o9ds6vlhvenr1ov94m99mjm0d2.apps.googleusercontent.com',
 		clientSecret: process.env.GOOGLE_SECRET || 'YEKnpgEj_tzelkcrJnI9No_c',
-		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/google/callback'
+		callbackURL: 'http://sportsscheduler.herokuapp.com/auth/google/callback',
+		apiKey:'AIzaSyDM9sJYRl6GO1TPmaDwBu9UxueH2RxJ-eY'
 	},
 	linkedin: {
 		clientID: process.env.LINKEDIN_ID || 'APP_ID',

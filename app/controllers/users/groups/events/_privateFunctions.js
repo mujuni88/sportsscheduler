@@ -12,7 +12,9 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
 	async = require('async'),
 	time = require('time'),
-	dateFormat = require('dateformat');
+	dateFormat = require('dateformat'),
+	GoogleUrlShortener = require('../../../../custom_objects/GoogleUrlShortener');
+
 
 var PrivateFunctions = (function() {
 	
@@ -128,28 +130,46 @@ var PrivateFunctions = (function() {
 
 						Helper.findWithAllAtts(User,query,function(err,users) {
 
-							for(var i = 0; i < users.length; ++i) {
+							var eventURL = 'http://'+req.headers.host+'/#!/groups/'+event.group.id+'/events/'+event.id;
+							var settingsURL = 'http://'+req.headers.host+'/#!/settings/me/notifications';
 
-								var user = users[i];
-								
-								var eventURL = 'http://'+req.headers.host+'/#!/groups/'+event.group.id+'/events/'+event.id;
-								var settingsURL = 'http://'+req.headers.host+'/#!/settings/me/notifications';
-								var eventEndDate = new Date(event.time);
-								eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS "at" h:MM TT');
-								
-								if(user.preferences.receiveTexts) {
+							async.waterfall([
+								function(callback){
+									GoogleUrlShortener.shorten(eventURL, function(err, response){
+										eventURL = response.id;
+										callback(err, eventURL);
+									});
+								},
+								function(eventUrl, callback){
+									GoogleUrlShortener.shorten(settingsURL, function(err, response){
+										settingsURL = response.id;
+										callback(err, eventUrl, settingsURL);
+									});
+								}
+							], function(err, eventUrl, settingsUrl){
+								console.log("URLS %s and %s", eventUrl, settingsUrl);
+								for(var i = 0; i < users.length; ++i) {
 
-									var recipient = user.phoneNumber + user.carrier;
-									Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at": ' + eventURL + '\nAttendance Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsURL, senderCallback(user));
+									var user = users[i];
+
+									var eventEndDate = new Date(event.time);
+									eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS "at" h:MM TT');
+
+									if(user.preferences.receiveTexts) {
+
+										var recipient = user.phoneNumber + user.carrier;
+										Sender.sendSMS(recipient, 'Sports Scheduler', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at": ' + eventUrl + '\nAttendance Ends: ' + eventEndDate + '\nUnsubscribe from notifications: '+settingsUrl, senderCallback(user));
+									}
+
+									if(user.preferences.receiveEmails) {
+
+										Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at":\n' + eventUrl + '\n\nAttendance Ends: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsUrl, senderCallback(user));
+									}
 								}
 
-								if(user.preferences.receiveEmails) {
-
-									Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at":\n' + eventURL + '\n\nAttendance Ends: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsURL, senderCallback(user));
-								}
-							}
-
-							done(null,arg1,arg2);
+								done(null,arg1,arg2);
+							});
+							
 						});
 					});					
 				};
