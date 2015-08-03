@@ -136,18 +136,18 @@ var PrivateFunctions = (function() {
 							async.waterfall([
 								function(callback){
 									GoogleUrlShortener.shorten(eventURL, function(err, response){
-										eventURL = response.id;
-										callback(err, eventURL);
+										eventURL = (err) ? eventURL : response.id;
+										callback(null, eventURL);
 									});
 								},
 								function(eventUrl, callback){
 									GoogleUrlShortener.shorten(settingsURL, function(err, response){
-										settingsURL = response.id;
-										callback(err, eventUrl, settingsURL);
+										settingsURL = (err) ? settingsURL : response.id;
+										callback(null, eventUrl, settingsURL);
 									});
 								}
 							], function(err, eventUrl, settingsUrl){
-								console.log("URLS %s and %s", eventUrl, settingsUrl);
+								console.log("Event URL: %s and Settings URL: %s", eventUrl, settingsUrl);
 								for(var i = 0; i < users.length; ++i) {
 
 									var user = users[i];
