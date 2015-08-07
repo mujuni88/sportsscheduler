@@ -177,6 +177,6 @@ body {
   max-width: 500px; }
   @media only screen and (max-width: 768px) {
     .event-name, .event-address, .group-name, .event-location {
-      max-width: 300px; } }
+      max-width: 250px; } }
 
 /*# sourceMappingURL=core.css.map */

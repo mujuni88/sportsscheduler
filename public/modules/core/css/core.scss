@@ -292,6 +292,6 @@ body{
   word-wrap: break-word; 
   max-width:500px;
   @include xs-screens{
-    max-width: 300px;
+    max-width: 250px;
   }
 }
