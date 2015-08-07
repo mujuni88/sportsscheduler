@@ -172,11 +172,8 @@ body {
     body {
       padding-top: 55px; } }
 
-.event-name, .event-address, .group-name, .event-location {
+.event-name, .event-address, .group-name, .event-location, .event-message {
   word-wrap: break-word;
-  max-width: 500px; }
-  @media only screen and (max-width: 768px) {
-    .event-name, .event-address, .group-name, .event-location {
-      max-width: 250px; } }
+  max-width: 90%; }
 
 /*# sourceMappingURL=core.css.map */

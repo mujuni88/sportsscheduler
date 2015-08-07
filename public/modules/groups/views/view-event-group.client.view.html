@@ -65,7 +65,7 @@
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
             </div>
-            <div class="col-sm-12" ng-if="event.message">
+            <div class="col-sm-12 event-message" ng-if="event.message">
                 <span>Message:</span>
                 <p class="text-primary well well-sm">{{event.message}}</p>
             </div>
