@@ -27,11 +27,11 @@ module.exports = function(app) {
 
 	// Setting up the users authentication api
 	app.route('/api/users').post(users.signup);
-	app.route('/auth/signin').post(users.signin);
+	app.route('/auth/signin').post(users.redirectUrl, users.signin);
 	app.route('/auth/signout').get(users.signout);
 
 	// Setting the facebook oauth routes
-	app.route('/auth/facebook').get(passport.authenticate('facebook', {
+	app.route('/auth/facebook').get(users.redirectUrl, passport.authenticate('facebook', {
 		scope: ['email']
 	}));
 	app.route('/auth/facebook/callback').get(users.oauthCallback('facebook'));
@@ -41,7 +41,7 @@ module.exports = function(app) {
 	app.route('/auth/twitter/callback').get(users.oauthCallback('twitter'));
 
 	// Setting the google oauth routes
-	app.route('/auth/google').get(passport.authenticate('google', {
+	app.route('/auth/google').get(users.redirectUrl, passport.authenticate('google', {
 		scope: [
 			'https://www.googleapis.com/auth/userinfo.profile',
 			'https://www.googleapis.com/auth/userinfo.email'

@@ -168,5 +168,15 @@
 
 body {
   padding-top: 59px; }
+  @media only screen and (max-width: 768px) {
+    body {
+      padding-top: 55px; } }
+
+.event-name, .event-address, .group-name, .event-location {
+  word-wrap: break-word;
+  max-width: 500px; }
+  @media only screen and (max-width: 768px) {
+    .event-name, .event-address, .group-name, .event-location {
+      max-width: 300px; } }
 
 /*# sourceMappingURL=core.css.map */

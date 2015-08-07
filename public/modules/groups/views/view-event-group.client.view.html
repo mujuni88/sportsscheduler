@@ -30,23 +30,31 @@
             <h2 ng-show="!hasVotedYes() && !hasVotedNo() && !hasEventExpired(event.time)" class="text-info">You have not responded</h2>
             <h2 ng-show="!hasVotedYes() && !hasVotedNo() && hasEventExpired(event.time)" class="text-info">You did not respond</h2>
         </div>
-        <div class="page-header">
-            <h1><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i>{{event.name}}
-            <div class="page-header-btns pull-right float-none-xs" ng-hide="hasEventExpired(event.time)">
+        <div class="page-header ">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h1 class="event-name"><i class="glyphicon glyphicon-calendar text-primary spacing-sm-right"></i> {{event.name}}
+            </h1>
+                </div>
+                <div class="col-sm-4">
+                    <h1 class="page-header-btns" ng-hide="hasEventExpired(event.time)">
                 <br class="visible-xs"/>
                 <span>Vote:</span><br class="visible-xs"/>
                 <button class="btn btn-primary btn-sm" ng-hide="hasVotedYes()" ng-class="{disabled:hasVotedYes()}" ng-click="voteYes()">Attending</button>
                 <button class="btn btn-secondary btn-sm" ng-hide="hasVotedNo()" ng-class="{disabled:hasVotedNo()}" ng-click="voteNo()">Not Attending</button>
-            </div>
             </h1>
+                </div>
+            </div>
+            
+            
         </div>
         <section class="row">
             <div class="col-sm-4 vcenter">
                 <ul class="list-unstyled">
-                    <li><span>Location Name:</span> <p class="text-primary">{{event.location.name}}</p></li>
-                    <li ng-if="event.location.address"><span>Address:</span><p class="text-primary">{{event.location.address}}</p></li>
-                    <li><span>Time:</span><p class="text-primary">{{event.time | date:'short'}}</p></li>
-                    <li ng-if="event.created"><span>Created:</span><p class="text-primary">{{event.created | date:'short'}}</p></li>
+                    <li><span>Location Name:</span> <p class="text-primary event-location">{{event.location.name}}</p></li>
+                    <li ng-if="event.location.address"><span>Address:</span><p class="text-primary event-address">{{event.location.address}}</p></li>
+                    <li><span>Time:</span><p class="text-primary event-time">{{event.time | date:'short'}}</p></li>
+                    <li ng-if="event.created"><span>Created:</span><p class="text-primary event-created">{{event.created | date:'short'}}</p></li>
                 </ul>
             </div>
             <div class="col-sm-8 vcenter">
@@ -70,7 +78,7 @@
                     ({{event.attendance.yes.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in event.attendance.yes"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in event.attendance.yes"><p><img width="25px" height="25px" ng-src="{{user.photo}}" alt="" class="img-circle"/> {{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 <div class="col-sm-4">
@@ -81,7 +89,7 @@
                     ({{event.attendance.no.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in event.attendance.no"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in event.attendance.no"><p><img width="25px" height="25px" ng-src="{{user.photo}}" alt="" class="img-circle"/> {{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 <div class="col-sm-4">
@@ -91,7 +99,7 @@
                     ({{unrespUsers.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">
-                    <li data-ng-repeat="user in unrespUsers"><p><i class="glyphicon glyphicon-user text-primary spacing-sm-right"></i>{{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
+                    <li data-ng-repeat="user in unrespUsers"><p><img width="25px" height="25px" ng-src="{{user.photo}}" alt="" class="img-circle"/> {{user.displayName}} <span class="text-info">({{user.username}})</span></p></li>
                 </ul>
                 </div>
                 

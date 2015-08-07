@@ -109,7 +109,7 @@ exports.signout = function(req, res) {
  */
 exports.oauthCallback = function(strategy) {
 	return function(req, res, next) {
-		passport.authenticate(strategy, function(err, user, redirectURL) {
+		passport.authenticate(strategy, function(err, user, redirectUrl) {
 			if (err || !user) {
 				return res.redirect('/#!/signin');
 			}
@@ -118,7 +118,7 @@ exports.oauthCallback = function(strategy) {
 					return res.redirect('/#!/signin');
 				}
 
-				return res.redirect(redirectURL || '/');
+				return res.redirect(req.session.redirectUrl || '/');
 			});
 		})(req, res, next);
 	};
@@ -234,4 +234,15 @@ exports.removeOAuthProvider = function(req, res, next) {
 			}
 		});
 	}
+};
+
+/**
+ * Sets redirectUrl
+ */
+exports.redirectUrl = function(req, res, next){
+	if(!req.isAuthenticated()){
+		req.session.redirectUrl = req.session.redirectUrl || req.originalUrl;
+	}
+
+	return next();
 };

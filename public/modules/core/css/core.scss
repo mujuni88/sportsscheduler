@@ -283,4 +283,15 @@ $lg-screens: 1200px;
 
 body{
   padding-top:59px;
+  @include xs-screens{
+    padding-top:55px;
+  }
+}
+
+.event-name, .event-address, .group-name, .event-location{
+  word-wrap: break-word; 
+  max-width:500px;
+  @include xs-screens{
+    max-width: 300px;
+  }
 }

@@ -2,9 +2,8 @@
 
 angular.module('users').controller('AuthenticationController', AuthenticationController);
 
-function AuthenticationController($scope, $http, $location, Authentication, CarrierFactory, lodash) {
+function AuthenticationController($scope, $state, $rootScope, $http, $location, Authentication, CarrierFactory, lodash) {
 	var _ = lodash;
-
     CarrierFactory.getCarriers().then(function(data){
         $scope.carriers = data;
     });
