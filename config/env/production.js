@@ -2,6 +2,43 @@
 
 module.exports = {
 	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/mean',
+	assets: {
+        lib: {
+            css: [
+                // 'public/modules/**/css/*.csspublic/lib/bootstrap/dist/css/bootstrap.css',
+                // 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+                'public/modules/core/css/bootstrap.css',
+                'public/lib/animate.css/animate.min.css',
+                'public/lib/angular-fx/dist/angular-fx.min.css',
+                'public/lib/angular-xeditable/dist/css/xeditable.min.css',
+                'public/lib/angular-dialog-service/dist/dialogs.min.css',
+                'public/lib/components-font-awesome/css/font-awesome.min.css',
+                'public/lib/angular-growl-v2/build/angular-growl.min.css',
+                'public/lib/ngprogress/ngProgress.min.css'
+            ],
+            js: [
+                'public/lib/angular/angular.js',
+                'public/lib/angular-sanitize/angular-sanitize.min.js',
+                'public/lib/angular-resource/angular-resource.min.js',
+                'public/lib/angular-animate/angular-animate.min.js',
+                'public/lib/angular-ui-router/release/angular-ui-router.min.js',
+                'public/lib/angular-ui-utils/ui-utils.min.js',
+                'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                'public/lib/angular-validation/dist/angular-validation.min.js',
+                'https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false',
+                'public/lib/ng-google-places-autocomplete/src/ngAutocomplete.min.js',
+                'public/lib/ng-lodash/build/ng-lodash.min.js',
+                'public/lib/angular-fx/dist/angular-fx.min.js',
+                'public/lib/angular-xeditable/dist/js/xeditable.min.js',
+                'public/lib/angular-dialog-service/dist/dialogs.min.js',
+                'public/lib/angular-growl-v2/build/angular-growl.min.js',
+                'public/lib/ngprogress/build/ngProgress.min.js',
+                'public/lib/angular-utils-pagination/dirPagination.js'
+            ]
+        },
+		css: 'public/dist/application.min.css',
+		js: 'public/dist/application.js'
+	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || '1707771316114841',
 		clientSecret: process.env.FACEBOOK_SECRET || 'f89244c2b34aa0d893bb10409b0a9ab3',

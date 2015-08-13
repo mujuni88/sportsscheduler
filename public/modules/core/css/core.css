@@ -167,13 +167,45 @@
   line-height: 32px; }
 
 body {
-  padding-top: 59px; }
+  padding-top: 55px;
+  background-color: #E9EDF2; }
   @media only screen and (max-width: 768px) {
     body {
-      padding-top: 55px; } }
+      padding-top: 51px; } }
 
 .event-name, .event-address, .group-name, .event-location, .event-message {
   word-wrap: break-word;
   max-width: 90%; }
+
+@media only screen and (max-width: 480px) {
+  .row, .container, .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0; } }
+
+@media only screen and (max-width: 480px) {
+  .pd-xxs-1 {
+    padding-left: 10px;
+    padding-right: 10px; } }
+
+.hero {
+  padding: 20px 0;
+  margin-bottom: 20px;
+  background-color: #3C4D59;
+  color: #fff; }
+  @media only screen and (max-width: 480px) {
+    .hero {
+      padding-left: 10px;
+      padding-right: 10px; } }
+  .hero .jumbotron {
+    background-color: transparent; }
+    @media only screen and (max-width: 768px) {
+      .hero .jumbotron {
+        padding-left: 0;
+        padding-right: 0; } }
+
+.tab-content .panel {
+  border-top: 0; }
 
 /*# sourceMappingURL=core.css.map */

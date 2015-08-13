@@ -18,7 +18,8 @@ var ApplicationConfiguration = (function() {
 		'720kb.fx',
 		'xeditable',
 		'dialogs.main',
-		'angular-growl'
+		'angular-growl',
+		'angularUtils.directives.dirPagination'
 	];
 
 	// Add a new vertical module
@@ -43,22 +44,31 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName)
-    .config(['$locationProvider',config])
-    .run(['editableOptions','editableThemes', run]);
+    .config(config)
+    .run(run);
 //Then define the init function for starting up the application
 angular.element(document).ready(ready);
 
-function config($locationProvider) {
+function config($locationProvider, paginationTemplateProvider) {
     $locationProvider.hashPrefix('!');
+    paginationTemplateProvider.setPath('lib/angular-utils-pagination/dirPagination.tpl.html');
 }
 
 function run(editableOptions, editableThemes) {
     editableThemes.bs3.buttonsClass = 'btn-sm';
     editableOptions.theme = 'bs3';
 }
+run.$inject = ['editableOptions', 'editableThemes'];
 function ready() {
     //Fixing facebook bug with redirect
     if (window.location.hash === '#_=_') window.location.hash = '#!';
+
+    // Fixing google bug with redirect
+    if (window.location.href[window.location.href.length - 1] === '#' &&
+        // for just the error url (origin + /#)
+        (window.location.href.length - window.location.origin.length) === 2) {
+        window.location.href = window.location.origin + '/#!';
+    }
 
     //Then init the app
     angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
@@ -104,14 +114,8 @@ ApplicationConfiguration.registerModule('validationrule');
 'use strict';
 
 // Configuring the Articles module
-angular.module('articles').run(['Menus',
-	function(Menus) {
-		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Articles', 'articles', 'dropdown', '/articles(/create)?');
-		Menus.addSubMenuItem('topbar', 'articles', 'List Articles', 'articles');
-		Menus.addSubMenuItem('topbar', 'articles', 'New Article', 'articles/create');
-	}
-]);
+angular.module('articles');
+
 'use strict';
 
 // Setting up route
@@ -231,7 +235,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 angular.module('core').config(config);
 
 function config(growlProvider){
-	growlProvider.globalPosition('top-center');
+	growlProvider.globalPosition('bottom-left');
 	// growlProvider.globalDisableCloseButton(true);
 	growlProvider.globalTimeToLive({success: 2000, error: 6000, warning: 6000, info: 4000});
 }
@@ -257,55 +261,10 @@ function HeaderController($scope, $state, Authentication, Menus, Search, Users, 
     });
 
     function onSelect(group) {
-        if(!canUserJoinGroup(group)){
-        	_notifyUser(group);
-        	return;
-        }
-
-        _joinGroupAndUser(group);
-    }
-
-    function addGroupToUser(group) {
-        user.joinedGroups.push(group);
-        var ret = Users.save({userId:user._id}, user, function(data){
-            return data;
+        $state.go('viewGroup.listEvents.viewEvents',{
+            groupId:group._id
         });
-
-        return ret.$promise;
     }
-    function _joinGroupAndUser(group) {
-
-        user.joinedGroups.push(group);
-        return UserService.joinGroupAndUser(user, group).then(function(response){
-            Authentication.user = response.data;
-            $state.go('viewGroup.listMembers.viewMembers',{
-                groupId:group._id
-            });
-        }, function(response){debugger;});
-    }
-
-    function canUserJoinGroup(group) {
-        return (!_hasUserJoinedGroup(group) && !(_hasUserCreatedGroup(group)));
-    }
-
-    function _hasUserJoinedGroup(group) {
-        return _.include(_.pluck(user.joinedGroup, '_id'), group._id);
-    }
-
-    function _hasUserCreatedGroup(group) {
-        return _.include(_.pluck(user.createdGroup, '_id'), group._id);
-    }
-
-    function _notifyUser(group) {
-        var header = 'Join Group',
-            msg = 'You have already joined <span class="text-primary">' + group.name + '</span>.',
-            opts = {
-                size: 'sm',
-                windowClass: 'modal-btn-sm'
-            };
-        dialogs.notify(header, msg, opts);
-    }
-
 
 }
 HeaderController.$inject = ['$scope', '$state', 'Authentication', 'Menus', 'Search', 'Users', 'dialogs', 'lodash', 'UserService'];
@@ -313,12 +272,61 @@ HeaderController.$inject = ['$scope', '$state', 'Authentication', 'Menus', 'Sear
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication','$animate',
+	function($scope, Authentication, $animate) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+		$animate.enabled(false);
+		var slides = $scope.slides = [];
+		
+		for (var i=0; i<4; i++) {
+			addSlides();
+		}
+
+		function addSlides() {
+			var newWidth = 600 + slides.length + 1;
+			slides.push({
+				image: 'http://placekitten.com/' + newWidth + '/300',
+				text: ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
+				['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
+			});
+		}
 	}
 ]);
+
+'use strict';
+
+angular.module('core').directive('dynFbCommentBox', dynFbCommentBox);
+
+function dynFbCommentBox() {
+    function createHTML(attrs) {
+        return '<div class="fb-comments" ' +
+            'data-href="' + attrs.href + '" ' +
+            'data-numposts="' + attrs.numposts + '" ' +
+            'data-colorsheme="' + attrs.colorscheme + '" ' +
+            'data-width="' + attrs.width + '">' +
+            '</div>';
+    }
+
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function postLink(scope, elem, attrs) {
+            attrs.$observe('pageHref', function (newValue) {
+                var htmlAttrs = {
+                    href            : newValue,
+                    numposts        : attrs.numposts    || 5,
+                    colorscheme     : attrs.colorscheme || 'light',
+                    width           : attrs.width || '100%'
+                };
+
+                elem.html(createHTML(htmlAttrs));
+                FB.XFBML.parse(elem[0]);
+            });
+        }
+    };
+}
+
 (function(){
     "use strict";
     /**
@@ -556,15 +564,31 @@ angular.module('core').service('Menus', [
 ]);
 'use strict';
 
+angular.module('groups').factory('PaginationService', PaginationService);
+
+function PaginationService($http) {
+    function Pagination(url) {
+        this.url = url || '';
+    }
+
+    Pagination.prototype = {
+        getResultsPage: function (pageNumber, count) {
+            return $http.get(this.url + '?page=' + pageNumber + '&count=' + count)
+                .then(function (result) {
+                    return result.data;
+                });
+        }
+    };
+
+    return Pagination;
+}
+PaginationService.$inject = ['$http'];
+
+'use strict';
+
 // Configuring the Articles module
-angular.module('events').run(['Menus',
-	function(Menus) {
-		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Events', 'events', 'dropdown', '/events(/create)?');
-		Menus.addSubMenuItem('topbar', 'events', 'List Events', 'events');
-		Menus.addSubMenuItem('topbar', 'events', 'New Event', 'events/create');
-	}
-]);
+angular.module('events');
+
 'use strict';
 
 //Setting up route
@@ -594,20 +618,24 @@ angular.module('events').config(['$stateProvider',
 // Events controller
 angular.module('events').controller('EventsController', EventsController);
 
-function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash) {
+function EventsController($scope, $state, $stateParams, $location, Authentication, Events, growl, lodash, $rootScope,$q, dialogs) {
     var _ = lodash;
+    _.mixin({
+        rejectList: rejectList
+    });
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     if (!$scope.user) {
-        $location.path('/')
+        $location.path('/');
     }
     $scope.state = $state;
     $scope.stateParams = $stateParams;
-    $scope.event = $scope.event || {};
-    $scope.event = {
-        voteEnabled: true,
-        minimumVotes: 0
-    };
+    
+    var MS_PER_MINUTE = 60000;
+    $scope.event = $scope.event || {
+            attndNotifMins:30
+        };
+
     // Create new Event
     $scope.create = create;
     // Remove existing Event
@@ -638,22 +666,39 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     };
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
-    $scope.dateChange = dateChange;
+   
     // Timepicker
     var date = new Date();
-    var plusTwoHrs = (date.getHours() + 3);
-    date.setHours(plusTwoHrs);
+    date.setHours(date.getHours() + 1);
     $scope.event.time = date;
-    var now, hrsDiff, time, HRS = 2,
-        HRS_MS = HRS * 60 * 60 * 1000;
-    $scope.timeChange = timeChange;
+    $scope.attndTimeMin = 0;
+    $scope.attndTimeMax = 60;
+
     // watch if places api changes
     $scope.$watch("details.geometry.location", watchLocation);
+    $scope.$watch("event.attndNotifMins", watchEventAttndMins);
+    $scope.$watch("event.time", watchEventTime);
+    
+    $scope.$on('voted', watchVotes);
     $scope.hasEventExpired = hasEventExpired;
     $scope.voteYes = voteYes;
     $scope.voteNo = voteNo;
     $scope.hasVotedYes = hasVotedYes;
     $scope.hasVotedNo = hasVotedNo;
+    $scope.group = $scope.$parent.group;
+    var findOneGroup = $scope.$parent.findOne;
+
+    // pagination
+    $scope.pagination = {
+        current: 1,
+        totalEvents: 0,
+        eventsPerPage:1
+    };
+
+    $scope.canCreateEvent = canCreateEvent;
+    var MAX_EVENTS = 5;
+    $scope.MAX_EVENTS =  MAX_EVENTS;
+    $scope.getTimeDiff = getTimeDiff;
 
     function getDate() {
         $scope.event.date = new Date();
@@ -676,21 +721,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $event.stopPropagation();
         $scope.opened = true;
     }
-
-    function dateChange() {
-        $scope.dateError = (!$scope.event.date) ? true : false;
-    }
-
-    function timeChange() {
-        now = new Date();
-        time = now.getTime();
-        hrsDiff = $scope.event.time.getTime() - time;
-        $scope.timeError = (hrsDiff < HRS_MS) ? true : false;
-    };
+    
 
     function hasEventExpired(eventTime) {
         var now = Date.now(),
-            eD = Date.parse(eventTime);
+            eD = Date.parse(eventTime),
+            hrsDiff;
+        
         hrsDiff = eD - now;
         return (hrsDiff < 0) ? true : false;
     }
@@ -703,15 +740,31 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         $scope.event.location.lng = newVal.lng();
     }
 
+    function watchVotes(data) {
+        $scope.unrespUsers = getUnresponsiveUsers();
+    }
+
     function create() {
-        if ($scope.timeError || $scope.dateError) return;
+        if(!_canCreateEvent()){
+            _notifyEventMax();
+            return;
+        }        
+        if (_.isUndefined($scope.event.attndNotifMins) ||
+            _.isNaN($scope.event.attndNotifMins) ||
+            $scope.event.attndNotifMins < $scope.attndNotifMin ||
+            $scope.event.attndNotifMins > $scope.attndNotifMax) {
+            debugger;
+            $scope.event.attndNotifMins = 0;
+        }
+        
         var event = new Events($scope.event),
             params = {
                 groupId: $stateParams.groupId
             };
         event.group = $stateParams.groupId;
-        event.$save(params, function(data) {
+        event.$save(params, function (data) {
             $scope.event = event;
+            _refreshData();
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
             });
@@ -724,8 +777,9 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
         var params = {
             eventId: $stateParams.eventId
         };
-        var event = Events.remove(params, function() {
+        var event = Events.remove(params, function () {
             $scope.event = event;
+            _refreshData();
             $state.go('viewGroup.listEvents.viewEvents');
             _notifySuccess('Event successfully removed');
         });
@@ -733,15 +787,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function update() {
-        if ($scope.timeError || $scope.dateError) {
-            return _getPromise(false, '');
-        };
         var params = {
             eventId: $stateParams.eventId
         };
         $scope.event.group = $stateParams.groupId;
-        var event = Events.update(params, $scope.event, function(data) {
+        var event = Events.update(params, $scope.event, function (data) {
             $scope.event = data;
+            _refreshData();
             $state.go('viewGroup.listEvents.viewEvent', {
                 eventId: $scope.event._id
             });
@@ -750,28 +802,29 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function find() {
-        return $scope.events = Events.query();
-    };
+        $scope.events = Events.query({
+            groupId: $stateParams.groupId
+        });
+    }
 
     function findOne() {
         var event = Events.get({
             eventId: $stateParams.eventId
-        }, function() {
+        }, function () {
             $scope.event = event;
+            $scope.unrespUsers = getUnresponsiveUsers();
         });
         return event.$promise;
-    };
+    }
 
     function _notifySuccess(text) {
         text = text || 'Event updated successfully';
-        growl.success(text, {
-            title: text
-        });
+        growl.success(text);
     }
 
     function voteYes() {
         _addUserToVoteYes($scope.user);
-        update().then(success, failure);
+        update().then(success, failure).finally(final);
 
         function success(data) {
             _notifySuccess('Voted successfully');
@@ -779,13 +832,19 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
         function failure(data) {
             _deleteUserFromYes($scope.user);
+
+            // only add to yes, if they were previously there
             _addUserToVoteNo($scope.user);
+        }
+
+        function final(data) {
+            $rootScope.$broadcast('voted', data);
         }
     }
 
     function voteNo() {
         _addUserToVoteNo($scope.user);
-        update().then(success, failure);
+        update().then(success, failure).finally(final);
 
         function success(data) {
             _notifySuccess('Voted successfully');
@@ -793,7 +852,13 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
         function failure(data) {
             _deleteUserFromNo($scope.user);
+
+            // only add to yes, if they were previously there
             _addUserToVoteYes($scope.user);
+        }
+
+        function final(data) {
+            $rootScope.$broadcast('voted', data);
         }
     }
 
@@ -803,7 +868,7 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             _deleteUserFromNo(user);
         }
         if (!_hasUserVotedYes(user)) {
-            $scope.event.votes.yes.push(user);
+            $scope.event.attendance.yes.push(user);
         }
     }
 
@@ -813,34 +878,22 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
             _deleteUserFromYes(user);
         }
         if (!_hasUserVotedNo(user)) {
-            $scope.event.votes.no.push(user);
+            $scope.event.attendance.no.push(user);
         }
     }
 
     function _deleteUserFromYes(user) {
         user = user || $scope.user;
-        $scope.event.votes.yes = _.reject($scope.event.votes.yes, function(item) {
+        $scope.event.attendance.yes = _.reject($scope.event.attendance.yes, function (item) {
             return _.isEqual(item._id, user._id);
         });
     }
 
     function _deleteUserFromNo(user) {
         user = user || $scope.user;
-        $scope.event.votes.no = _.reject($scope.event.votes.no, function(item) {
+        $scope.event.attendance.no = _.reject($scope.event.attendance.no, function (item) {
             return _.isEqual(item._id, user._id);
         });
-    }
-
-    function _getPromise(isSuccess, data) {
-        var deferred = $q.defer();
-        setTimeout(function() {
-            if (isSuccess) {
-                deferred.resolve(data);
-            } else {
-                deferred.reject(data);
-            }
-        }, 1);
-        return deferred.promise;
     }
 
     function hasVotedYes(user) {
@@ -853,15 +906,97 @@ function EventsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _hasUserVotedYes(user) {
         user = user || $scope.user;
-        return _.include(_.pluck($scope.event.votes.yes, '_id'), user._id);
+        if (_.isUndefined($scope.event.attendance)) {
+            return false;
+        }
+        return _.include(_.pluck($scope.event.attendance.yes, '_id'), user._id);
     }
 
     function _hasUserVotedNo(user) {
         user = user || $scope.user;
-        return _.include(_.pluck($scope.event.votes.no, '_id'), user._id);
+        if (_.isUndefined($scope.event.attendance)) {
+            return false;
+        }
+        return _.include(_.pluck($scope.event.attendance.no, '_id'), user._id);
     }
+
+    function rejectList(list, rej, key) {
+        rej.forEach(function (item) {
+            list = _(list).reject(function (it) {
+                return item[key] === it[key];
+            }).value();
+        });
+        return list;
+    }
+
+    function getUnresponsiveUsers(members) {
+        members = members || $scope.group.members;
+        return _(members)
+            .rejectList($scope.event.attendance.no, '_id')
+            .rejectList($scope.event.attendance.yes, '_id')
+            .value();
+    }
+    
+    function canCreateEvent(){
+        if(!_canCreateEvent()){
+            _notifyEventMax();
+            return;
+        }
+
+        $state.go('viewGroup.listEvents.addEvents',{
+            groupId:$stateParams.groupId
+        });
+    }
+    
+    function _canCreateEvent(){
+        if(!_.isUndefined($scope.events)){
+            return ($scope.events.length < MAX_EVENTS);
+        }
+        
+        if(_.isUndefined($scope.group.events.length)){
+            growl.warning("Internal error :(");
+            return false;
+        }
+        
+        return ($scope.group.events.length < MAX_EVENTS);
+    }
+    
+    function _notifyEventMax(){
+        var header = 'Add Event',
+            msg = 'You have reached the maximum number(5) of events allowed. Please delete one to continue.',
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+        dialogs.notify(header, msg, opts);
+    }
+    
+    function _refreshData(){
+        find();
+        findOneGroup();
+    }
+    
+    function watchEventAttndMins(newVal, oldVal){
+        if(!newVal){
+            $scope.attndNotifError = true;
+            newVal = 0;
+        } else{
+            $scope.attndNotifError = false;
+        }
+        $scope.attndNotifTime = new Date(Date.parse($scope.event.time)- newVal * MS_PER_MINUTE);
+    }
+    
+    function watchEventTime(newVal, oldVal){
+        $scope.attndNotifTime = new Date(Date.parse(newVal)- $scope.event.attndNotifMins * MS_PER_MINUTE);
+    }
+    
+    
+    function getTimeDiff(date, mins){
+        return new Date(Date.parse(date) - mins * MS_PER_MINUTE);
+    }
+    
 }
-EventsController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Events', 'growl', 'lodash'];
+EventsController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Events', 'growl', 'lodash', '$rootScope', '$q', 'dialogs'];
 
 'use strict';
 
@@ -953,12 +1088,12 @@ angular.module('groups').config(['$stateProvider',
 // Groups controller
 angular.module('groups').controller('GroupsController', GroupsController);
 
-function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl) {
+function GroupsController($scope, $state, $stateParams, $location, Authentication, Groups, Search, lodash, dialogs, $q, growl, Users, UserService) {
     var _ = lodash;
     $scope.authentication = Authentication;
-    $scope.user = Authentication.user;
+    $scope.user = $scope.authentication.user;
     if (!$scope.user) {
-        $location.path('/')
+        $location.path('/');
     }
 
     $scope.$state = $state;
@@ -986,9 +1121,24 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     $scope.addMember = addMember;
     $scope.isAdmin = isAdmin;
     $scope.isOwner = isOwner;
+    $scope.isLoggedInOwner = isLoggedInOwner;
     $scope.makeAdmin = makeAdmin;
     $scope.removeAdmin = removeAdmin;
     $scope.canRemoveAdmin = canRemoveAdmin;
+    $scope.isMember = isMember;
+    $scope.joinGroup = joinGroup;
+    $scope.absUrl = $location.absUrl();
+
+    // user functions
+    $scope.getUser = getUser;
+    $scope.canRevokeAdminRights = canRevokeAdminRights;
+    $scope.canMakeAdmin = canMakeAdmin;
+    $scope.canRemoveMember = canRemoveMember;
+    $scope.canRmMember = canRmMember;
+    $scope.canRmvMember = canRmvMember;
+    $scope._isAdmin = _isAdmin;
+    
+    $scope.shareGroup = shareGroup;
 
     // Group Functions
     function create() {
@@ -996,7 +1146,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         var group = new Groups($scope.group);
         // Redirect after save
         return group.$save(function(data) {
-            _updateUser(data);
             $state.go('viewGroup.listMembers.viewMembers',{
                 groupId:data._id
             });
@@ -1016,7 +1165,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function find() {
         $scope.groups = Groups.query();
-        _getUser();
     }
     // Member functions
     function _addIsAdminAttr() {
@@ -1034,12 +1182,7 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     function findOne() {
         return $scope.group = Groups.get({
             groupId: $stateParams.groupId
-        }, function() {
-            $scope.group.members = _.uniq(_.union($scope.group.members, $scope.group.admins), '_id');
-            _addIsAdminAttr();
         });
-        $scope.tempMembers = [];
-        _getUser();     
     }
 
     function onSelect($model) {
@@ -1056,11 +1199,11 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         }
     }
 
-    function removeMember(index) {
-        var member = _getMember(index);
+    function removeMember(member) {
+        // var member = _getMember(index);
         if (member.isAdmin) {
             if (!canRemoveAdmin()) {
-                _notifyCannotRemoveAdmin();
+                _notifyCannotRemoveOwner();
                 return _getPromise(false, member);
             }
 
@@ -1071,7 +1214,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
 
         function success() {
-            _addIsAdminAttr();
             _notifySuccess('Member ' + member.username + ' removed');
         }
 
@@ -1090,7 +1232,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
 
         function success() {
-            _addIsAdminAttr();
         }
 
         function failure() {
@@ -1107,7 +1248,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(function() {
             $state.go('viewGroup.listMembers.viewMembers');
             $scope.tempMembers = [];
-            _addIsAdminAttr();
             _notifySuccess('Member successfully added');
 
         });
@@ -1131,11 +1271,23 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
 
     function isOwner(member){
+        if(_.isUndefined($scope.group.createdBy)){
+            return false;
+        }
+        
         if(member._id !== $scope.group.createdBy._id){
             return false;
         }
 
         return _isUserInAdmins($scope.group.createdBy);
+    }
+
+    function isLoggedInOwner(){
+        if(_.isUndefined($scope.group.createdBy)){
+            return false;
+        }
+
+        return $scope.group.createdBy._id === $scope.authentication.user._id;
     }
 
     function makeAdmin(member) {
@@ -1146,7 +1298,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
         // on succes, add isAdmin & add to member array
         function success() {
-            _addIsAdminAttr();
             _notifySuccess('Admin successfully added');
         }
         // on failure, remove from admins array
@@ -1156,8 +1307,8 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
     }
 
     function removeAdmin(member) {
-        if (!canRemoveAdmin()) {
-            _notifyCannotRemoveAdmin();
+        if (isOwner(member)) {
+            _notifyCannotRemoveOwner();
             return _getPromise(false, member);
         }
         // remove member from admin array
@@ -1166,7 +1317,6 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return update().then(success, failure);
         // on succes, add isAdmin & add to member array
         function success() {
-            _addIsAdminAttr();
              _notifySuccess('Admin successfully removed');
         }
         // on failure, add member back to admins
@@ -1179,9 +1329,9 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
         return _.size($scope.group.admins) > 1;
     }
 
-    function _notifyCannotRemoveAdmin() {
-        var header = 'Remove Admin',
-            msg = 'Group requires an admin. Assign admin rights to a member in order to remove one',
+    function _notifyCannotRemoveOwner() {
+        var header = 'Remove Owner',
+            msg = 'Can not remove the owner',
             opts = {
                 size: 'sm',
                 windowClass: 'modal-btn-sm'
@@ -1251,24 +1401,93 @@ function GroupsController($scope, $state, $stateParams, $location, Authenticatio
 
     function _notifySuccess(text){
         text = text || 'Group successfully updated';
-        growl.success(text, {title:text});
+        growl.success(text);
     }
 
-    function _updateUser(group){
-        $scope.user.createdGroups.push(group);
-        Authentication.user = $scope.user;
+    function getUser(){
+        var user = Users.get({
+            userId: $scope.user._id
+        }, function() {
+            Authentication.user = user;
+            $scope.user = user;
+        });
+        return user.$promise;
     }
 
-    function _getUser(){
-        $scope.user = Authentication.user;
+    // Checks whether the logged in user is a member of the group
+    function isMember(){
+        return _isUserInMembers($scope.user);
+    }
+
+    function joinGroup(){
+        _addMember($scope.user);
+        update().then(function() {
+            $state.go('viewGroup.listMembers.viewMembers');
+            _notifySuccess('You are now a member');
+        }, function(){
+            _removeMember($scope.user);
+        });
+    }
+
+    function _joinGroup(user, group){
+        return UserService.joinGroupAndUser(user, group);
+    }
+
+    function canRevokeAdminRights(member){
+        return ( member.isAdmin && !isOwner(member) && isLoggedInAdmin(member)) || ( member.isAdmin && isLoggedInOwner() && !isOwner(member) );
+    }
+
+    function canMakeAdmin(member){
+        return member.isAdmin;
+    }
+
+    function canRemoveMember(member){
+        return !member.isAdmin ||
+            ( !isOwner(member) && isLoggedInAdmin(member)) ||
+            ( isLoggedInOwner() && !isOwner(member) );
+    }
+
+    function canRmMember(member){
+        return ( !isOwner(member) && isLoggedInOwner() );
+    }
+
+    function canRmvMember(member){
+        return ( !isOwner(member) && !member.isAdmin && !isLoggedInOwner() );
+    }
+
+    function _isAdmin(member){
+        return ( member.isAdmin && !isOwner(member) );
+    }
+    
+    function isLoggedInAdmin(member){
+        if(_.isUndefined($scope.authentication.user._id)){
+            return false;
+        }
+
+        return member._id === $scope.authentication.user._id;
+    }
+    
+    function shareGroup(){
+        var header = 'Share Group',
+            msg = ['<p>Want people to join this group?</p>',
+                '<ul>',
+                '<li>Share group name <br><a href="'+$location.absUrl()+'">'+$scope.group.name+'</a></li>',
+                '<li>Search for the group</li>',
+                '<li>Click Join Group</li>',
+                '</ul>'].join(' '),
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+        dialogs.notify(header, msg, opts);
     }
 }
-GroupsController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups', 'Search', 'lodash', 'dialogs', '$q', 'growl'];
+GroupsController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Groups', 'Search', 'lodash', 'dialogs', '$q', 'growl', 'Users', 'UserService'];
 
 'use strict';
 angular.module('groups').factory('GroupEvents', GroupEvents);
 
-function GroupEvents($http) {
+function GroupEvents($http, $q) {
     var service = {
         create: create,
         get: get,
@@ -1318,7 +1537,6 @@ function GroupEvents($http) {
         // server (or what not handles properly - ex. server error), then we
         // may have to normalize it on our end, as best we can.
         
-        debugger;
         if (!angular.isObject(response.data) || !response.data.message) {
             return ($q.reject("An unknown error occurred."));
         }
@@ -1328,7 +1546,6 @@ function GroupEvents($http) {
     // I transform the successful response, unwrapping the application data
     // from the API response payload.
     function handleSuccess(response) {
-    	debugger;
         return (response.data);
     }
 
@@ -1345,7 +1562,7 @@ function GroupEvents($http) {
     }
 
 }
-GroupEvents.$inject = ['$http'];
+GroupEvents.$inject = ['$http', '$q'];
 
 'use strict';
 
@@ -1449,7 +1666,6 @@ function MembersController($scope, $state, $stateParams, $location, Authenticati
     }
 
     function onSelect($model) {
-        debugger;
         var tempMembers = $scope.tempMembers;
         tempMembers.push($model);
 
@@ -1885,93 +2101,99 @@ config.$inject = ['$httpProvider'];
 
 // Setting up route
 angular.module('users').config(['$stateProvider',
-	function($stateProvider) {
-		// Users state routing
-		$stateProvider.
-		state('profile', {
-			url: '/settings/profile',
-			templateUrl: 'modules/users/views/settings/edit-profile.client.view.html'
-		}).
-		state('password', {
-			url: '/settings/password',
-			templateUrl: 'modules/users/views/settings/change-password.client.view.html'
-		}).
-		state('accounts', {
-			url: '/settings/accounts',
-			templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
-		}).
-		state('signup', {
-			url: '/signup',
-			templateUrl: 'modules/users/views/authentication/signup.client.view.html'
-		}).
-		state('signin', {
-			url: '/signin',
-			templateUrl: 'modules/users/views/authentication/signin.client.view.html'
-		}).
-		state('forgot', {
-			url: '/password/forgot',
-			templateUrl: 'modules/users/views/password/forgot-password.client.view.html'
-		}).
-		state('reset-invlaid', {
-			url: '/password/reset/invalid',
-			templateUrl: 'modules/users/views/password/reset-password-invalid.client.view.html'
-		}).
-		state('reset-success', {
-			url: '/password/reset/success',
-			templateUrl: 'modules/users/views/password/reset-password-success.client.view.html'
-		}).
-		state('reset', {
-			url: '/password/reset/:token',
-			templateUrl: 'modules/users/views/password/reset-password.client.view.html'
-		});
-	}
+    function ($stateProvider) {
+        // Users state routing
+        $stateProvider.
+            state('settings', {
+                url: '/settings/me',
+                templateUrl: 'modules/users/views/settings/settings.client.view.html'
+            }).
+            state('settings.profile', {
+                url: '/profile',
+                templateUrl: 'modules/users/views/settings/edit-profile.client.view.html'
+            }).
+            state('settings.notifications', {
+                url: '/notifications',
+                templateUrl: 'modules/users/views/settings/edit-notifications.client.view.html'
+            }).
+            state('settings.password', {
+                url: '/password',
+                templateUrl: 'modules/users/views/settings/change-password.client.view.html'
+            }).
+            state('settings.accounts', {
+                url: '/accounts',
+                templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
+            }).
+            state('signup', {
+                url: '/signup',
+                templateUrl: 'modules/users/views/authentication/signup.client.view.html'
+            }).
+            state('signin', {
+                url: '/signin',
+                templateUrl: 'modules/users/views/authentication/signin.client.view.html'
+            }).
+            state('forgot', {
+                url: '/password/forgot',
+                templateUrl: 'modules/users/views/password/forgot-password.client.view.html'
+            }).
+            state('reset-invlaid', {
+                url: '/password/reset/invalid',
+                templateUrl: 'modules/users/views/password/reset-password-invalid.client.view.html'
+            }).
+            state('reset-success', {
+                url: '/password/reset/success',
+                templateUrl: 'modules/users/views/password/reset-password-success.client.view.html'
+            }).
+            state('reset', {
+                url: '/password/reset/:token',
+                templateUrl: 'modules/users/views/password/reset-password.client.view.html'
+            });
+    }
 ]);
+
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication','CarrierFactory',
-	function($scope, $http, $location, Authentication, CarrierFactory) {
+angular.module('users').controller('AuthenticationController', AuthenticationController);
 
-        CarrierFactory.getCarriers().then(function(data){
-            $scope.carriers = data;
-        });
+function AuthenticationController($scope, $state, $rootScope, $http, $location, Authentication, CarrierFactory, lodash) {
+	var _ = lodash;
+    CarrierFactory.getCarriers().then(function(data){
+        $scope.carriers = data;
+    });
 
-		$scope.authentication = Authentication;
+	$scope.authentication = Authentication;
 
-		// If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/');
+	// If user is signed in then redirect back home
+	if ($scope.authentication.user) $location.path('/');
 
-		$scope.signup = function() {
-			$scope.credentials.carrier = $scope.credentials.carrier.addr;
+	$scope.signup = function() {
+		$scope.credentials.carrier = (_.isUndefined($scope.credentials.carrier)) ? '' : $scope.credentials.carrier.addr;
 
-			$http.post('/api/users', $scope.credentials).success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+		$http.post('/api/users', $scope.credentials).success(function(response) {
+			// If successful we assign the response to the global user model
+			$scope.authentication.user = response;
 
-				// And redirect to the index page
-				$location.path('/');
-			}).error(function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
-			});
-		};
+			// And redirect to the index page
+			$location.path('/');
+		});
+	};
 
-		$scope.signin = function() {
-			$http.post('/auth/signin', $scope.credentials).success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+	$scope.signin = function() {
+		$http.post('/auth/signin', $scope.credentials).success(function(response) {
+			// If successful we assign the response to the global user model
+			$scope.authentication.user = response;
 
-				// And redirect to the index page
-				$location.path('/');
-			}).error(function(errorResponse) {
-                $scope.error = errorResponse.clientMessage;
-			});
-		};
+			// And redirect to the index page
+			$location.path('/');
+		});
+	};
 
-        $scope.confirmPassword = function(){
-            var password = $scope.credentials.password || '';
-            $scope.isPasswordError =  (password.trimRight() === $scope.credentials.confirmPassword.trimRight());
-        };
-	}
-]);
+    $scope.confirmPassword = function(){
+        var password = $scope.credentials.password || '';
+        $scope.isPasswordError =  (password.trimRight() === $scope.credentials.confirmPassword.trimRight());
+    };
+}
+AuthenticationController.$inject = ['$scope', '$state', '$rootScope', '$http', '$location', 'Authentication', 'CarrierFactory', 'lodash'];
 
 'use strict';
 
@@ -2019,76 +2241,111 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 ]);
 
 'use strict';
+angular.module('users').controller('SettingsController', SettingsController);
 
-angular.module('users').controller('SettingsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-	function($scope, $http, $location, Users, Authentication) {
-		$scope.user = Authentication.user;
+function SettingsController($scope, $http, $state, $location, Users, Authentication, growl, $window, CarrierFactory, lodash, $validation, dialogs) {
+    var _ = lodash;
+    $scope.user = Authentication.user;
+    $scope.authentication = Authentication;
+    $scope.$state = $state;
+    CarrierFactory.getCarriers().then(function(data) {
+        $scope.carriers = data;
+    });
+    // If user is not signed in then redirect back home
+    if (!$scope.user) $location.path('/');
+    // Check if there are additional accounts 
+    $scope.hasConnectedAdditionalSocialAccounts = hasConnectedAdditionalSocialAccounts;
+    $scope.changeUserPassword = changeUserPassword;
+    $scope.isConnectedSocialAccount = isConnectedSocialAccount;
+    $scope.removeUserSocialAccount = removeUserSocialAccount;
+    $scope.updateUserProfile = updateUserProfile;
+    $scope.canText = canText;
+    $scope.user.phoneNumber =  ($validation.getExpression('phone').test($scope.user.phoneNumber)) ? $scope.user.phoneNumber : null;
 
-		// If user is not signed in then redirect back home
-		if (!$scope.user) $location.path('/');
+    function hasConnectedAdditionalSocialAccounts(provider) {
+        for (var i in $scope.user.additionalProvidersData) {
+            return true;
+        }
+        return false;
+    };
+    // Check if provider is already in use with current user
+    function isConnectedSocialAccount(provider) {
+        return $scope.user.provider === provider || ($scope.user.additionalProvidersData && $scope.user.additionalProvidersData[provider]);
+    };
+    // Remove a user social account
+    function removeUserSocialAccount(provider) {
+        $scope.success = $scope.error = null;
+        $http.delete('/users/accounts', {
+            params: {
+                provider: provider
+            }
+        }).success(function(response) {
+            // If successful show success message and clear form
+            $scope.success = true;
+            $scope.user = Authentication.user = response;
+            _notifySuccess();
+        });
+    };
+    // Update a user profile
+    function updateUserProfile(isValid) {
+        if (isValid) {
+            $scope.success = $scope.error = null;
+            var user = new Users($scope.user);
+            user.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                _notifySuccess();
+            });
+        } else {
+            $scope.submitted = true;
+        }
+    };
+    // Change user password
+    function changeUserPassword() {
+        $scope.success = $scope.error = null;
+        $http.post('/users/password', $scope.passwordDetails).success(function(response) {
+            // If successful show success message and clear form
+            $scope.success = true;
+            $scope.passwordDetails = null;
+            _notifySuccess();
+            $window.location = '/auth/signout';
+        });
+    };
 
-		// Check if there are additional accounts 
-		$scope.hasConnectedAdditionalSocialAccounts = function(provider) {
-			for (var i in $scope.user.additionalProvidersData) {
-				return true;
-			}
+    function _notifySuccess(text) {
+        text = text || 'Settings Saved Successfully';
+        growl.success(text);
+    }
 
-			return false;
-		};
+    function userHasPhone() {
+        return $validation.getExpression('phone').test($scope.user.phoneNumber);
+    }
 
-		// Check if provider is already in use with current user
-		$scope.isConnectedSocialAccount = function(provider) {
-			return $scope.user.provider === provider || ($scope.user.additionalProvidersData && $scope.user.additionalProvidersData[provider]);
-		};
+    function userHasCarrier() {
+        return !_.isUndefined($scope.user.carrier) && !_.isEmpty($scope.user.carrier);
+    }
 
-		// Remove a user social account
-		$scope.removeUserSocialAccount = function(provider) {
-			$scope.success = $scope.error = null;
+    function alertSetPhone() {
+        var header = 'Text Message',
+            msg = 'In order to receive text messages, make sure your phone number and carrier are correct. To verify, go to your profile settings.<br><br> Do you want to verify?',
+            opts = {
+                size: 'sm',
+                windowClass: 'modal-btn-sm'
+            };
+            var dlg = dialogs.confirm(header, msg, opts);
+        		dlg.result.then(function(btn){
+						$state.go('settings.profile');
+					});
+    }
 
-			$http.delete('/users/accounts', {
-				params: {
-					provider: provider
-				}
-			}).success(function(response) {
-				// If successful show success message and clear form
-				$scope.success = true;
-				$scope.user = Authentication.user = response;
-			}).error(function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
-			});
-		};
+    function canText() {
+        if (userHasCarrier() === true && userHasPhone() === true) {return}
 
-		// Update a user profile
-		$scope.updateUserProfile = function(isValid) {
-			if (isValid){
-				$scope.success = $scope.error = null;
-				var user = new Users($scope.user);
-	
-				user.$update(function(response) {
-					$scope.success = true;
-					Authentication.user = response;
-				}, function(errorResponse) {
-					$scope.error = errorResponse.clientMessage;
-				});
-			} else {
-				$scope.submitted = true;
-			}
-		};
-
-		// Change user password
-		$scope.changeUserPassword = function() {
-			$scope.success = $scope.error = null;
-
-			$http.post('/users/password', $scope.passwordDetails).success(function(response) {
-				// If successful show success message and clear form
-				$scope.success = true;
-				$scope.passwordDetails = null;
-			}).error(function(errorResponse) {
-				$scope.error = errorResponse.clientMessage;
-			});
-		};
-	}
-]);
+        $scope.user.preferences.receiveTexts = false;
+        alertSetPhone();
+    }
+}
+SettingsController.$inject = ['$scope', '$http', '$state', '$location', 'Users', 'Authentication', 'growl', '$window', 'CarrierFactory', 'lodash', '$validation', 'dialogs'];
 
 'use strict';
 
@@ -2127,23 +2384,24 @@ Authorization.$inject = ['$rootScope', '$state', 'authentication'];
 
     function HttpProviderInterceptor($q, $location, Authentication, growl) {
         var provider =  {
-            responseError: responseError
+            'responseError': responseError
         };
         
         return provider;
-
+        
         function responseError(rejection) {
+
             switch (rejection.status) {
                 case 400:
                     if(rejection.data){
                         var data = rejection.data, config = {};
                         data.clientMessage.forEach(function(msg){
                             config.title = msg;
-                            growl.warning(msg, config);
+                            growl.warning(msg);
                         });
                         data.devMessage.forEach(function(msg){
                             config.title = msg;
-                            growl.warning(msg,config);
+                            growl.warning(msg);
 
                         });
                     }
@@ -2158,6 +2416,11 @@ Authorization.$inject = ['$rootScope', '$state', 'authentication'];
                 case 403:
                     // Add unauthorized behaviour 
                     break;
+                case 500:
+                    var config = {title:'Sorry, We are having internal server issues :('};
+                    growl.warning(config.title);
+                    break;
+                
             }
 
             return $q.reject(rejection);
@@ -2171,7 +2434,7 @@ Authorization.$inject = ['$rootScope', '$state', 'authentication'];
 angular.module('users').
 	factory('Search', Search);
 
-function Search($http){
+function Search($http, $q){
 	var service = {
         getUsers:getUsers,
 		getGroups:getGroups
@@ -2185,6 +2448,10 @@ function Search($http){
                 username: val
             }
         }).then(function(response){
+            if(!angular.isObject(response.data)){
+                return [];
+            }
+            
             return response.data;
         });
     }
@@ -2194,11 +2461,15 @@ function Search($http){
                 name: val
             }
         }).then(function(response){
+            if(!angular.isObject(response.data)){
+                return [];
+            }
+
             return response.data;
         });
     }
 }
-Search.$inject = ['$http'];
+Search.$inject = ['$http', '$q'];
 
 'use strict';
 // Users service used for communicating with the users REST endpoint
@@ -2232,8 +2503,9 @@ function UserService($http){
 
 	function joinGroupAndUser(user, group){
 		return $http.post(url,{user:user, group:group})
-		.success(function(data){
-			return data;
+		.then(function(response){
+			debugger;
+			return response.data;
 		});
 	}
 
