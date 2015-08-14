@@ -9,7 +9,7 @@
                     <div class="col-sm-6 col-sm-offset-3">
                         <div class="input-group">
                             <input type="text" class="form-control"
-                                   placeholder="Search for your groups" data-ng-model="search.group"/>
+                                   placeholder="Search for your groups" data-ng-model="search.name"/>
                         <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                         </span>
@@ -28,7 +28,7 @@
             No Groups yet <a href="/#!/groups/create">create one</a>.
         </div>
         <div class="list-group">
-            <a data-ng-repeat="group in user.createdGroups | orderBy:'name' | filter:search.group"
+            <a data-ng-repeat="group in user.createdGroups | orderBy:'name' | filter:search.name"
                data-ng-href="#!/groups/{{group._id}}/events/list" class="list-group-item">
                 <small class="list-group-item-text">
                     Created on
@@ -49,7 +49,7 @@
             You could join a group by searching at the menu bar.
         </div>
         <div class="list-group">
-            <a data-ng-repeat="group in user.joinedGroups | orderBy:'name' | filter:search.group"
+            <a data-ng-repeat="group in user.joinedGroups | orderBy:'name' | filter:search.name"
                data-ng-href="#!/groups/{{group._id}}/events/list" class="list-group-item">
                 <small class="list-group-item-text">
                     Created on
