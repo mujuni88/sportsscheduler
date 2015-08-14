@@ -1,6 +1,6 @@
-'use strict';
 
 (function() {
+    'use strict';
 	// Validationservice Controller Spec
 	describe('ValidationService Tests', function() {
 		// Initialize global variables

@@ -1,6 +1,6 @@
-'use strict';
 
 (function() {
+	'use strict';
 	// Sms Controller Spec
 	describe('Sms Controller Tests', function() {
 		// Initialize global variables

@@ -242,7 +242,7 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['env:prod','lint', 'concurrent:default']);
+    grunt.registerTask('default', ['lint', 'concurrent:default']);
 
     // Documentation task
     grunt.loadNpmTasks('grunt-jsdoc');
@@ -250,13 +250,13 @@ module.exports = function (grunt) {
     //grunt.registerTask('docs',['jsdoc']);
 
     // Debug task.
-    grunt.registerTask('debug', ['env:dev','lint', 'concurrent:debug']);
+    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
 
     // Lint task(s).
     grunt.registerTask('lint', ['jshint','csslint']);
 
     // Build task(s).
-    grunt.registerTask('build', ['remove', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
 
 //	grunt.registerTask('test', ['env:test', 'mochaTest']);
 	grunt.registerTask('travis', ['protractor_webdriver','concurrent:travis','protractor']);

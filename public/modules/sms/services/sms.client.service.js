@@ -1,54 +1,58 @@
-'use strict';
-var app = angular.module('sms').factory('CarrierFactory', ['$http', '$q', 'CarrierService','LocalCarriers',
-    function($http, $q, CarrierService, localCarriers) {
-        
-        var cs = CarrierService;
-        var deferred = $q.defer();
+(function () {
 
-        function success(data, status, headers, config) {
-            // if success, cache it
-            if (data.status === 200) {
-                cs.setCarriers(data.data);
-            } else if (!cs.getCarriers()) {
-                // if no cache, return set local copy
-                cs.setCarriers(localCarriers);
-            }
-            deferred.resolve(cs.getCarriers());
-        }
+    'use strict';
+    var app = angular.module('sms').factory('CarrierFactory', ['$http', '$q', 'CarrierService', 'LocalCarriers',
+        function ($http, $q, CarrierService, localCarriers) {
 
-        function error(data, status, headers, config) {
-            if (!cs.getCarriers()) {
-                // if no cache, return set local copy
-                cs.setCarriers(localCarriers);
-            }
-            deferred.resolve(cs.getCarriers());
-        }
+            var cs = CarrierService;
+            var deferred = $q.defer();
 
-        function getCarriers() {
-            // get cached copy if available
-            if (cs.getCarriers()) {
+            function success(data, status, headers, config) {
+                // if success, cache it
+                if (data.status === 200) {
+                    cs.setCarriers(data.data);
+                } else if (!cs.getCarriers()) {
+                    // if no cache, return set local copy
+                    cs.setCarriers(localCarriers);
+                }
                 deferred.resolve(cs.getCarriers());
-            } else {
-                $http.get('/api/carriers/countries/us').
-                success(success).
-                error(error);
             }
-            return deferred.promise;
+
+            function error(data, status, headers, config) {
+                if (!cs.getCarriers()) {
+                    // if no cache, return set local copy
+                    cs.setCarriers(localCarriers);
+                }
+                deferred.resolve(cs.getCarriers());
+            }
+
+            function getCarriers() {
+                // get cached copy if available
+                if (cs.getCarriers()) {
+                    deferred.resolve(cs.getCarriers());
+                } else {
+                    $http.get('/api/carriers/countries/us').
+                        success(success).
+                        error(error);
+                }
+                return deferred.promise;
+            }
+
+            return {
+                getCarriers: getCarriers
+            };
         }
-        return {
-            getCarriers: getCarriers
-        };
-    }
-]);
-app.service('CarrierService', ['$rootScope',
-    function($rootScope) {
-        this.cachedCarriers = null;
-        this.setCarriers = function(cr) {
-            this.cachedCarriers = cr;
-            $rootScope.$broadcast('carrier.update');
-        };
-        this.getCarriers = function() {
-            return this.cachedCarriers;
-        };
-    }
-]);
+    ]);
+    app.service('CarrierService', ['$rootScope',
+        function ($rootScope) {
+            this.cachedCarriers = null;
+            this.setCarriers = function (cr) {
+                this.cachedCarriers = cr;
+                $rootScope.$broadcast('carrier.update');
+            };
+            this.getCarriers = function () {
+                return this.cachedCarriers;
+            };
+        }
+    ]);
+}).call(this);
