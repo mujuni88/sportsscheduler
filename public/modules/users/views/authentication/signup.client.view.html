@@ -1,101 +1,130 @@
-<section class="row" ng-controller="AuthenticationController">
-    <h3 class="col-md-12 text-center">Sign up using facebook</h3>
+<div class="row" data-ng-controller="AuthenticationController">
+    <section class="hero hero-ht">
+        <div class="container">
+            <div class="jumbotron text-center">
+                <h3 class="col-md-12 text-center">Sign up using your social accounts</h3>
 
-    <div class="col-md-12 text-center">
-        <a href="/auth/facebook" class="undecorated-link">
-            <img src="/modules/users/img/buttons/facebook.png">
-        </a>
-        <a href="/auth/google" class="undecorated-link">
-            <img src="/modules/users/img/buttons/google.png">
-        </a>
-    </div>
-    <h3 class="col-md-12 text-center">Or the form below</h3>
+                <div class="col-md-12 text-center">
+                    <a href="/auth/facebook" class="undecorated-link">
+                        <img class="bg-clear" src="/modules/users/img/buttons/facebook.png">
+                    </a>
+                    <a href="/auth/google" class="undecorated-link">
+                        <img class="bg-clear" src="/modules/users/img/buttons/google.png">
+                    </a>
+                </div>
+                <h3 class="col-md-12 text-center">Or the form below</h3>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        <div class="col-sm-6 col-sm-offset-3">
+            <form name="userForm" class="form-horizontal" novalidate autocomplete="off">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="firstName">First Name <span
+                                class="has-error">*</span></label>
 
-    <div class="col-sm-6 col-sm-offset-3">
-        <form name="userForm" class="form-horizontal" novalidate autocomplete="off">
-            <fieldset>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="firstName">First Name  <span class="has-error">*</span></label>
+                        <div class="col-sm-7">
+                            <input type="text" required id="firstName" name="firstName" class="form-control"
+                                   ng-model="credentials.firstName" placeholder="First Name" validator="required, alpha"
+                                   valid-method="blur">
 
-                    <div class="col-sm-7">
-                        <input type="text" required id="firstName" name="firstName" class="form-control" ng-model="credentials.firstName" placeholder="First Name" validator="required, alpha" valid-method="blur">
-
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="lastName">Last Name <span class="has-error">*</span></label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="lastName">Last Name <span class="has-error">*</span></label>
 
-                    <div class="col-sm-7">
-                        <input type="text" id="lastName" name="lastName" class="form-control"
-                               ng-model="credentials.lastName" placeholder="Last Name" validator="required, alpha" valid-method="blur">
+                        <div class="col-sm-7">
+                            <input type="text" id="lastName" name="lastName" class="form-control"
+                                   ng-model="credentials.lastName" placeholder="Last Name" validator="required, alpha"
+                                   valid-method="blur">
 
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="email">Email <span class="has-error">*</span></label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="email">Email <span class="has-error">*</span></label>
 
-                    <div class="col-sm-7">
-                        <input type="email" id="email" name="email" class="form-control"
-                               ng-model="credentials.email"
-                               placeholder="Email" validator="required, email" valid-method="blur">
+                        <div class="col-sm-7">
+                            <input type="email" id="email" name="email" class="form-control"
+                                   ng-model="credentials.email"
+                                   placeholder="Email" validator="required, email" valid-method="blur">
 
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="username">Username <span class="has-error">*</span></label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="username">Username <span
+                                class="has-error">*</span></label>
 
-                    <div class="col-sm-7">
-                        <input type="text" id="username" name="username" class="form-control"
-                               ng-model="credentials.username" placeholder="Username" validator="required, nospecialchars" minlength-error-message="Minimum 5 characters" valid-method="blur">
+                        <div class="col-sm-7">
+                            <input type="text" id="username" name="username" class="form-control"
+                                   ng-model="credentials.username" placeholder="Username"
+                                   validator="required, nospecialchars" minlength-error-message="Minimum 5 characters"
+                                   valid-method="blur">
 
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="password">Password <span class="has-error">*</span></label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="password">Password <span
+                                class="has-error">*</span></label>
 
-                    <div class="col-sm-7">
-                        <input type="password" id="password" name="password" class="form-control"
-                               ng-model="credentials.password" placeholder="Password" validator="required, oneUpperCaseLetter, oneUpperCaseLetter, oneNumber, oneAlphabet" minlength-error-message="Minimum 5 characters"  valid-method="blur">
+                        <div class="col-sm-7">
+                            <input type="password" id="password" name="password" class="form-control"
+                                   ng-model="credentials.password" placeholder="Password"
+                                   validator="required, oneUpperCaseLetter, oneUpperCaseLetter, oneNumber, oneAlphabet"
+                                   minlength-error-message="Minimum 5 characters" valid-method="blur">
 
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="confirmPassword">Confirm Password</label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="confirmPassword">Confirm Password</label>
 
-                    <div class="col-sm-7">
-                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-                               ng-model="credentials.confirmPassword" placeholder="Confirm Password" data-match="credentials.password"  valid-method="blur">
-                        <span><div class="has-error" ng-show="userForm.confirmPassword.$error.match">Passwords do not match.</div></span>
+                        <div class="col-sm-7">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                                   ng-model="credentials.confirmPassword" placeholder="Confirm Password"
+                                   data-match="credentials.password" valid-method="blur">
+                            <span><div class="has-error" ng-show="userForm.confirmPassword.$error.match">Passwords do
+                                not match.
+                            </div></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="phone">Phone Number</label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="phone">Phone Number</label>
 
-                    <div class="col-sm-7">
-                        <input type="text" name="phone" class="form-control" ng-model="credentials.phoneNumber" id="phone"
-                               placeholder="Phone number">
+                        <div class="col-sm-7">
+                            <input type="text" name="phone" class="form-control" ng-model="credentials.phoneNumber"
+                                   id="phone"
+                                   placeholder="Phone number">
 
-                        <p><small>If you want to receive texts</small></p>
+                            <p>
+                                <small>If you want to receive texts</small>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="carriers">Carrier</label>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="carriers">Carrier</label>
 
-                    <div class="col-sm-7">
-                        <select id="carriers" class="form-control" name="carriers" ng-model="credentials.carrier"
-                                ng-options="carrier.carrier for carrier in carriers">
-                            <option value="">-- choose carrier --</option>
-                        </select>
-                                                <p><small>If you want to receive texts</small></p>
+                        <div class="col-sm-7">
+                            <select id="carriers" class="form-control" name="carriers" ng-model="credentials.carrier"
+                                    ng-options="carrier.carrier for carrier in carriers">
+                                <option value="">-- choose carrier --</option>
+                            </select>
 
+                            <p>
+                                <small>If you want to receive texts</small>
+                            </p>
+
+                        </div>
                     </div>
-                </div>
-                <div class="text-center form-group">
-                    <button type="submit" validation-submit="userForm" ng-click="signup()" class="btn btn-large btn-primary">Sign up</button>
-                    &nbsp; or&nbsp;
-                    <a href="/#!/signin" class="show-signup">Sign in</a>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-</section>
+                    <div class="text-center form-group">
+                        <button type="submit" validation-submit="userForm" ng-click="signup()"
+                                class="btn btn-large btn-primary">Sign up
+                        </button>
+                        &nbsp; or&nbsp;
+                        <a href="/#!/signin" class="show-signup">Sign in</a>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+    <br><br><br><br>
+</div>
