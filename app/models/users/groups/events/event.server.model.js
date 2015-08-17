@@ -9,6 +9,7 @@ var _ = require('lodash'),
 	serverJSON = require('../../../../local_files/ui/server.ui.json'),
 	Helper = require('../../../../custom_objects/Helper'),
 	async = require('async'),
+	PrivateFunctions = require('./_privateFunctions'),
 	ValidationError = require('mongoose/lib/error/validation'),
 	ValidatorError =  require('mongoose/lib/error/validator'),
 	time = require('time');
@@ -134,7 +135,8 @@ EventSchema.virtual('attndCloseTime')
 });
 
 EventSchema.statics.functionsArray = [
-	
+
+	PrivateFunctions.populateAtts	
 ];
 
 EventSchema.statics.objectIDAtts = [

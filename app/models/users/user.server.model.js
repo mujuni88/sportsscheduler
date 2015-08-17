@@ -227,7 +227,7 @@ var UserSchema = new Schema({
 
 UserSchema.statics.functionsArray = [
 	
-	PrivateFunctions.populateAtts	
+	PrivateFunctions.populateAtts
 ];
 
 UserSchema.statics.objectIDAtts = [
