@@ -1,6 +1,6 @@
-'use strict';
 
 (function() {
+	'use strict';
 	// Members Controller Spec
 	describe('Members Controller Tests', function() {
 		// Initialize global variables

@@ -1,34 +1,67 @@
-<div class="row">
-    <section data-ng-controller="GroupsController" data-ng-init="getUser()" class="container">
-        <div class="page-header">
-            <h3>Created Groups <span class="badge badge-secondary">{{user.createdGroups.length}}</span> </h3>
+<div class="row" data-ng-controller="GroupsController" data-ng-init="getUser()">
+    <section class="hero hero-ht">
+        <div class="container">
+            <div class="jumbotron text-center">
+                <h1>Groups
+                </h1>
+                <br>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                                   placeholder="Search for your groups" data-ng-model="search.group"/>
+                        <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="alert alert-info alert-sm text-center" data-ng-hide="user.createdGroups.length || user.joinedGroups.length">
+    </section>
+    <section class="container pd-xxs-1">
+        <div class="page-header">
+            <h3>Created Groups <span class="badge badge-secondary">{{user.createdGroups.length}}</span></h3>
+        </div>
+        <div class="alert alert-info alert-sm text-center"
+             data-ng-hide="user.createdGroups.length">
             No Groups yet <a href="/#!/groups/create">create one</a>.
         </div>
         <div class="list-group">
-            <a data-ng-repeat="group in user.createdGroups | orderBy:'name'" data-ng-href="#!/groups/{{group._id}}/events/list" class="list-group-item">
+            <a data-ng-repeat="group in user.createdGroups | orderBy:'name' | filter:search.group"
+               data-ng-href="#!/groups/{{group._id}}/events/list" class="list-group-item">
                 <small class="list-group-item-text">
                     Created on
                     <span data-ng-bind="group.created | date:'short'"></span>
                 </small>
-                <p class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length}}</span></span></p>
+                <p class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i>
+                    {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length}}</span></span>
+                </p>
             </a>
         </div>
         <br>
+
         <div class="page-header">
-            <h3>Joined Groups <span class="badge badge-secondary">{{user.joinedGroups.length}}</span> </h3>
+            <h3>Joined Groups <span class="badge badge-secondary">{{user.joinedGroups.length}}</span></h3>
+        </div>
+        <div class="alert alert-info alert-sm text-center"
+             data-ng-hide="user.joinedGroups.length">
+            You could join a group by searching at the menu bar.
         </div>
         <div class="list-group">
-            <a data-ng-repeat="group in user.joinedGroups | orderBy:'name'" data-ng-href="#!/groups/{{group._id}}/events/list" class="list-group-item">
+            <a data-ng-repeat="group in user.joinedGroups | orderBy:'name' | filter:search.group"
+               data-ng-href="#!/groups/{{group._id}}/events/list" class="list-group-item">
                 <small class="list-group-item-text">
                     Created on
                     <span data-ng-bind="group.created | date:'short'"></span>
                     by
                     <span data-ng-bind="group.createdBy.displayName"></span>
                 </small>
-                <p class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i> {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length}}</span></span></p>
+                <p class="list-group-item-heading"><i class="fa fa-users text-primary spacing-sm-right"></i>
+                    {{group.name}} <span class="pull-right spacing-sm-right">Members <span class="badge">{{group.members.length}}</span></span>
+                </p>
             </a>
         </div>
     </section>
+    <br><br><br><br>
 </div>

@@ -1,4 +1,6 @@
-'use strict';
+(function(){
+    'use strict';
 
 // Configuring the Articles module
-angular.module('events');
+    angular.module('events');
+}).call(this);

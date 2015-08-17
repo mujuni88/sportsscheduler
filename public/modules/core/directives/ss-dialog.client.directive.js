@@ -1,46 +1,50 @@
-'use strict';
+(function(){
 
-angular.module('core').directive('ssDialog', ssDialog);
+    'use strict';
 
-function ssDialog(dialogs) {
-    var dd =  {
-        scope:{
-            ok:'&dialogOk',
-            cancel:'&dialogCancel',
-            enable:'=dialogEnable',
-            config:'@dialogConfig'
-        },
-        restrict: 'A',
-        link: postLink
-    };
-    return dd;
+    angular.module('core').directive('ssDialog', ssDialog);
 
-    function postLink(scope, element, attrs) {
-        element.bind('click', clickFn);
-        function clickFn(e) {
-            if(!scope.enable){
-                return;
+    function ssDialog(dialogs) {
+        var dd =  {
+            scope:{
+                ok:'&dialogOk',
+                cancel:'&dialogCancel',
+                enable:'=dialogEnable',
+                config:'@dialogConfig'
+            },
+            restrict: 'A',
+            link: postLink
+        };
+        return dd;
+
+        function postLink(scope, element, attrs) {
+            element.bind('click', clickFn);
+            function clickFn(e) {
+                if(!scope.enable){
+                    return;
+                }
+
+                e.preventDefault();
+                launch(scope, attrs);
             }
+        }
 
-            e.preventDefault();
-            launch(scope, attrs);
+        function launch(scope, attrs){
+            var config = angular.extend({
+                    size:'sm'
+                }, scope.config),
+
+                dlg = dialogs.confirm(attrs.title, attrs.message, config);
+
+            dlg.result.then(function(btn){
+                scope.ok();
+                //scope.$eval(attrs.dialogOk);
+            },function(btn){
+                if(scope.cancel){
+                    scope.cancel();
+                }
+            });
         }
     }
-    
-    function launch(scope, attrs){
-        var config = angular.extend({
-                size:'sm'
-            }, scope.config),
-        
-        dlg = dialogs.confirm(attrs.title, attrs.message, config);
-        
-        dlg.result.then(function(btn){
-            scope.ok();
-            //scope.$eval(attrs.dialogOk);
-        },function(btn){
-            if(scope.cancel){
-                scope.cancel();
-            }
-        });
-    }
-}
+
+}).call(this);

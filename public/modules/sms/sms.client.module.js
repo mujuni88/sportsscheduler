@@ -1,4 +1,7 @@
-'use strict';
+(function(){
+
+    'use strict';
 
 // Use applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('sms');
+    ApplicationConfiguration.registerModule('sms');
+}).call(this);

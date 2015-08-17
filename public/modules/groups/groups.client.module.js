@@ -1,4 +1,7 @@
-'use strict';
+(function(){
+    'use strict';
 
 // Use applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('groups');
+    ApplicationConfiguration.registerModule('groups');
+
+}).call(this);

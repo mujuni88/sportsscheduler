@@ -104,7 +104,8 @@ module.exports = function (grunt) {
 		uglify: {
 			production: {
 				options: {
-					mangle: false
+					mangle: false,
+					sourceMap: true
 				},
 				files: {
 					'public/dist/application.min.js': 'public/dist/application.js'
@@ -113,6 +114,9 @@ module.exports = function (grunt) {
 		},
 		cssmin: {
 			combine: {
+				options: {
+					sourceMap: true
+				},
 				files: {
 					'public/dist/application.min.css': '<%= applicationCSSFiles %>'
 				}
@@ -156,6 +160,9 @@ module.exports = function (grunt) {
 			},
 			dev: {
 				NODE_ENV: 'development'
+			},
+			prod: {
+				NODE_ENV: 'production'
 			}
 		},
 		mochaTest: {
@@ -204,6 +211,14 @@ module.exports = function (grunt) {
                     'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
                 }
             }
+        },
+        remove: {
+            production:{
+                option:{
+                    
+                },
+                dirList: ['public/dist/']
+            }
         }
 	});
 
@@ -218,9 +233,12 @@ module.exports = function (grunt) {
     grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function () {
         var init = require('./config/init')();
         var config = require('./config/config');
-
+        
         grunt.config.set('applicationJavaScriptFiles', config.assets.js);
         grunt.config.set('applicationCSSFiles', config.assets.css);
+        
+        grunt.log.writeln('Config assets js '+config.assets.js);
+        grunt.log.writeln('Config assets css '+config.assets.css);
     });
 
     // Default task(s).
@@ -232,7 +250,7 @@ module.exports = function (grunt) {
     //grunt.registerTask('docs',['jsdoc']);
 
     // Debug task.
-    grunt.registerTask('debug', ['env:dev','lint', 'concurrent:debug']);
+    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
 
     // Lint task(s).
     grunt.registerTask('lint', ['jshint','csslint']);

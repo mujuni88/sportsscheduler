@@ -1,6 +1,7 @@
-'use strict';
+(function(){
+    'use strict';
 
-angular.module('sms').controller('SmsController', ['$scope', '$http','carriers',function ($scope, $http, carriers) {
+    angular.module('sms').controller('SmsController', ['$scope', '$http', 'carriers', function ($scope, $http, carriers) {
 
         $scope.carriers = carriers;
 
@@ -36,4 +37,6 @@ angular.module('sms').controller('SmsController', ['$scope', '$http','carriers',
         };
 
     }
-]);
+    ]);
+
+}).call(this);
