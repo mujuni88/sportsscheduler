@@ -315,7 +315,7 @@
         }
 
         function getUnresponsiveUsers(members) {
-            members = members || $scope.group.members;
+            members = members || $scope.event.group.members;
             return _(members)
                 .rejectList($scope.event.attendance.no, '_id')
                 .rejectList($scope.event.attendance.yes, '_id')
