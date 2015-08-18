@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-xs-3 col-sm-6">
                     <a class="btn btn-primary btn-sm pull-right"
-                    href="/#!/groups/{{group._id}}/members/add" data-ng-show="isAdmin()" title="Add members" popover-placement="left" tooltip-placement="top" tooltip="Add members">
+                    href="/#!/groups/{{group._id}}/members/add" data-ng-show="isLoggedInAdmin()" title="Add members" popover-placement="left" tooltip-placement="top" tooltip="Add members">
                     <i class="glyphicon glyphicon-plus"></i>
                     </a>
                 </div>
@@ -24,10 +24,10 @@
         <p class="bold">
             {{group.members.length}} {{(group.members.length > 1) ? "members" : "member";}}
         </p>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && isLoggedInAdmin()">
             No Members yet, <a href="/#!/groups/{{group._id}}/members/add">add one</a>.
         </div>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && !isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="group.members.length === 0 && !isLoggedInAdmin()">
             No Members yet
         </div>
         <div class="list-groups members" data-ng-if="group.members">
@@ -37,10 +37,10 @@
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
                     owner
                     </span>
-                    <span class="spacing-sm-right badge" ng-show="_isAdmin(member)">
+                    <span class="spacing-sm-right badge" ng-show="isAdmin(member)">
                     admin
                     </span>
-                    <span class="admin-btns" data-ng-show="isAdmin()">
+                    <span class="admin-btns" data-ng-show="isLoggedInAdmin()">
                         <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)" tooltip-placement="top" tooltip="Make Admin">
                         <i class="glyphicon glyphicon-king text-primary"></i>
                         </span>
@@ -48,7 +48,7 @@
                         <i class="glyphicon glyphicon-king text-danger"></i>
                         </span>
                     </span>
-                                            <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
+                    <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
                         title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">
                         <i class="glyphicon glyphicon-remove text-danger"></i>
                         </span>
