@@ -882,7 +882,7 @@ var ApplicationConfiguration = (function() {
         }
 
         function getUnresponsiveUsers(members) {
-            members = members || $scope.group.members;
+            members = members || $scope.event.group.members;
             return _(members)
                 .rejectList($scope.event.attendance.no, '_id')
                 .rejectList($scope.event.attendance.yes, '_id')
@@ -1085,13 +1085,13 @@ var ApplicationConfiguration = (function() {
         $scope.saveMember = saveMember;
         // show dialog for adding members
         $scope.addMember = addMember;
-        $scope.isAdmin = isAdmin;
+        $scope.isLoggedInAdmin = isLoggedInAdmin;
         $scope.isOwner = isOwner;
         $scope.isLoggedInOwner = isLoggedInOwner;
         $scope.makeAdmin = makeAdmin;
         $scope.removeAdmin = removeAdmin;
         $scope.canRemoveAdmin = canRemoveAdmin;
-        $scope.isMember = isMember;
+        $scope.isLoggedInUserAMember = isLoggedInUserAMember;
         $scope.joinGroup = joinGroup;
         $scope.absUrl = $location.absUrl();
 
@@ -1100,9 +1100,7 @@ var ApplicationConfiguration = (function() {
         $scope.canRevokeAdminRights = canRevokeAdminRights;
         $scope.canMakeAdmin = canMakeAdmin;
         $scope.canRemoveMember = canRemoveMember;
-        $scope.canRmMember = canRmMember;
-        $scope.canRmvMember = canRmvMember;
-        $scope._isAdmin = _isAdmin;
+        $scope.isAdmin = isAdmin;
 
         $scope.shareGroup = shareGroup;
 
@@ -1134,18 +1132,6 @@ var ApplicationConfiguration = (function() {
         }
 
         // Member functions
-        function _addIsAdminAttr() {
-            _.each($scope.group.members, function (item) {
-                if (_.include(_.pluck($scope.group.admins, '_id'), item._id)) {
-                    if (_.isUndefined(item.isAdmin)) {
-                        item.isAdmin = true;
-                    } else {
-                        item.isAdmin = false;
-                    }
-                }
-            });
-        }
-
         function findOne() {
             return $scope.group = Groups.get({
                 groupId: $stateParams.groupId
@@ -1228,15 +1214,6 @@ var ApplicationConfiguration = (function() {
         }
 
         // Admin functions
-        function isAdmin() {
-            if (_.isUndefined($scope.group.admins)) {
-                return false;
-            }
-
-            return _isUserInAdmins($scope.authentication.user);
-        }
-
-
         function isOwner(member) {
             if (_.isUndefined($scope.group.createdBy)) {
                 return false;
@@ -1255,6 +1232,22 @@ var ApplicationConfiguration = (function() {
             }
 
             return $scope.group.createdBy._id === $scope.authentication.user._id;
+        }
+
+        function isLoggedInAdmin() {
+            if (_.isUndefined($scope.group.admins)) {
+                return false;
+            }
+
+            return _isUserInAdmins($scope.authentication.user);
+        }
+
+        function _isLoggedInMember(member) {
+            if (_.isUndefined($scope.authentication.user._id)) {
+                return false;
+            }
+
+            return member._id === $scope.authentication.user._id;
         }
 
         function makeAdmin(member) {
@@ -1323,14 +1316,7 @@ var ApplicationConfiguration = (function() {
             $scope.group.members.push(member);
             return true;
         }
-
-        function _addTempMember(member) {
-            if (_isUserInTempMembers(member)) {
-                return false;
-            }
-            $scope.tempMembers.push(member);
-            return true;
-        }
+        
 
         function _deleteAdminMember(member) {
             $scope.group.admins = _.reject($scope.group.admins, function (item) {
@@ -1384,7 +1370,7 @@ var ApplicationConfiguration = (function() {
         }
 
         // Checks whether the logged in user is a member of the group
-        function isMember() {
+        function isLoggedInUserAMember() {
             return _isUserInMembers($scope.user);
         }
 
@@ -1403,37 +1389,26 @@ var ApplicationConfiguration = (function() {
         }
 
         function canRevokeAdminRights(member) {
-            return ( member.isAdmin && !isOwner(member) && isLoggedInAdmin(member)) || ( member.isAdmin && isLoggedInOwner() && !isOwner(member) );
+            return ( member.isAdmin && !isOwner(member) && _isLoggedInMember(member)) || ( member.isAdmin && isLoggedInOwner() && !isOwner(member) );
         }
 
         function canMakeAdmin(member) {
+                        if(_.isUndefined(member)) {return false};
+
             return member.isAdmin;
         }
 
         function canRemoveMember(member) {
-            return !member.isAdmin ||
-                ( !isOwner(member) && isLoggedInAdmin(member)) ||
-                ( isLoggedInOwner() && !isOwner(member) );
+            return (!member.isAdmin && _isLoggedInMember(member)) || // member removing themselves
+                (!member.isAdmin && isLoggedInAdmin()) || // admin removing any members
+                ( !isOwner(member) && _isLoggedInMember(member) && isLoggedInAdmin()) || // admin
+                ( isLoggedInOwner() && !isOwner(member) ); // owner
         }
 
-        function canRmMember(member) {
-            return ( !isOwner(member) && isLoggedInOwner() );
-        }
+        function isAdmin(member) {
+            if(_.isUndefined(member)) {return false};
 
-        function canRmvMember(member) {
-            return ( !isOwner(member) && !member.isAdmin && !isLoggedInOwner() );
-        }
-
-        function _isAdmin(member) {
             return ( member.isAdmin && !isOwner(member) );
-        }
-
-        function isLoggedInAdmin(member) {
-            if (_.isUndefined($scope.authentication.user._id)) {
-                return false;
-            }
-
-            return member._id === $scope.authentication.user._id;
         }
 
         function shareGroup() {
