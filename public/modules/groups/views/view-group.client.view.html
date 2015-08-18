@@ -32,7 +32,7 @@
                                 </a>
                             </div>
                         </div>
-                        <button class="ng-cloak btn btn-primary btn-block btn-lg group-join-btn" ng-hide="isMember()"
+                        <button class="ng-cloak btn btn-primary btn-block btn-lg group-join-btn" ng-hide="isLoggedInUserAMember()"
                                 ng-click="joinGroup()"><i
                                 class="glyphicon glyphicon-plus"></i> Join Group
                         </button>
@@ -46,7 +46,7 @@
                                     data-ng-repeat="admin in group.admins | orderBy:['createdBy','isAdmin']:true"><h5
                                         class="">
                                     <img width="30px" height="30px" ng-src="{{admin.photo}}" alt=""
-                                         class="img-circle group-admin-photo"/> {{admin.displayName}}</h5></li>
+                                         class="img-circle group-admin-photo"/> {{admin.displayName}}  <span class="badge bg-primary" ng-if="isOwner(admin)">owner</span></h5></li>
                             </ul>
                         </div>
                         <br/>

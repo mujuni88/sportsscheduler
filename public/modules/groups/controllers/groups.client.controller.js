@@ -42,7 +42,7 @@
         $scope.makeAdmin = makeAdmin;
         $scope.removeAdmin = removeAdmin;
         $scope.canRemoveAdmin = canRemoveAdmin;
-        $scope.isMember = isMember;
+        $scope.isLoggedInUserAMember = isLoggedInUserAMember;
         $scope.joinGroup = joinGroup;
         $scope.absUrl = $location.absUrl();
 
@@ -193,7 +193,7 @@
             return _isUserInAdmins($scope.authentication.user);
         }
 
-        function isLoggedInMember(member) {
+        function _isLoggedInMember(member) {
             if (_.isUndefined($scope.authentication.user._id)) {
                 return false;
             }
@@ -321,7 +321,7 @@
         }
 
         // Checks whether the logged in user is a member of the group
-        function isMember() {
+        function isLoggedInUserAMember() {
             return _isUserInMembers($scope.user);
         }
 
@@ -340,21 +340,25 @@
         }
 
         function canRevokeAdminRights(member) {
-            return ( member.isAdmin && !isOwner(member) && isLoggedInMember(member)) || ( member.isAdmin && isLoggedInOwner() && !isOwner(member) );
+            return ( member.isAdmin && !isOwner(member) && _isLoggedInMember(member)) || ( member.isAdmin && isLoggedInOwner() && !isOwner(member) );
         }
 
         function canMakeAdmin(member) {
+                        if(_.isUndefined(member)) {return false};
+
             return member.isAdmin;
         }
 
         function canRemoveMember(member) {
-            return (!member.isAdmin && isLoggedInMember(member)) || // member removing themselves
+            return (!member.isAdmin && _isLoggedInMember(member)) || // member removing themselves
                 (!member.isAdmin && isLoggedInAdmin()) || // admin removing any members
-                ( !isOwner(member) && isLoggedInMember(member) && isLoggedInAdmin()) || // admin
+                ( !isOwner(member) && _isLoggedInMember(member) && isLoggedInAdmin()) || // admin
                 ( isLoggedInOwner() && !isOwner(member) ); // owner
         }
 
         function isAdmin(member) {
+            if(_.isUndefined(member)) {return false};
+
             return ( member.isAdmin && !isOwner(member) );
         }
 
