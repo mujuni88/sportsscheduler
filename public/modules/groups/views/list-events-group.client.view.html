@@ -3,11 +3,11 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-12 text-right">
-                    <button class="btn btn-secondary btn-sm spacing-sm-right" data-ng-show="isAdmin() && events.length" data-ng-click='find()'>
+                    <button class="btn btn-secondary btn-sm spacing-sm-right" data-ng-show="isLoggedInAdmin() && events.length" data-ng-click='find()'>
                     <i class="glyphicon glyphicon-refresh"></i>
                     </button>
                     <button class="btn btn-primary btn-sm"
-                    data-ng-click="canCreateEvent()" data-ng-show="isAdmin()" title="Create an event">
+                    data-ng-click="canCreateEvent()" data-ng-show="isLoggedInAdmin()" title="Create an event">
                     <i class="glyphicon glyphicon-plus"></i>
                     </button>
                 </div>
@@ -18,10 +18,10 @@
         <p class="bold">
             {{events.length}}/{{MAX_EVENTS}} events. {{(MAX_EVENTS - events.length) < 0 ? 0: (MAX_EVENTS - events.length)}} left
         </p>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isLoggedInAdmin()">
             No Events yet, <a href="/#!/groups/{{group._id}}/events/add">create one</a>.
         </div>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isLoggedInAdmin()">
             No Events yet
         </div>
         <div class="list-group">
