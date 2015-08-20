@@ -16,18 +16,11 @@ function Sender() {
     console.log('refreshToken: ' + configJSON.nodemailer.xoauth2.refreshToken);
     console.log('accessToken: ' + configJSON.nodemailer.xoauth2.accessToken);
     */
- 	this.transporter = nodemailer.createTransport('SMTP',{
-	    service: 'Gmail',
+ 	this.transporter = nodemailer.createTransport({
+	    service: 'gmail',
 	    auth: {
-		    XOAuth2: {
 				user: "sportschedulertest@gmail.com", // Your gmail address.
-				                                    // Not @developer.gserviceaccount.com
-				clientId: configJSON.nodemailer.xoauth2.clientID,
-				clientSecret: configJSON.nodemailer.xoauth2.clientSecret,
-				refreshToken: configJSON.nodemailer.xoauth2.refreshToken,
-				accessToken: configJSON.nodemailer.xoauth2.accessToken,
-
-			},
+				pass: '}_sB*p4:Y]A4ESr'
 		},
 	    debug: true
 	});
