@@ -244,7 +244,7 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['env:prod','lint', 'concurrent:default']);
+    grunt.registerTask('default', ['lint', 'concurrent:default']);
 
     // Documentation task
     grunt.loadNpmTasks('grunt-jsdoc');
