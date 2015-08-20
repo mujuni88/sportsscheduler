@@ -18,13 +18,13 @@
 
                     <div class="input-group input-group-sm">
                         <input type="text" 
-                            typeahead-on-select="onSelect(search.members); search.members = '';"        
+                            typeahead-on-select="onSelect(search.username); search.username = '';"        
                             typeahead="member as member.username for member in getMembers($viewValue)"
                             typeahead-loading="loading" 
                             typeahead-template-url="searchMembers.html"
                             typeahead-wait-ms="250"
                             class="form-control"
-                            placeholder="Search for members to add" data-ng-model="search.members"/>
+                            placeholder="Search for members to add" data-ng-model="search.username"/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>

@@ -10,7 +10,7 @@ hr.hr-primary {
 
   .visible-xxs {
     display: block !important; } }
-@media lg-wide-screens {
+@media only screen and (min-width: 480px) {
   .visible-xxs {
     display: none !important; } }
 .ng-invalid.ng-dirty {
@@ -50,28 +50,7 @@ hr.hr-primary {
     display: inline-block;
     vertical-align: middle;
     margin-right: -4px; } }
-@media only screen and (max-width: 768px) {
-  .row > [class^=col] {
-    margin-bottom: 20px; } }
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important; }
 
-.row + .row {
-  margin-top: 20px; }
-
-.jumbotron {
-  margin-bottom: 0;
-  background-color: #fcfcfc; }
-
-.list-group-item-expired {
-  border: 1px solid #ff0039;
-  background-color: #eeeeee; }
-
-.btn-secondary, .badge-secondary {
-  background-color: #c3c3c3;
-  color: #000; }
-
-.badge-secondary {
-  color: #000; }
-
-/*# sourceMappingURL=groups.css.map */
+/*# sourceMappingURL=common.css.map */

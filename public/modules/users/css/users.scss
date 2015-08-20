@@ -1,0 +1,22 @@
+@import "../../common/css/common";
+
+@include md-screens{
+.nav-users {
+	position: fixed;
+}
+}
+
+.remove-account-container {
+	display: inline-block;
+	position: relative;
+}
+
+.btn-remove-account {
+	top: 10px;
+	right: 10px;
+	position: absolute;
+}
+.settings .tab-content{
+	background-color: #f5f5f5;
+	padding:20px 0;
+}

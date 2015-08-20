@@ -1,0 +1,77 @@
+@mixin border-radius-all($all) {
+  border-radius: $all;
+}
+
+@mixin border-radius($tl: 6px, $tr: 6px, $br: 0, $bl: 0) {
+  border-radius: $tl $tr $br $bl;
+}
+
+$sm-handheld: 320px;
+$lg-handheld: 480px;
+$xs-screens: 768px;
+$md-screens: 992px;
+$lg-screens: 1200px;
+@mixin respond-to($media) {
+  @if $media == sm-handheld {
+    @media only screen and (max-width: $sm-handheld) {
+      @content;
+    }
+  } @else if $media == lg-handheld {
+    @media only screen and (max-width: $lg-handheld) {
+      @content;
+    }
+  } @else if $media == xs-screens {
+    @media only screen and (max-width: $xs-screens) {
+      @content;
+    }
+  } @else if $media == lg-wide-screens {
+    @media only screen and (min-width:$lg-handheld) {
+      @content;
+    }
+  }@else if $media == tablets {
+    @media only screen and (min-width:$xs-screens) and (max-width: $md-screens) {
+      @content;
+    }
+  } @else if $media == sm-screens {
+    @media only screen and (min-width: $xs-screens + 1) {
+      @content;
+    }
+  } @else if $media == md-screens {
+    @media only screen and (min-width: $md-screens + 1) {
+      @content;
+    }
+  } @else if $media == wide-screens {
+    @media only screen and (min-width: $lg-screens) {
+      @content;
+    }
+  }
+
+}
+
+
+@mixin sm-handheld{
+  @include respond-to(sm-handheld){ @content}
+}
+@mixin lg-handheld{
+  @include respond-to(lg-handheld){ @content}
+}
+@mixin xs-screens{
+  @include respond-to(xs-screens){ @content}
+}
+@mixin lg-wide-screens{
+  @include respond-to(lg-wide-screens){ @content}
+}
+@mixin tablets{
+  @include respond-to(tablets){ @content}
+}
+@mixin sm-screens{
+  @include respond-to(sm-screens){ @content}
+}
+
+@mixin md-screens{
+  @include respond-to(md-screens){ @content}
+}
+
+@mixin wide-screens{
+  @include respond-to(wide-screens){ @content}
+}

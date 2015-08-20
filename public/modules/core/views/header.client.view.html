@@ -61,12 +61,12 @@
             <div class="form-group">
             <div class="input-group">
                         <input type="text" 
-                            typeahead-on-select="onSelect(search.groups); search.groups = '';"
+                            typeahead-on-select="onSelect(search.name); search.name = '';"
                             typeahead="group for group in getGroups($viewValue)" 
                             typeahead-template-url="searchGroups.html"
                             typeahead-wait-ms="250"
                             class="form-control"
-                            placeholder="Search for a group" data-ng-model="search.groups"/>
+                            placeholder="Search for a group" data-ng-model="search.name"/>
                     </div>
             </div>
         </div>
