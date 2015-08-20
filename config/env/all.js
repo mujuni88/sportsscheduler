@@ -13,6 +13,7 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
+				'public/modules/core/css/bootstrap.css',
                 'public/lib/animate.css/animate.min.css',
                 'public/lib/angular-fx/src/css/angular-fx.css',
                 'public/lib/angular-xeditable/dist/css/xeditable.css',
@@ -42,7 +43,8 @@ module.exports = {
             ]
 		},
 		css: [
-			'public/modules/**/css/*.css'
+			'public/modules/**/css/*.css',
+			'public/modules/**/css/!bootstrap*.css'
 		],
 		js: [
 			'public/config.js',

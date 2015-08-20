@@ -119,6 +119,7 @@ module.exports = function (grunt) {
 					sourceMap: true
 				},
 				files: {
+					'public/dist/bootstrap.min.css': 'public/modules/core/css/bootstrap.css',
 					'public/dist/application.min.css': '<%= applicationCSSFiles %>'
 				}
 			}
@@ -243,7 +244,7 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['lint', 'concurrent:default']);
+    grunt.registerTask('default', ['env:prod','lint', 'concurrent:default']);
 
     // Documentation task
     grunt.loadNpmTasks('grunt-jsdoc');
