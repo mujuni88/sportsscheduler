@@ -45,7 +45,7 @@
                 </div>
             </li>
             <li class="list-group-item" dir-paginate="member in tempMembers | itemsPerPage: 10" pagination-id="newMembers">
-                <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> <img width="25px" height="25px" ng-src="{{member.photo}}" alt="" class="img-circle"/> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
+                <span class=""> <img width="25px" height="25px" ng-src="{{member.photo}}" alt="" class="img-circle"/> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <span class="pull-right btn-link" ng-click="removeTempMember($index)">
                     <i class="glyphicon glyphicon-remove text-danger"></i>
                 </span>
@@ -58,38 +58,13 @@
         <ul class="list-groups list-unstyled" ng-show="group.members.length">
             <li><h4>Existing members:</h4></li>
             <li class="list-group-item" dir-paginate="member in group.members | orderBy:['createdBy','isAdmin']:true | itemsPerPage: 10" pagination-id="exstMembers">
-                <span class=""><i class="glyphicon glyphicon-user text-primary spacing-sm-right" ng-if="!member.isAdmin"></i><i class="glyphicon glyphicon-king text-primary spacing-sm-right" ng-if="member.isAdmin"></i> <img width="25px" height="25px" ng-src="{{member.photo}}" alt="" class="img-circle"/> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
+                <span class=""> <img width="25px" height="25px" ng-src="{{member.photo}}" alt="" class="img-circle"/> {{member.displayName}}</span> ( <span class="text-info" data-ng-bind="member.username"></span> )
                 <div class="pull-right">
                     <span class="spacing-sm-right badge" ng-show="isOwner(member)">
                     owner
                     </span>
-                    <span class="spacing-sm-right badge" ng-show="_isAdmin(member)">
+                    <span class="spacing-sm-right badge" ng-show="isAdmin(member)">
                     admin
-                    </span>
-                    <span class="admin-btns hidden" data-ng-show="isAdmin()">
-                        <span class="spacing-sm-right pointer" ng-click="makeAdmin(member)" ng-hide="canMakeAdmin(member)">
-                        <i class="glyphicon glyphicon-king text-primary"></i>
-                        </span>
-                        <span class="spacing-sm-right pointer" ng-click="removeAdmin(member)" ng-show="canRevokeAdminRights(member)">
-                        <i class="glyphicon glyphicon-king text-danger"></i>
-                        </span>
-                        <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
-                        title="Remove Member" message="Are you sure?" data-ng-show="canRemoveMember(member)">
-                        <i class="glyphicon glyphicon-remove text-danger"></i>
-                        </span>
-                        <span class="spacing-sm-right pointer" ss-dialog dialog-ok="removeMember(member)" dialog-enable="true"
-                        title="Remove Member" message="Are you sure?" data-ng-show="canRmMember(member)">
-                        <i class="glyphicon glyphicon-remove text-danger"></i>
-                        </span>
-                    </span>
-                    <span class="spacing-sm-right pointer" 
-                        ss-dialog 
-                        dialog-ok="removeMember(member)" 
-                        dialog-enable="true"
-                        title="Remove Member" 
-                        message="Are you sure?" 
-                        data-ng-show="canRmvMember(member)">
-                        <i class="glyphicon glyphicon-remove text-danger"></i>
                     </span>
                 </div>
             </li>

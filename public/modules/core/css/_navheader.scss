@@ -1,0 +1,13 @@
+@import '../../common/css/_mixins';
+
+@include xs-screens{
+	.navbar-fixed-top{
+		position:relative;
+	}
+	.navbar{
+		margin-bottom: 0;
+	}
+	body{
+		padding-top:0;
+	}
+}
