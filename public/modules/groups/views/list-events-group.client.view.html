@@ -31,7 +31,7 @@
             </div>
             <div class="media-body">
                 <div class="row">
-                    <div class="col-sm-4 vcenter">
+                    <div class="col-sm-7 vcenter">
                         <ul class="list-unstyled event">
                             <li><h4 class="media-heading event-name">{{event.name}}</h4></li>
                             <li><span class="hidden">Location Name:</span> <p class="text-primary event-location">{{event.location.name}}</p></li>
@@ -39,8 +39,8 @@
                             <li><span class="hidden event-time">Time:</span><p class="text-primary">{{event.time | date:'short'}}</p></li>
                         </ul> 
                     </div>
-                    <div class="col-sm-7 vcenter">
-                        <ul class="list-unstyled pull-right float-none-xs event event-right">
+                    <div class="col-sm-4 vcenter">
+                        <ul class="list-unstyled event event-right">
                             <li><p class="event-response">Responses: <span class="badge">{{event.attendance.yes.length + event.attendance.no.length}}</span></p></li>
                             <li><p class="event-notification">Attendance Notification: <span ng-if="!event.attndNotifMins" class="text-danger event-not-sent">Not sent</span> <span ng-if="event.attndNotifMins" class="text-primary event-sent">{{getTimeDiff(event.time, event.attndNotifMins) | date:'shortTime'}}</span></p></li>
                             <li ng-if="hasEventExpired(event.time)"><p class="text-danger event-end">Event Ended</p></li>

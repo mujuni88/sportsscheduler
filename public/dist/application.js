@@ -254,7 +254,9 @@ var ApplicationConfiguration = (function() {
                     };
 
                     elem.html(createHTML(htmlAttrs));
-                    FB.XFBML.parse(elem[0]);
+                    if(FB){
+                        FB.XFBML.parse(elem[0]);
+                    }
                 });
             }
         };

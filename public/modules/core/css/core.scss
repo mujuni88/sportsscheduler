@@ -1,5 +1,5 @@
 @import "../../common/css/_common";
-@import "_navheader"
+@import "_navheader";
 
 .banner {
   border-bottom: none;
@@ -240,4 +240,12 @@ body{
 
 .bg-clear{
   background-color: #fff !important;
+}
+.section {
+  margin-top: 20px;
+}
+
+.has-error {
+  color: #FF4136;
+  margin: 5px 0;
 }
