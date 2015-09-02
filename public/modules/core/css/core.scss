@@ -156,14 +156,6 @@
   line-height: 32px;
 }
 
-body{
-  padding-top:55px;
-  background-color: #E9EDF2;
-  @include xs-screens{
-    padding-top:51px;
-  }
-}
-
 .event-name, .event-address, .group-name, .event-location, .event-message{
   word-wrap: break-word; 
   max-width:90%;
@@ -248,4 +240,4 @@ body{
 .has-error {
   color: #FF4136;
   margin: 5px 0;
-}
+}  
