@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 	EventModel = mongoose.model('Event'),
 	Helper = require('../../../../custom_objects/Helper'),
 	Sender = require('../../../../custom_objects/Sender'),
+	config = require('../../../../../config/config'),
 	CronJob = require('cron').CronJob,
 	CronHandler = require('../../../../custom_objects/CronHandler'),
 	CronFunctions = require('../../../../custom_objects/CronFunctions'),
@@ -23,6 +24,14 @@ var PrivateFunctions = (function() {
 		return function(response) {
 
 			console.log('Email sent successfully to: %s',user.email);
+		};
+	};
+
+	var sendTemplate = function(user) {
+		
+		return function(err,templateHTML) {
+
+			Sender.sendSMS(user.email, 'Sports Scheduler', templateHTML, senderCallback(user));
 		};
 	};
 
@@ -114,7 +123,7 @@ var PrivateFunctions = (function() {
 					done(null,arg1,arg2);
 				};
 			},
-			eventStartNotifications: function(req,event) {
+			eventStartNotifications: function(req,res,event) {
 
 				return function(arg1,arg2,done) {
 
@@ -153,7 +162,7 @@ var PrivateFunctions = (function() {
 									var user = users[i];
 
 									var eventEndDate = new Date(event.time);
-									eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS "at" h:MM TT');
+									eventEndDate = dateFormat(eventEndDate, 'dddd mmmm dS h:MM TT');
 
 									if(user.preferences.receiveTexts) {
 
@@ -163,7 +172,18 @@ var PrivateFunctions = (function() {
 
 									if(user.preferences.receiveEmails) {
 
-										Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at":\n' + eventUrl + '\n\nAttendance Ends: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsUrl, senderCallback(user));
+										res.render('templates/create-event-email', {
+											eventName: event.name,
+											startTime: dateFormat(new Date(event.created), 'dddd mmmm dS h:MM TT'),
+											locationName: event.location.name,
+											locationAddress: event.location.address,
+											attndTime: dateFormat(new Date(event.attndCloseTime), 'dddd mmmm dS h:MM TT'),
+											appName: config.app.title,
+											devEmail: config.app.devEmail
+											
+										}, sendTemplate(user));
+
+										//Sender.sendSMS(user.email, 'Sports Scheduler\n', 'Event for Group: '+event.group.name+' has started!\nLet everyone know your plans "at":\n' + eventUrl + '\n\nAttendance Ends: ' + eventEndDate + '\nTo unsubscribe from notifications go to\n'+settingsUrl, senderCallback(user));
 									}
 								}
 
@@ -181,7 +201,7 @@ var PrivateFunctions = (function() {
 		},
 		delete: 
 		{
-			notifiyUsersOfEventCancellation: function(event) {
+			notifiyUsersOfEventCancellation: function(res,event) {
 
 				return function(arg1,arg2,done) {
 
@@ -219,8 +239,15 @@ var PrivateFunctions = (function() {
 								}
 
 								if(user.preferences.receiveEmails) {
-
-									Sender.sendSMS(user.email, 'Sports Scheduler', 'Event: ' + event.name + ' for Group: '+event.group.name+' has been canceled', senderCallback(user));
+									
+									res.render('templates/delete-event-email', {
+										eventName: event.name,
+										groupName: event.group.name,
+										appName: config.app.title,
+										devEmail: config.app.devEmail
+										
+									}, sendTemplate(user));
+									//Sender.sendSMS(user.email, 'Sports Scheduler', 'Event: ' + event.name + ' for Group: '+event.group.name+' has been canceled', senderCallback(user));
 								}
 							}
 

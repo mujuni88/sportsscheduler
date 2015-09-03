@@ -4,7 +4,8 @@ module.exports = {
 	app: {
 		title: 'SportsScheduler',
 		description: 'Schedule manager for sports teams',
-		keywords: 'sports, scheduler, calendar, events, basketball, baseball, football, soccer'
+		keywords: 'sports, scheduler, calendar, events, basketball, baseball, football, soccer',
+		devEmail: 'sportschedulertest@gmail.com'
 	},
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',

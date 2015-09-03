@@ -19,8 +19,8 @@ function Sender() {
  	this.transporter = nodemailer.createTransport({
 	    service: 'gmail',
 	    auth: {
-				user: "sportschedulertest@gmail.com", // Your gmail address.
-				pass: '}_sB*p4:Y]A4ESr'
+			user: "sportschedulertest@gmail.com", // Your gmail address.
+			pass: '}_sB*p4:Y]A4ESr'
 		},
 	    debug: true
 	});
@@ -29,13 +29,13 @@ function Sender() {
 
 }
 
-Sender.prototype.sendSMS = function(to,subject,text,callback) {
+Sender.prototype.sendSMS = function(to,subject,html,callback) {
 
 	var mailOptions = {
 
 		to: to,
 		subject: subject,
-		text: text
+		html: html
 		
 	};
 

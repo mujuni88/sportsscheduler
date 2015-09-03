@@ -1,3 +1,15 @@
 {% extends 'email-layout.server.view.html' %}
 
 {% block content %}
+
+<p>
+The event: {{eventName}} has been created and is scheduled to start at: {{startTime}}
+</p>
+
+<p>
+The location for the event is: {{locationName}} {{locationAddress}}
+</p>
+
+<p>
+You have until: {{attndTime}} to let everyone know if you're attending or not
+</p>

@@ -94,7 +94,7 @@ exports.create = function(req, res) {
 
 				var functionsArray = [];
 				functionsArray.push(PrivateFunctions.create.addEventToGroup(group,event._id));
-				functionsArray.push(PrivateFunctions.create.eventStartNotifications(req,event));
+				functionsArray.push(PrivateFunctions.create.eventStartNotifications(req,res,event));
 				functionsArray.push(PrivateFunctions.create.createGatherAttendanceCron(event));
 				functionsArray = Helper.buildWaterfall(functionsArray);
 
@@ -268,7 +268,7 @@ exports.delete = function(req, res) {
 				} 
 
 				var functionsArray = [];
-				functionsArray.push(PrivateFunctions.delete.notifiyUsersOfEventCancellation(event));
+				functionsArray.push(PrivateFunctions.delete.notifiyUsersOfEventCancellation(res,event));
 				functionsArray = Helper.buildWaterfall(functionsArray);
 
 				Helper.executeWaterfall(functionsArray,function (err, obj) {
