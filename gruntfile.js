@@ -9,7 +9,7 @@ module.exports = function (grunt) {
         clientViews: ['public/modules/**/views/**/*.html'],
         clientJS: ['public/js/*.js', 'public/modules/**/*![e2e]*.js'],
         clientCSS: ['public/modules/**/!(bootstrap)*.css'],
-        clientSCSS: ['public/modules/**/!(bootstrap)*.scss'],
+        clientSCSS: ['public/modules/**/*.scss'],
         mochaTests: ['app/tests/**/*.js'],
         e2eTests: ['public/modules/*/tests/e2e/*.js']
     };
@@ -60,6 +60,13 @@ module.exports = function (grunt) {
 					livereload: true
 				}
 			},
+			clientSCSS: {
+				files: watchFiles.clientSCSS,
+				tasks: ['sass'],
+				options: {
+					livereload: true
+				}
+			},
 			karma: {
                 files: ['src/**/*.js', 'test/unit/**/*.js'],
                 tasks: ['karma:unit:run']
@@ -69,6 +76,16 @@ module.exports = function (grunt) {
                 tasks: ['protractor_webdriver','protractor']
             }
 		},
+		sass: {
+	        options: {
+	            sourceMap: true
+	        },
+	        dist: {
+	            files: {
+	                'public/dist/main.css': watchFiles.clientSCSS
+	            }
+	        }
+	    },
 		jshint: {
 			all: {
 				src: watchFiles.clientJS.concat(watchFiles.serverJS),
@@ -119,6 +136,7 @@ module.exports = function (grunt) {
 					sourceMap: true
 				},
 				files: {
+					'public/dist/bootstrap.min.css': 'public/modules/core/css/bootstrap.css',
 					'public/dist/application.min.css': '<%= applicationCSSFiles %>'
 				}
 			}

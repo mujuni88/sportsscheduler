@@ -56,6 +56,19 @@ hr.hr-primary {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important; }
 
+body {
+  padding-top: 55px;
+  background-color: #E9EDF2; }
+  @media only screen and (max-width: 768px) {
+    body {
+      padding-top: 0; } }
+
+@media only screen and (max-width: 768px) {
+  .navbar-fixed-top {
+    position: relative; }
+
+  .navbar {
+    margin-bottom: 0; } }
 .banner {
   border-bottom: none;
   margin-top: -4px;
@@ -175,13 +188,6 @@ hr.hr-primary {
   padding-bottom: 11px;
   line-height: 32px; }
 
-body {
-  padding-top: 55px;
-  background-color: #E9EDF2; }
-  @media only screen and (max-width: 768px) {
-    body {
-      padding-top: 51px; } }
-
 .event-name, .event-address, .group-name, .event-location, .event-message {
   word-wrap: break-word;
   max-width: 90%; }
@@ -231,5 +237,12 @@ body {
 
 .bg-clear {
   background-color: #fff !important; }
+
+.section {
+  margin-top: 20px; }
+
+.has-error {
+  color: #FF4136;
+  margin: 5px 0; }
 
 /*# sourceMappingURL=core.css.map */

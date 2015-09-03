@@ -49,26 +49,27 @@
             
         </div>
         <section class="row">
-            <div class="col-sm-4 vcenter">
+            <div class="col-sm-8 vcenter">
                 <ul class="list-unstyled">
                     <li><span>Location Name:</span> <p class="text-primary event-location">{{event.location.name}}</p></li>
                     <li ng-if="event.location.address"><span>Address:</span><p class="text-primary event-address">{{event.location.address}}</p></li>
                     <li><span>Time:</span><p class="text-primary event-time">{{event.time | date:'short'}}</p></li>
                     <li ng-if="event.created"><span>Created:</span><p class="text-primary event-created">{{event.created | date:'short'}}</p></li>
+                    <li ng-if="event.message">
+                    <span>Message:</span>
+                    <p class="text-primary well well-sm">{{event.message}}</p>
+                </li>
                 </ul>
             </div>
-            <div class="col-sm-8 vcenter">
-                <ul class="list-unstyled pull-right float-none-xs">
+            <div class="col-sm-4 vcenter">
+                <ul class="list-unstyled">
                     <!--                             <li><a href='/#!/groups/{{event.group._id}}/events/{{event._id}}' class="btn btn-primary btn-sm">Vote</a></li> -->
                     <li><p>Responses: <span class="badge">{{event.attendance.yes.length + event.attendance.no.length}}</span></p></li>
                     <li><p>Attendance Notification: <span ng-if="!event.attndNotifMins" class="text-danger">Not sent</span> <span ng-if="event.attndNotifMins" class="text-primary">{{getTimeDiff(event.time, event.attndNotifMins) | date:'shortTime'}}</span></p></li>
                     <li ng-if="hasEventExpired(event.time)"><p class="text-danger">Event Ended</p></li>
                 </ul>
             </div>
-            <div class="col-sm-12 event-message" ng-if="event.message">
-                <span>Message:</span>
-                <p class="text-primary well well-sm">{{event.message}}</p>
-            </div>
+            
             <div class="col-sm-12">
                 <div class="col-sm-4">
                     <div class="page-header">
@@ -95,7 +96,7 @@
                 <div class="col-sm-4">
                     <div class="page-header">
                     <h3>  
-                    <span>Didn't Respond</span> 
+                    <span>No Response</span> 
                     ({{unrespUsers.length}}):</h3>
                 </div>
                 <ul class="list-unstyled">

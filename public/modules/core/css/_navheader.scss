@@ -1,0 +1,18 @@
+@import '../../common/css/_mixins';
+
+body{
+	padding-top:55px;
+	background-color: #E9EDF2;
+	@include xs-screens{
+		padding-top:0;
+	}
+}
+
+@include xs-screens{
+	.navbar-fixed-top{
+		position:relative;
+	}
+	.navbar{
+		margin-bottom: 0;
+	}
+} 

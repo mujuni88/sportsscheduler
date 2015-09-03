@@ -1,4 +1,5 @@
-@import "../../common/css/common";
+@import "../../common/css/_common";
+@import "_navheader";
 
 .banner {
   border-bottom: none;
@@ -155,14 +156,6 @@
   line-height: 32px;
 }
 
-body{
-  padding-top:55px;
-  background-color: #E9EDF2;
-  @include xs-screens{
-    padding-top:51px;
-  }
-}
-
 .event-name, .event-address, .group-name, .event-location, .event-message{
   word-wrap: break-word; 
   max-width:90%;
@@ -240,3 +233,11 @@ body{
 .bg-clear{
   background-color: #fff !important;
 }
+.section {
+  margin-top: 20px;
+}
+
+.has-error {
+  color: #FF4136;
+  margin: 5px 0;
+}  

@@ -3,11 +3,11 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-12 text-right">
-                    <button class="btn btn-secondary btn-sm spacing-sm-right" data-ng-show="isAdmin() && events.length" data-ng-click='find()'>
+                    <button class="btn btn-secondary btn-sm spacing-sm-right" data-ng-show="isLoggedInAdmin() && events.length" data-ng-click='find()'>
                     <i class="glyphicon glyphicon-refresh"></i>
                     </button>
                     <button class="btn btn-primary btn-sm"
-                    data-ng-click="canCreateEvent()" data-ng-show="isAdmin()" title="Create an event">
+                    data-ng-click="canCreateEvent()" data-ng-show="isLoggedInAdmin()" title="Create an event">
                     <i class="glyphicon glyphicon-plus"></i>
                     </button>
                 </div>
@@ -18,10 +18,10 @@
         <p class="bold">
             {{events.length}}/{{MAX_EVENTS}} events. {{(MAX_EVENTS - events.length) < 0 ? 0: (MAX_EVENTS - events.length)}} left
         </p>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && isLoggedInAdmin()">
             No Events yet, <a href="/#!/groups/{{group._id}}/events/add">create one</a>.
         </div>
-        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isAdmin()">
+        <div class="alert alert-info alert-sm text-center" data-ng-show="events.length === 0 && !isLoggedInAdmin()">
             No Events yet
         </div>
         <div class="list-group">
@@ -31,7 +31,7 @@
             </div>
             <div class="media-body">
                 <div class="row">
-                    <div class="col-sm-4 vcenter">
+                    <div class="col-sm-7 vcenter">
                         <ul class="list-unstyled event">
                             <li><h4 class="media-heading event-name">{{event.name}}</h4></li>
                             <li><span class="hidden">Location Name:</span> <p class="text-primary event-location">{{event.location.name}}</p></li>
@@ -39,8 +39,8 @@
                             <li><span class="hidden event-time">Time:</span><p class="text-primary">{{event.time | date:'short'}}</p></li>
                         </ul> 
                     </div>
-                    <div class="col-sm-7 vcenter">
-                        <ul class="list-unstyled pull-right float-none-xs event event-right">
+                    <div class="col-sm-4 vcenter">
+                        <ul class="list-unstyled event event-right">
                             <li><p class="event-response">Responses: <span class="badge">{{event.attendance.yes.length + event.attendance.no.length}}</span></p></li>
                             <li><p class="event-notification">Attendance Notification: <span ng-if="!event.attndNotifMins" class="text-danger event-not-sent">Not sent</span> <span ng-if="event.attndNotifMins" class="text-primary event-sent">{{getTimeDiff(event.time, event.attndNotifMins) | date:'shortTime'}}</span></p></li>
                             <li ng-if="hasEventExpired(event.time)"><p class="text-danger event-end">Event Ended</p></li>
