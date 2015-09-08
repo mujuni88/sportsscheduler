@@ -60,8 +60,8 @@ exports.update = function(req, res) {
 					req.body.joinedGroups.push(joinedGroups[i]._id);
 			}
 			
-			user.updated = Date.now();
-			user.displayName = user.firstName + ' ' + user.lastName;
+			req.body.updated = Date.now();
+			req.body.displayName = req.body.firstName + ' ' + req.body.lastName;
 
 			req.body = _.omit(req.body,'_id');
 			
