@@ -4,6 +4,7 @@ var _ = require('lodash'),
     serverJSON = require('../local_files/ui/server.ui.json'),
 	mongoose = require('mongoose'),
     MyResponse = require('./MyResponse'),
+    Sender = require('./Sender'),
     async = require('async');
 
 var Helper = (function() {
@@ -140,8 +141,8 @@ var Helper = (function() {
         },
         doesObjectsExist: function(model,ids) {
 
-            return function(arg1,arg2,done)
-            {
+            return function(arg1,arg2,done) {
+
                 model.find({
                     _id: { $in: ids}}, function (err, models) {
                     
@@ -178,6 +179,12 @@ var Helper = (function() {
                     
                     done(null, true);
                 });
+            };
+        },
+        sendTemplate: function(user) {
+
+            return function(err,templateHTML) {
+                Sender.sendSMS(user.email, 'Sports Scheduler', templateHTML, Sender.senderCallback(user));
             };
         },
         /**************** END WATERFALL FUNCTIONS ***********/

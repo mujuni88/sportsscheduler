@@ -58,6 +58,25 @@ Sender.prototype.sendSMS = function(to,subject,html,callback) {
 	});
 };
 
+Sender.prototype.senderCallback = function(user) {
+
+	return function(response) {
+
+		console.log('Email sent successfully to: %s',user.email);
+	};
+};
+
+Sender.prototype.sendTemplate = function(user) {
+
+	var sender = this;
+
+    return function(err,templateHTML) {
+        
+        sender.sendSMS(user.email, 'Sports Scheduler', templateHTML, sender.senderCallback(user));
+
+    };
+};
+
 
 //I believe this should make it to where only 1 instance will ever be created
 module.exports = new Sender();

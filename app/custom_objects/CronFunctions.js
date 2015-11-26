@@ -7,13 +7,23 @@ var _ = require('lodash'),
 	Cron = mongoose.model('Cron'),
 	CronJob = require('cron').CronJob,
 	Helper = require('./Helper'),
+	config = require('../../config/config'),
 	Sender = require('./Sender');
 
 var CronFunctions = (function() {
 
+	var sendTemplate = function(user) {
+		
+		return function(err,templateHTML) {
+        
+        	Sender.sendSMS(user.email, 'Sports Scheduler', templateHTML, Sender.senderCallback(user));
+
+    	};
+    };
+
 	return {
 
-		gatherAttendance: function(eventID) {
+		gatherAttendance: function(res,eventID) {
 
 			return function() {
 
@@ -63,7 +73,16 @@ var CronFunctions = (function() {
 
 							if(user.preferences.receiveEmails) {
 
-								Sender.sendSMS(user.email, 'Event\n', 'Attendance Results!\n' + event.attendance.yes.length + ' YES \n' + event.attendance.no.length + ' NO \n', senderCallback(user));
+								res.render('templates/attendance-email', {
+									eventName: event.name,
+									groupName: event.group.name,
+									yesUsers: event.attendance.yes,
+									noUsers: event.attendance.no,
+									appName: config.app.title,
+									devEmail: config.app.devEmail
+									
+								}, sendTemplate(user));
+								//Sender.sendSMS(user.email, 'Event\n', 'Attendance Results!\n' + event.attendance.yes.length + ' YES \n' + event.attendance.no.length + ' NO \n', senderCallback(user));
 							}
 
 							var	CronHandler = require('./CronHandler');

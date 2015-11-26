@@ -89,7 +89,7 @@ var PrivateFunctions = (function() {
 					});
 				};
 			},
-			createGatherAttendanceCron: function(event) {
+			createGatherAttendanceCron: function(res,event) {
 
 				return function(arg1,arg2,done) {
 					
@@ -102,7 +102,7 @@ var PrivateFunctions = (function() {
 					var settings = {
 
 				  		cronTime: cronTime,
-				  		onTick: CronFunctions.gatherAttendance(event.id),
+				  		onTick: CronFunctions.gatherAttendance(res,event.id),
 				  		start: true,
 				  		timeZone: 'America/Chicago'
 

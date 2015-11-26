@@ -95,7 +95,7 @@ exports.create = function(req, res) {
 				var functionsArray = [];
 				functionsArray.push(PrivateFunctions.create.addEventToGroup(group,event._id));
 				functionsArray.push(PrivateFunctions.create.eventStartNotifications(req,res,event));
-				functionsArray.push(PrivateFunctions.create.createGatherAttendanceCron(event));
+				functionsArray.push(PrivateFunctions.create.createGatherAttendanceCron(res,event));
 				functionsArray = Helper.buildWaterfall(functionsArray);
 
 				Helper.executeWaterfall(functionsArray,function (err, obj) {
