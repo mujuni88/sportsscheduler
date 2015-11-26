@@ -173,10 +173,11 @@ var PrivateFunctions = (function() {
 									if(user.preferences.receiveEmails) {
 
 										res.render('templates/create-event-email', {
-											eventName: event.name,
-											startTime: dateFormat(new Date(event.created), 'dddd mmmm dS h:MM TT'),
-											locationName: event.location.name,
-											locationAddress: event.location.address,
+											user: user,
+											event: event,
+											eventURL: eventURL,
+											groupURL: req.headers.origin + '/#!/groups/' + event.group.id,
+											startTime: eventEndDate,
 											attndTime: dateFormat(new Date(event.attndCloseTime), 'dddd mmmm dS h:MM TT'),
 											appName: config.app.title,
 											devEmail: config.app.devEmail

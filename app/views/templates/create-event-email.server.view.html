@@ -1,15 +1,24 @@
 {% extends 'email-layout.server.view.html' %}
 
 {% block content %}
-
 <p>
-The event: {{eventName}} has been created and is scheduled to start at: {{startTime}}
+Hey {{user.firstName}},
+</p>
+An event <a href="{{eventURL}}">{{event.name}}</a> in Group <a href="{{groupURL}}">{{event.group.name}}</a>
+<p>
+Start Time: {{startTime}}
 </p>
 
 <p>
-The location for the event is: {{locationName}} {{locationAddress}}
+Location: {{event.location.name}} {{event.location.address}}
 </p>
 
 <p>
-You have until: {{attndTime}} to let everyone know if you're attending or not
+Reply By: {{attndTime}}
 </p>
+
+<p>
+Event Message: {{event.message}}
+</p>
+
+An attendance email will be sent at {{attndTime}}
