@@ -1,0 +1,11 @@
+{% extends 'email-layout.server.view.html' %}
+
+{% block content %}
+
+<p>
+Below is the final attendance tally for event {{eventName}} in group {{groupName}}
+</p>
+
+{% for user in yesUsers %}
+	<h3><span>{{user.firstName}} {{user.lastName}}</span></h3>
+{% endfor %}
